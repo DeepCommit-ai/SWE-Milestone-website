@@ -25,9 +25,15 @@ AGENT_MODEL_DISPLAY = {
     ("claude-code", "claude-opus-4-6"): "CC Opus 4.6",
     ("claude-code", "claude-opus-4-7"): "CC Opus 4.7 xhigh",
     ("claude-code", "claude-opus-4-7[1m]"): "CC Opus 4.7 xhigh 1M",
+    ("claude-code", "claude-opus-4-8"): "CC Opus 4.8 max 1M",
+    ("claude-code", "claude-fable-5-with-leak"): "CC Fable 5 max 1M",
     ("claude-code", "glm-5"): "CC GLM-5",
     ("claude-code", "glm-5.1"): "CC GLM-5.1",
+    ("claude-code", "glm-5.2"): "CC GLM-5.2",
+    ("claude-code", "glm-5.2-1m"): "CC GLM-5.2 1M",
     ("claude-code", "kimi-k2.6"): "CC Kimi K2.6",
+    ("claude-code", "deepseek-v4-pro"): "CC DeepSeek V4 Pro",
+    ("claude-code", "qwen3.6-27b"): "CC Qwen3.6 27B",
     ("codex", "gpt-5.2-codex"): "Codex GPT-5.2C",
     ("codex", "gpt-5.2"): "Codex GPT-5.2",
     ("codex", "gpt-5.3-codex"): "Codex GPT-5.3C",
@@ -38,15 +44,18 @@ AGENT_MODEL_DISPLAY = {
     ("gemini-cli", "gemini-3-pro"): "Gemini Pro",
     ("gemini-cli", "gemini-3-pro-preview"): "Gemini Pro",
     ("gemini-cli", "gemini-3.1-pro"): "Gemini 3.1 Pro",
+    ("gemini-cli", "gemini-3.5-flash"): "Gemini 3.5 Flash",
 }
 
 AGENT_MODEL_ORDER = [
     "CC Sonnet 4.5", "CC Opus 4.5", "CC Sonnet 4.6", "CC Opus 4.6",
-    "CC Opus 4.7 xhigh", "CC Opus 4.7 xhigh 1M", "CC GLM-5", "CC GLM-5.1",
-    "CC Kimi K2.6",
+    "CC Opus 4.7 xhigh", "CC Opus 4.7 xhigh 1M",
+    "CC Opus 4.8 max 1M", "CC Fable 5 max 1M",
+    "CC GLM-5", "CC GLM-5.1", "CC GLM-5.2", "CC GLM-5.2 1M",
+    "CC Kimi K2.6", "CC DeepSeek V4 Pro", "CC Qwen3.6 27B",
     "Codex GPT-5.2C", "Codex GPT-5.2", "Codex GPT-5.3C", "Codex GPT-5.4",
     "Codex GPT-5.5",
-    "Gemini Pro", "Gemini 3.1 Pro", "Gemini Flash",
+    "Gemini Pro", "Gemini 3.1 Pro", "Gemini Flash", "Gemini 3.5 Flash",
 ]
 
 
@@ -77,15 +86,17 @@ AGENT_GROUPS = [
     ("claude-code", [
         "claude-sonnet-4-5-20250929", "claude-opus-4-5-20251101",
         "claude-sonnet-4-6", "claude-opus-4-6",
-        "claude-opus-4-7", "claude-opus-4-7[1m]", "glm-5", "glm-5.1",
-        "kimi-k2.6",
+        "claude-opus-4-7", "claude-opus-4-7[1m]",
+        "claude-opus-4-8", "claude-fable-5-with-leak",
+        "glm-5", "glm-5.1", "glm-5.2", "glm-5.2-1m",
+        "kimi-k2.6", "deepseek-v4-pro", "qwen3.6-27b",
     ]),
     ("codex", ["gpt-5.2-codex", "gpt-5.2", "gpt-5.3-codex", "gpt-5.4", "gpt-5.5"]),
-    ("gemini-cli", ["gemini-3-pro", "gemini-3.1-pro", "gemini-3-flash"]),
+    ("gemini-cli", ["gemini-3-pro", "gemini-3.1-pro", "gemini-3-flash", "gemini-3.5-flash"]),
 ]
 OPENHANDS_MODELS = [
     "minimax-m2.5", "kimi-k2.5", "gemini-3-flash",
-    "gpt-5.3-codex", "claude-opus-4-6",
+    "gpt-5.3-codex", "claude-opus-4-6", "glm-5", "kimi-k2.6",
 ]
 
 # ── Display names ───────────────────────────────────────────────────────────
@@ -96,16 +107,23 @@ MODEL_DISPLAY = {
     "claude-opus-4-6": "Claude Opus 4.6",
     "claude-opus-4-7": "Claude Opus 4.7 xhigh",
     "claude-opus-4-7[1m]": "Claude Opus 4.7 xhigh 1M",
+    "claude-opus-4-8": "Claude Opus 4.8 max 1M",
+    "claude-fable-5-with-leak": "Claude Fable 5 max 1M",
     "glm-5": "GLM-5",
     "glm-5.1": "GLM-5.1",
-    "gpt-5.2-codex": "GPT 5.2 Codex",
-    "gpt-5.2": "GPT 5.2",
-    "gpt-5.3-codex": "GPT 5.3 Codex",
-    "gpt-5.4": "GPT 5.4",
-    "gpt-5.5": "GPT 5.5",
+    "glm-5.2": "GLM-5.2",
+    "glm-5.2-1m": "GLM-5.2 1M",
+    "deepseek-v4-pro": "DeepSeek V4 Pro",
+    "qwen3.6-27b": "Qwen3.6 27B",
+    "gpt-5.2-codex": "GPT 5.2 Codex xhigh",
+    "gpt-5.2": "GPT 5.2 xhigh",
+    "gpt-5.3-codex": "GPT 5.3 Codex xhigh",
+    "gpt-5.4": "GPT 5.4 xhigh",
+    "gpt-5.5": "GPT 5.5 xhigh",
     "gemini-3-pro": "Gemini 3 Pro",
     "gemini-3.1-pro": "Gemini 3.1 Pro",
     "gemini-3-flash": "Gemini 3 Flash",
+    "gemini-3.5-flash": "Gemini 3.5 Flash",
     "kimi-k2.5": "Kimi K2.5",
     "kimi-k2.6": "Kimi K2.6",
     "minimax-m2.5": "MiniMax M2.5",
@@ -123,8 +141,14 @@ MODEL_ORG = {
     "claude-opus-4-6": "Anthropic",
     "claude-opus-4-7": "Anthropic",
     "claude-opus-4-7[1m]": "Anthropic",
+    "claude-opus-4-8": "Anthropic",
+    "claude-fable-5-with-leak": "Anthropic",
     "glm-5": "Z.ai",
     "glm-5.1": "Z.ai",
+    "glm-5.2": "Z.ai",
+    "glm-5.2-1m": "Z.ai",
+    "deepseek-v4-pro": "DeepSeek",
+    "qwen3.6-27b": "Qwen",
     "gpt-5.2-codex": "OpenAI",
     "gpt-5.2": "OpenAI",
     "gpt-5.3-codex": "OpenAI",
@@ -133,6 +157,7 @@ MODEL_ORG = {
     "gemini-3-pro": "Google",
     "gemini-3.1-pro": "Google",
     "gemini-3-flash": "Google",
+    "gemini-3.5-flash": "Google",
     "kimi-k2.5": "Moonshot AI",
     "kimi-k2.6": "Moonshot AI",
     "minimax-m2.5": "MiniMax",
@@ -146,22 +171,31 @@ CHART_LABELS = {
     ("claude-code", "claude-opus-4-6"): "Claude Opus 4.6",
     ("claude-code", "claude-opus-4-7"): "Claude Opus 4.7 xhigh",
     ("claude-code", "claude-opus-4-7[1m]"): "Claude Opus 4.7 xhigh 1M",
+    ("claude-code", "claude-opus-4-8"): "Claude Opus 4.8 max 1M",
+    ("claude-code", "claude-fable-5-with-leak"): "Claude Fable 5 max 1M",
     ("claude-code", "glm-5"): "GLM-5",
     ("claude-code", "glm-5.1"): "GLM-5.1",
+    ("claude-code", "glm-5.2"): "GLM-5.2",
+    ("claude-code", "glm-5.2-1m"): "GLM-5.2 1M",
     ("claude-code", "kimi-k2.6"): "Kimi K2.6",
-    ("codex", "gpt-5.2-codex"): "GPT-5.2-Codex",
-    ("codex", "gpt-5.2"): "GPT-5.2",
-    ("codex", "gpt-5.3-codex"): "GPT-5.3-Codex",
-    ("codex", "gpt-5.4"): "GPT-5.4",
-    ("codex", "gpt-5.5"): "GPT-5.5",
+    ("claude-code", "deepseek-v4-pro"): "DeepSeek V4 Pro",
+    ("claude-code", "qwen3.6-27b"): "Qwen3.6 27B",
+    ("codex", "gpt-5.2-codex"): "GPT-5.2-Codex xhigh",
+    ("codex", "gpt-5.2"): "GPT-5.2 xhigh",
+    ("codex", "gpt-5.3-codex"): "GPT-5.3-Codex xhigh",
+    ("codex", "gpt-5.4"): "GPT-5.4 xhigh",
+    ("codex", "gpt-5.5"): "GPT-5.5 xhigh",
     ("gemini-cli", "gemini-3-pro"): "Gemini 3 Pro",
     ("gemini-cli", "gemini-3.1-pro"): "Gemini 3.1 Pro",
     ("gemini-cli", "gemini-3-flash"): "Gemini 3 Flash",
+    ("gemini-cli", "gemini-3.5-flash"): "Gemini 3.5 Flash",
     ("openhands", "minimax-m2.5"): "MiniMax M2.5",
     ("openhands", "kimi-k2.5"): "Kimi K2.5",
     ("openhands", "gemini-3-flash"): "Gemini 3 Flash",
-    ("openhands", "gpt-5.3-codex"): "GPT-5.3-Codex",
+    ("openhands", "gpt-5.3-codex"): "GPT-5.3-Codex xhigh",
     ("openhands", "claude-opus-4-6"): "Claude Opus 4.6",
+    ("openhands", "glm-5"): "GLM-5",
+    ("openhands", "kimi-k2.6"): "Kimi K2.6",
 }
 
 # ── Per-entry text position overrides (to avoid overlap) ───────────────────
@@ -186,14 +220,20 @@ ENTRY_COLORS = {
     ("claude-code", "claude-opus-4-6"): "#D07A5E",
     ("claude-code", "claude-opus-4-7"): "#D07A5E",
     ("claude-code", "claude-opus-4-7[1m]"): "#D07A5E",
+    ("claude-code", "claude-opus-4-8"): "#D07A5E",
+    ("claude-code", "claude-fable-5-with-leak"): "#D07A5E",
     # GLM / Z.ai: use the light-mode color as the default; the scatter
     # renderer overrides to a lighter gray when dark theme is active so the
     # centre dot stays visible on the dark canvas. Same fallback for both
     # GLM variants — the dot resolver in JS pulls the themed --zai-accent.
     ("claude-code", "glm-5"):   "#4A4D5C",
     ("claude-code", "glm-5.1"): "#4A4D5C",
+    ("claude-code", "glm-5.2"): "#4A4D5C",
+    ("claude-code", "glm-5.2-1m"): "#4A4D5C",
     # CC Kimi K2.6 — themed silver via --moonshot-accent (same as OH Kimi).
     ("claude-code", "kimi-k2.6"): "#5C5F6B",
+    ("claude-code", "deepseek-v4-pro"): "#4D6BFE",
+    ("claude-code", "qwen3.6-27b"): "#615CED",
     ("codex", "gpt-5.2-codex"): "#90C890",
     ("codex", "gpt-5.2"): "#90C890",
     ("codex", "gpt-5.3-codex"): "#90C890",
@@ -202,6 +242,7 @@ ENTRY_COLORS = {
     ("gemini-cli", "gemini-3-pro"): "#7AAED8",
     ("gemini-cli", "gemini-3.1-pro"): "#7AAED8",
     ("gemini-cli", "gemini-3-flash"): "#7AAED8",
+    ("gemini-cli", "gemini-3.5-flash"): "#7AAED8",
     ("openhands", "minimax-m2.5"): "#E06070",
     # Moonshot/Kimi: themed silver — JS dot resolver pulls --moonshot-accent
     # at render time, so the centre dot tracks light/dark theme. The static
@@ -210,6 +251,8 @@ ENTRY_COLORS = {
     ("openhands", "gemini-3-flash"): "#7AAED8",
     ("openhands", "gpt-5.3-codex"): "#90C890",
     ("openhands", "claude-opus-4-6"): "#D07A5E",
+    ("openhands", "glm-5"): "#4A4D5C",
+    ("openhands", "kimi-k2.6"): "#5C5F6B",
 }
 
 ORG_COLORS = {
@@ -223,6 +266,8 @@ ORG_COLORS = {
     # Z.ai flips tone with theme so GLM reads as dark-brand on light canvas
     # and light-brand on dark canvas. CSS var resolves at render time.
     "Z.ai": "var(--zai-accent)",
+    "DeepSeek": "#4D6BFE",
+    "Qwen": "#615CED",
 }
 AGENT_COLORS = {
     "claude-code": {"bg": "rgba(217,119,87,0.15)", "fg": "#D97757"},
@@ -591,20 +636,6 @@ footer a:hover{color:var(--accent)}
   <h1 class="hero-title">
     <img class="title-icon" src="evoclaw_icon.png" alt=""><span class="brand">EvoClaw</span><span class="sep">:</span><span class="desc">Evaluating AI Agents on Continuous Software Evolution</span>
   </h1>
-  <div class="news-stack">
-    <div class="news-banner" style="--accent:#D97757">
-      <span class="news-tag">NEW</span>
-      <span class="news-text"><strong>Claude Opus 4.7</strong> (xhigh, 200K context) leads the overall leaderboard at <strong>39.81%</strong>.</span>
-    </div>
-    <div class="news-banner" style="--accent:#10A37F">
-      <span class="news-tag">NEW</span>
-      <span class="news-text"><strong>GPT-5.5</strong> (xhigh) takes the #2 official spot at <strong>37.77%</strong>.</span>
-    </div>
-    <div class="news-banner news-banner--moonshot" style="grid-column:1/-1">
-      <span class="news-tag">NEW</span>
-      <span class="news-text"><strong>Kimi K2.6</strong> is the best open-source model at <strong>34.69%</strong>, but uses the most turns; <strong>GLM-5.1</strong> ranks #2 open-source at <strong>28.77%</strong> with about half the turns.</span>
-    </div>
-  </div>
   <p class="hero-desc">Long-running agents build customized software (a &ldquo;Claw&rdquo;) to interact with their environments. For practical use in complex, real-world tasks, these agents must fully and autonomously evolve this software in response to a continuous stream of end-user requirements. EvoClaw evaluates how well frontier LLM agents handle this continuous development, benchmarking them against real-world evolution itineraries from open-source repositories.</p>
   <nav class="nav-btns">
     <a class="nav-btn active" href="#leaderboard">
@@ -628,6 +659,10 @@ footer a:hover{color:var(--accent)}
 
 <!-- ═══ Chart ═══ -->
 <section class="panel" id="overview">
+  <div class="news-banner" style="--accent:#6366f1;margin-bottom:1rem">
+    <span class="news-tag">NOTE</span>
+    <span class="news-text">Unless otherwise noted in the model name, agents run at the model's <strong>highest available thinking / reasoning-effort level</strong>.</span>
+  </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
     <h2 class="panel-title" style="margin-bottom:0">Overall Cost / Performance on EvoClaw</h2>
     <label class="toggle-label">
@@ -678,7 +713,7 @@ const DATA = "__LEADERBOARD_DATA__";
 const LOGOS = "__LOGOS__";
 
 // org key mapping
-const ORG_KEY = { 'Anthropic':'anthropic','OpenAI':'openai','Google':'google','Moonshot AI':'moonshot','MiniMax':'minimax','Z.ai':'zai' };
+const ORG_KEY = { 'Anthropic':'anthropic','OpenAI':'openai','Google':'google','Moonshot AI':'moonshot','MiniMax':'minimax','Z.ai':'zai','DeepSeek':'deepseek','Qwen':'qwen' };
 const AGENT_KEY = { 'claude-code':'claude-code','codex':'codex','gemini-cli':'gemini-cli','openhands':'openhands' };
 
 function isLight() { return document.documentElement.getAttribute('data-theme') === 'light'; }
