@@ -26,7 +26,6 @@ AGENT_MODEL_DISPLAY = {
     ("claude-code", "claude-opus-4-7"): "CC Opus 4.7 xhigh",
     ("claude-code", "claude-opus-4-7[1m]"): "CC Opus 4.7 xhigh 1M",
     ("claude-code", "claude-opus-4-8"): "CC Opus 4.8 max 1M",
-    ("claude-code", "claude-fable-5-with-leak"): "CC Fable 5 max 1M",
     ("claude-code", "glm-5"): "CC GLM-5",
     ("claude-code", "glm-5.1"): "CC GLM-5.1",
     ("claude-code", "glm-5.2"): "CC GLM-5.2",
@@ -50,7 +49,7 @@ AGENT_MODEL_DISPLAY = {
 AGENT_MODEL_ORDER = [
     "CC Sonnet 4.5", "CC Opus 4.5", "CC Sonnet 4.6", "CC Opus 4.6",
     "CC Opus 4.7 xhigh", "CC Opus 4.7 xhigh 1M",
-    "CC Opus 4.8 max 1M", "CC Fable 5 max 1M",
+    "CC Opus 4.8 max 1M",
     "CC GLM-5", "CC GLM-5.1", "CC GLM-5.2", "CC GLM-5.2 1M",
     "CC Kimi K2.6", "CC DeepSeek V4 Pro", "CC Qwen3.6 27B",
     "Codex GPT-5.2C", "Codex GPT-5.2", "Codex GPT-5.3C", "Codex GPT-5.4",
@@ -87,7 +86,7 @@ AGENT_GROUPS = [
         "claude-sonnet-4-5-20250929", "claude-opus-4-5-20251101",
         "claude-sonnet-4-6", "claude-opus-4-6",
         "claude-opus-4-7", "claude-opus-4-7[1m]",
-        "claude-opus-4-8", "claude-fable-5-with-leak",
+        "claude-opus-4-8",
         "glm-5", "glm-5.1", "glm-5.2", "glm-5.2-1m",
         "kimi-k2.6", "deepseek-v4-pro", "qwen3.6-27b",
     ]),
@@ -108,7 +107,6 @@ MODEL_DISPLAY = {
     "claude-opus-4-7": "Claude Opus 4.7 xhigh",
     "claude-opus-4-7[1m]": "Claude Opus 4.7 xhigh 1M",
     "claude-opus-4-8": "Claude Opus 4.8 max 1M",
-    "claude-fable-5-with-leak": "Claude Fable 5 max 1M",
     "glm-5": "GLM-5",
     "glm-5.1": "GLM-5.1",
     "glm-5.2": "GLM-5.2",
@@ -142,7 +140,6 @@ MODEL_ORG = {
     "claude-opus-4-7": "Anthropic",
     "claude-opus-4-7[1m]": "Anthropic",
     "claude-opus-4-8": "Anthropic",
-    "claude-fable-5-with-leak": "Anthropic",
     "glm-5": "Z.ai",
     "glm-5.1": "Z.ai",
     "glm-5.2": "Z.ai",
@@ -172,7 +169,6 @@ CHART_LABELS = {
     ("claude-code", "claude-opus-4-7"): "Claude Opus 4.7 xhigh",
     ("claude-code", "claude-opus-4-7[1m]"): "Claude Opus 4.7 xhigh 1M",
     ("claude-code", "claude-opus-4-8"): "Claude Opus 4.8 max 1M",
-    ("claude-code", "claude-fable-5-with-leak"): "Claude Fable 5 max 1M",
     ("claude-code", "glm-5"): "GLM-5",
     ("claude-code", "glm-5.1"): "GLM-5.1",
     ("claude-code", "glm-5.2"): "GLM-5.2",
@@ -221,7 +217,6 @@ ENTRY_COLORS = {
     ("claude-code", "claude-opus-4-7"): "#D07A5E",
     ("claude-code", "claude-opus-4-7[1m]"): "#D07A5E",
     ("claude-code", "claude-opus-4-8"): "#D07A5E",
-    ("claude-code", "claude-fable-5-with-leak"): "#D07A5E",
     # GLM / Z.ai: use the light-mode color as the default; the scatter
     # renderer overrides to a lighter gray when dark theme is active so the
     # centre dot stays visible on the dark canvas. Same fallback for both
