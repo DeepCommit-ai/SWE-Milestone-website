@@ -1,0 +1,9 @@
+# Cloudflare Workers static-assets exclude list (gitignore syntax).
+# The deployed site is the pre-built root index.html. These are only the
+# machinery used to generate it, so they don't need to ship. Data CSVs under
+# data/ are intentionally NOT excluded (kept downloadable, as before).
+versions/
+data/compute.py
+data/records.json
+__pycache__/
+README.md

@@ -1,0 +1,5 @@
+{
+  "name": "Milestone DAG Visualizer",
+  "description": "A modern React Flow based visualization for software project milestones and dependency graphs.",
+  "requestFramePermissions": []
+}

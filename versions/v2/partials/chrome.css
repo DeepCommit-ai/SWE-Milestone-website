@@ -1,0 +1,44 @@
+/* Shared site chrome — header + footer. Injected into every page by build.py.
+   Referenced design tokens (var(--…)) are defined in each page's :root. */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(1, 4, 9, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav {
+  max-width: var(--maxw); margin: 0 auto; padding: 0 28px;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: "Space Grotesk", var(--sans); font-size: 15px; font-weight: 700;
+  color: var(--heading); letter-spacing: -0.01em;
+}
+.brand svg { display: block; }
+.brand-logo { width: 22px; height: 22px; border-radius: 5px; display: block; flex: none; transform: translateY(-2px); }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a {
+  font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted);
+  transition: color 0.15s ease;
+}
+.nav-links a:hover { color: var(--heading); }
+.nav-links a.gh {
+  color: var(--heading); border: 1px solid var(--border-strong);
+  padding: 5px 12px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.nav-links a.gh:hover { background: var(--surface); }
+footer { padding: 44px 0 56px; }
+.foot {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 12px; color: var(--faint);
+}
+.foot a { color: var(--muted); transition: color .15s; }
+.foot a:hover { color: var(--heading); }
+.foot .team { display: inline-flex; align-items: center; gap: 8px; }
+.foot .team i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
+@media (max-width: 720px) { .nav-links a:not(.gh) { display: none; } }

@@ -1,0 +1,13 @@
+source_id,target_id,type,strength,rationale,confidence_score
+maintenance_deps_1,maintenance_releases_1,NFR,Strong,Dependency version bumps must precede crate version releases. Version progression constraint.,0.95
+milestone_seed_292bc54_1,milestone_seed_a6e0be3_1_sub-02,FUNC,Strong,9d8016d removes max_matches from JSON printer modifying code paths added by 292bc54. Commits share overlapping json.rs code.,0.90
+maintenance_fixes_1_sub-02,maintenance_style_1,TEXT,Weak,rustfmt (bb8172f) incidentally modifies files touched by bug fixes (f722268). Cosmetic changes with no functional dependency.,0.85
+milestone_seed_119407d_1_sub-02,maintenance_style_1,TEXT,Weak,rustfmt (bb8172f) reorders imports for hyperlink module exports added by 66aa4a6. Pure cosmetic change.,0.85
+milestone_seed_292bc54_1,maintenance_style_1,TEXT,Weak,rustfmt (bb8172f) applies formatting to json.rs modified by 292bc54. Independent textual changes.,0.85
+milestone_seed_a6e0be3_1_sub-01,milestone_seed_8c6595c_1,TEXT,Weak,Both milestones modify core.rs in grep-searcher. Incidental dependency - after-context fix could work independently.,0.75
+milestone_seed_a6e0be3_1_sub-01,milestone_seed_a6e0be3_1_sub-02,FUNC,Strong,Sub-02 (9d8016d) completes the removal of max_matches that sub-01 (a6e0be3) started. Direct code dependency.,0.95
+milestone_seed_119407d_1_sub-01,milestone_seed_119407d_1_sub-02,FUNC,Strong,Sub-02 (66aa4a6) deletes and replaces the hyperlink.rs file modified by sub-01 (119407d). Must apply in order.,0.95
+milestone_seed_5f5da48_1_sub-01,milestone_seed_5f5da48_1_sub-02,FUNC,Strong,Sub-02 (f596a5d) is committed after sub-01 (5f5da48) and both modify glob.rs. Order must be preserved.,0.90
+milestone_seed_2924d0c_1,milestone_seed_b610d1c_1,FUNC,Strong,b610d1c requires min_depth field introduced by 2924d0c in walk.rs. Direct code dependency.,0.95
+maintenance_style_1,milestone_seed_b610d1c_1,TEXT,Weak,b610d1c expects import order from rustfmt changes in bb8172fe. Cosmetic dependency.,0.85
+maintenance_fixes_1_sub-01,maintenance_fixes_1_sub-02,TEXT,Weak,Both sub-milestones modify overlapping files in flags and printer modules. Sub-02 should follow sub-01 for consistent ordering.,0.80

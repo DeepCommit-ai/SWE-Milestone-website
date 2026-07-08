@@ -1,0 +1,121 @@
+workspace,milestone_id,title
+dubbo,M001.1,Spring Security OAuth2 Serialization Support
+dubbo,M001.2,Spring 6 Security Module Split and UTF-8 Standardization
+dubbo,M002,HTTP/2 Connection Preface Protocol Implementation
+dubbo,M003.1,Mutiny Module Configuration and Code Generation Templates
+dubbo,M003.2,Mutiny Core Abstractions and Publisher/Subscriber
+dubbo,M003.3,Mutiny Reactive Streaming Support
+dubbo,M004,REST Streaming and SSE Infrastructure Enhancements
+dubbo,M005.1,Affinity Router Core Infrastructure and Model
+dubbo,M005.2,Affinity Router Config-Based Implementations
+dubbo,M006,RadixTree Multi-Method REST Path Routing Fix
+dubbo,M007,Method-Level TPS Rate Limiting
+dubbo,M010,Bouncy Castle JDK18 Security Upgrade
+dubbo,M011,Logging FQCN Infrastructure Enhancement
+dubbo,M012,Tracing and Metrics Infrastructure Improvements
+dubbo,M013,Environment Variable Key Resolution Enhancement
+dubbo,M014,Java 21 Virtual Thread Pool Auto-Configuration
+dubbo,M015,Third-Party Dependency Version Updates
+dubbo,M016.1,REST Bean Argument Resolution and Protocol Fixes
+dubbo,M017,Remoting Module Stability and Triple Protocol Enhancements
+dubbo,M018,Performance Optimizations for Hot Code Paths
+dubbo,M019,Minor Feature Enhancements and Additions
+dubbo,M020,Test Infrastructure Dependency Cleanup
+dubbo,M021,Code Cleanup and Refactoring
+dubbo,M022,Triple Protocol Reliability and Stability Improvements
+dubbo,M024,Registration and Thread Safety Configuration Improvements
+dubbo,M025,Miscellaneous Fixes and Improvements
+ripgrep,maintenance_fixes_1_sub-01,Exit Code and Search Worker Initialization Bug Fixes
+ripgrep,maintenance_fixes_1_sub-02,Maintenance Fixes and Minor Enhancements
+ripgrep,maintenance_style_1,Code Style Refactoring to Modern Rust Idioms
+ripgrep,milestone_seed_119407d_1_sub-01,Windows Hyperlink Path Performance Optimization
+ripgrep,milestone_seed_119407d_1_sub-02,Hyperlink Alias Modular Architecture Restructuring
+ripgrep,milestone_seed_2924d0c_1,Add Minimum Depth Option for Directory Traversal
+ripgrep,milestone_seed_292bc54_1,Replacement Text Support in JSON Output Mode
+ripgrep,milestone_seed_5f5da48_1_sub-01,Nested Alternation Groups Support in Glob Patterns
+ripgrep,milestone_seed_5f5da48_1_sub-02,Unclosed Character Class Toggle for Glob Parsing
+ripgrep,milestone_seed_624bbf7_1,GlobSet API Enhancements with matches_all and Constructor
+ripgrep,milestone_seed_8c6595c_1,Fix Performance with Large After-Context Flag Values
+ripgrep,milestone_seed_a6e0be3_1_sub-01,Migrate Max Matches Limit from Printer to Searcher
+ripgrep,milestone_seed_a6e0be3_1_sub-02,Simplify Printer max_matches After Searcher Migration
+ripgrep,milestone_seed_b610d1c_1,Fix Global Gitignore Matching with Absolute Paths
+navidrome,milestone_001,Plugin System Core Improvements
+navidrome,milestone_002,Plugin API Extensions
+navidrome,milestone_003_sub-01,Multi-Library Database and Persistence Foundation
+navidrome,milestone_003_sub-02,Multi-Library Core Service and Scanner
+navidrome,milestone_003_sub-03,Multi-Library Server APIs
+navidrome,milestone_003_sub-04,Multi-Library UI Components
+navidrome,milestone_004,Scanner Quality Improvements
+navidrome,milestone_006,UI Quality Improvements
+navidrome,milestone_007,Agent Logic Streamlining
+element-web,feature_enhancements,Reply Mentions and Notification API Improvements
+element-web,maintenance_bug_fixes,Cross-Subsystem Bug Fixes and Stability Improvements
+element-web,maintenance_infrastructure,Infrastructure Maintenance and Code Quality Improvements
+element-web,maintenance_ui_ux,UI/UX and Accessibility Improvements
+element-web,milestone_seed_05df321_1,React 19 JSX Import Migration
+element-web,milestone_seed_3762d40_1,Enhanced Rageshake Error Reporting with Friendly Messages
+element-web,milestone_seed_3f47487_1,React DOM Rendering Modernization for Message Content
+element-web,milestone_seed_56c7fc1_1,Identity Reset Protection UX Enhancement
+element-web,milestone_seed_599112e_1,Compound Design System Checkbox Migration
+element-web,milestone_seed_7ff1fd2_1,RoomListStoreV3 Filter Infrastructure
+element-web,milestone_seed_8bb4d44_1,Element Call Bundle Integration for Offline Deployment
+element-web,milestone_seed_aa99601_1,Group Call Error Screen Display
+element-web,milestone_seed_be3778b_1,Key Storage Toggle for Encryption Settings
+element-web,milestone_seed_e662c19_1,Image and Video Hiding Privacy Feature
+element-web,milestone_seed_e9a3625_1_sub-01,Room List V3 ViewModel Foundation
+element-web,milestone_seed_e9a3625_1_sub-02,Room List V3 UI Components
+element-web,milestone_seed_e9a3625_1_sub-03,Room List V3 Room Behavior and Display
+element-web,milestone_seed_f59af37_1,Simplified Sliding Sync Architecture
+element-web,milestone_seed_fba5938_1,SSO Pickle Key Generation and Session Handling
+nushell,milestone_core_development.1,Core Shell Language and Type System Fixes
+nushell,milestone_core_development.2,Operators and Completions and REPL Improvements
+nushell,milestone_core_development.3,Commands and Parser and Error Handling Improvements
+nushell,milestone_core_development.4,Case-Insensitive Get and Flatten Each Completions
+nushell,milestone_G01_48bca0a,Custom Completion Refactoring for Flag Name vs Value
+nushell,milestone_G02_a647707,Runtime Enforcement of Type Annotations on Variables
+nushell,milestone_G02_da9615f,Parse-time Pipeline Type Checking for Multiple Output Types
+nushell,milestone_G04_1ddae02,Query XML Multiple Output Types and Enhanced Nodeset Formatting
+nushell,milestone_G04_ca0e961,Overlay List Active Status and Scoped Module Registration
+nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils
+nushell,milestone_G05_ac3f93f,Format Bits Endianness Default and Flag Control
+nushell,milestone_G05_be6e868,LSP Testing Refactoring and Goto Definition Fix
+nushell,milestone_M02_parser,Parser Fixes for Expressions and Scoping and Error Reporting
+nushell,milestone_M03_polars,Polars Plugin Updates and Dependency Upgrades
+nushell,milestone_M04_std,Standard Library Enhancements for Random and Alignment
+nushell,milestone_M08_docs,Documentation and Help Improvements with LSP Integration
+scikit-learn,M01,Metadata Routing for RFE and RFECV Feature Selection
+scikit-learn,M03,Estimator Type Detection and Pipeline Fitted State Checks
+scikit-learn,M04,Estimator Validation and Performance Improvements
+scikit-learn,M06,Array API Support for Metrics and Preprocessing
+scikit-learn,M11,Missing Value Support for ExtraTree Estimators
+scikit-learn,M12.1,Infrastructure Phase 1: API Changes and Bug Fixes
+scikit-learn,M12.2,Infrastructure Phase 2: Metadata Routing and Bug Fixes
+scikit-learn,M12.3,Infrastructure Phase 3a: Metrics and Validation Updates
+scikit-learn,M12.4,Infrastructure Phase 3b: Testing and Metadata Routing
+scikit-learn,M12.5,Tags System Migration and Validation Enhancements
+scikit-learn,M13,Documentation Consistency and Metadata Routing Coverage
+scikit-learn,M17,Performance Optimizations for Manifold and Covariance
+go-zero,M001,Go-Redis v9 Upgrade with API Modernization
+go-zero,M003,Circuit Breaker Algorithm Evolution and Recovery Optimization
+go-zero,M004,CPU Monitoring and Adaptive Load Shedding
+go-zero,M005,SQL Statement-Level Circuit Breaker Support
+go-zero,M006,SQL Read/Write Separation with Replica Routing
+go-zero,M007.1,Etcd Config Center Infrastructure
+go-zero,M007.2,Etcd Discovery Mechanism Reliability Fixes
+go-zero,M008,REST File Server for Static File Serving
+go-zero,M009,HTTP-to-HTTP Gateway Proxy Support
+go-zero,M010,SSE Routes Support with Timeout Handling
+go-zero,M013,Consistent Hash Load Balancer for zRPC
+go-zero,M014,Continuous Profiling with Pyroscope Integration
+go-zero,M017,Mapping and Unmarshaler Bug Fixes
+go-zero,M018,Logging System Enhancements and Bug Fixes
+go-zero,M019,HTTP Request/Response Parsing and CORS Improvements
+go-zero,M020,Code Modernization with Go Generics and Stdlib
+go-zero,M021,Service Infrastructure and Config Validation Improvements
+go-zero,M022,Trace and Observability Stability Improvements
+go-zero,M023,SQL and ORM Metrics and Bug Fixes
+go-zero,M024,zRPC Server Interceptor and Balancer Improvements
+go-zero,M025,Threading and Concurrency Utility Enhancements
+go-zero,M026,Config Parsing Fix and K8s Build Tag Support
+go-zero,M027,Lua Scripts Externalization to Embedded Files
+go-zero,M028,Miscellaneous Cross-Module Fixes and Improvements

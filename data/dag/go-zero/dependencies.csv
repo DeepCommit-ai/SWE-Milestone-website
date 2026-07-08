@@ -1,0 +1,26 @@
+source_id,target_id,type,strength,rationale,confidence_score
+M001,M002,FUNC,Strong,M002 depends on go-redis v9 Hook interface (ProcessHook/ProcessPipelineHook) introduced by M001,0.98
+M001,M027,FUNC,Strong,M027 uses redis.NewScript() from go-redis v9 API upgraded by M001,0.98
+M007.1,M007.2,FUNC,Strong,M007.2 discovery mechanism relies on config center infrastructure from M007.1,0.95
+M007.2,M002,FUNC,Strong,M002 introduces hook-based Redis breaker architecture that M007.2 infrastructure depends on,0.95
+M016,M002,FUNC,Strong,M016 new Redis commands use breaker infrastructure refactored by M002 into hooks,0.95
+M004,M003,NFR,Weak,Both address load management quality but operate on different subsystems,0.90
+M007.2,M014,NFR,Weak,M014 profiling uses proc.Done() for shutdown coordination - non-blocking lifecycle dependency,0.85
+M010,M028,TEXT,Weak,SSE feature independent of miscellaneous fixes,0.90
+M014,M022,NFR,Weak,Both improve shutdown behavior but in different subsystems,0.85
+M014,M028,TEXT,Weak,Profiling independent of miscellaneous fixes,0.85
+M020,M014,TEXT,Weak,Code modernization independent of profiling feature,0.70
+M021,M020,TEXT,Weak,Service infrastructure independent of stdlib modernization,0.72
+M026,M021,TEXT,Weak,Config parsing layer independent of service runtime,0.73
+M004,M027,FUNC,Strong,M027 Lua scripts use Redis APIs; M004 load management must complete on Go 1.19 before M020 introduces Go 1.21 code via M027->M020,0.95
+M017,M004,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M004,M018,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M018,M019,FUNC,Strong,M019 loghandler.go commits (f57874a/63ec989) depend on M018 fix (8625864) that changes defaultSlowThreshold to slowThreshold.Load(),0.95
+M019,M010,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M002,M006,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M002,M012,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M005,M017,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M023,M017,FUNC,Strong,M017 orm.go refactoring (75941ae) depends on M023 prerequisite commits (cc79e3d/ff89062/c706517) that modify getValueInterface,0.95
+M017,M021,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M019,M007.2,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M029,M002,FUNC,Weak,Auto-inferred from commit-level dependencies (MCP shares file overlap with Redis hooks),0.70

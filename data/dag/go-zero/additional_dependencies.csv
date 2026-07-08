@@ -1,0 +1,6 @@
+source_id,target_id,type,strength,rationale,confidence_score
+M003,M001,FUNC,Strong,M003 uses go-redis/v8 at END tag; M001 snapshot introduces v9 source that conflicts with v8 go.mod,0.99
+M005,M001,FUNC,Strong,M005 uses go-redis/v8 at END tag; M001 snapshot introduces v9 source that conflicts with v8 go.mod,0.99
+M027,M020,FUNC,Strong,M027 eval Docker is Go 1.19; M020 introduces slices/cmp imports (Go 1.21) that break compilation on Go <1.21,0.99
+M007.1,M020,FUNC,Strong,M007.1 eval Docker is Go 1.20; M020 introduces slices/cmp imports (Go 1.21) that break compilation on Go <1.21,0.99
+M023,M020,FUNC,Strong,M023 eval Docker is Go 1.19; M020 introduces slices/cmp imports (Go 1.21) that break compilation on Go <1.21,0.99

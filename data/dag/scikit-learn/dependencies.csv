@@ -1,0 +1,15 @@
+source_id,target_id,type,strength,rationale,confidence_score
+M13,M04,NFR,Weak,Documentation updates precede validation API changes,0.75
+M12.1,M12.2,FUNC,Strong,Topological dependency - Phase 2 depends on Phase 1,0.90
+M12.2,M12.3,FUNC,Strong,Topological dependency - Phase 3a depends on Phase 2,0.90
+M12.2,M03,FUNC,Strong,M03 tags changes depend on M12.2 infrastructure foundation,0.90
+M12.3,M12.4,FUNC,Strong,Topological dependency - Phase 3b depends on Phase 3a,0.90
+M12.4,M12.5,FUNC,Strong,Topological dependency - Phase 4a depends on Phase 3b,0.90
+M11,M12.5,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M12.2,M13,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M06,M12.5,FUNC,Weak,Array API foundation for validation phase,0.70
+M12.2,M01,FUNC,Strong,M01 commits depend on metadata routing commits in M12.2,0.95
+M01,M12.5,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+M03,M12.5,FUNC,Strong,M12.5 tags revamp depends on M03 is_clusterer function,0.95
+M12.5,M17,FUNC,Weak,M17 performance optimizations build on M12.5 infrastructure,0.70
+M12.5,M04,FUNC,Strong,M04 requires force_writeable parameter introduced in M12.5,0.95

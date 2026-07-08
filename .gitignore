@@ -5,3 +5,19 @@
 .env*
 !.env.example
 .omc/
+
+# Python
+__pycache__/
+*.pyc
+
+# Milestone DAG build machinery (source lives in versions/v2/dag/, the built
+# self-contained bundle is committed at assets/mstone-dag.{js,css}). node_modules
+# and any vite dev output are build-only and must not be committed.
+versions/v2/dag/node_modules/
+versions/v2/dag/dist/
+.vite/
+
+# Generated data-contract snapshot (derived from CSVs; regenerate with
+# `python data/compute.py`). The build imports compute_records() directly,
+# so this file is only a human-inspection convenience.
+data/records.json

@@ -1,0 +1,312 @@
+[
+  {
+    "trial_id": "_claude-code_deepseek-v4-pro_run_002",
+    "agent": "claude-code",
+    "model": "deepseek-v4-pro",
+    "org": "DeepSeek",
+    "name": "DeepSeek V4 Pro",
+    "thinking": null,
+    "context": null,
+    "logo_key": "deepseek"
+  },
+  {
+    "trial_id": "_claude-code_fable-5-with-leak_run_002",
+    "agent": "claude-code",
+    "model": "claude-fable-5-with-leak",
+    "org": "Anthropic",
+    "name": "Claude Fable 5",
+    "thinking": "max",
+    "context": "1M",
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_glm-5.1_refine_run_002",
+    "agent": "claude-code",
+    "model": "glm-5.1",
+    "org": "Z.ai",
+    "name": "GLM-5.1",
+    "thinking": null,
+    "context": null,
+    "logo_key": "zai"
+  },
+  {
+    "trial_id": "_claude-code_glm-5.2-1m_run_002",
+    "agent": "claude-code",
+    "model": "glm-5.2-1m",
+    "org": "Z.ai",
+    "name": "GLM-5.2",
+    "thinking": null,
+    "context": "1M",
+    "logo_key": "zai"
+  },
+  {
+    "trial_id": "_claude-code_glm-5.2_run_002",
+    "agent": "claude-code",
+    "model": "glm-5.2",
+    "org": "Z.ai",
+    "name": "GLM-5.2",
+    "thinking": null,
+    "context": null,
+    "logo_key": "zai"
+  },
+  {
+    "trial_id": "_claude-code_glm-5_refine_run_002",
+    "agent": "claude-code",
+    "model": "glm-5",
+    "org": "Z.ai",
+    "name": "GLM-5",
+    "thinking": null,
+    "context": null,
+    "logo_key": "zai"
+  },
+  {
+    "trial_id": "_claude-code_kimi-k2.6_run_002",
+    "agent": "claude-code",
+    "model": "kimi-k2.6",
+    "org": "Moonshot AI",
+    "name": "Kimi K2.6",
+    "thinking": null,
+    "context": null,
+    "logo_key": "moonshot"
+  },
+  {
+    "trial_id": "_claude-code_opus-4.5_run_002",
+    "agent": "claude-code",
+    "model": "claude-opus-4-5-20251101",
+    "org": "Anthropic",
+    "name": "Claude Opus 4.5",
+    "thinking": null,
+    "context": null,
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_opus-4.6_run_002",
+    "agent": "claude-code",
+    "model": "claude-opus-4-6",
+    "org": "Anthropic",
+    "name": "Claude Opus 4.6",
+    "thinking": null,
+    "context": null,
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_opus-4.7-xhigh-1m_run_002",
+    "agent": "claude-code",
+    "model": "claude-opus-4-7[1m]",
+    "org": "Anthropic",
+    "name": "Claude Opus 4.7",
+    "thinking": "xhigh",
+    "context": "1M",
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_opus-4.7-xhigh_run_002",
+    "agent": "claude-code",
+    "model": "claude-opus-4-7",
+    "org": "Anthropic",
+    "name": "Claude Opus 4.7",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_opus-4.8_run_002",
+    "agent": "claude-code",
+    "model": "claude-opus-4-8",
+    "org": "Anthropic",
+    "name": "Claude Opus 4.8",
+    "thinking": "max",
+    "context": "1M",
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_qwen3.6-27b_run_002",
+    "agent": "claude-code",
+    "model": "qwen3.6-27b",
+    "org": "Qwen",
+    "name": "Qwen3.6 27B",
+    "thinking": null,
+    "context": null,
+    "logo_key": "qwen"
+  },
+  {
+    "trial_id": "_claude-code_sonnet-4.5_run_002",
+    "agent": "claude-code",
+    "model": "claude-sonnet-4-5-20250929",
+    "org": "Anthropic",
+    "name": "Claude Sonnet 4.5",
+    "thinking": null,
+    "context": null,
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_claude-code_sonnet-4.6_run_002",
+    "agent": "claude-code",
+    "model": "claude-sonnet-4-6",
+    "org": "Anthropic",
+    "name": "Claude Sonnet 4.6",
+    "thinking": null,
+    "context": null,
+    "logo_key": "anthropic"
+  },
+  {
+    "trial_id": "_codex_gpt-5.2-codex_run_002",
+    "agent": "codex",
+    "model": "gpt-5.2-codex",
+    "org": "OpenAI",
+    "name": "GPT 5.2 Codex",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "openai"
+  },
+  {
+    "trial_id": "_codex_gpt-5.2_run_002",
+    "agent": "codex",
+    "model": "gpt-5.2",
+    "org": "OpenAI",
+    "name": "GPT 5.2",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "openai"
+  },
+  {
+    "trial_id": "_codex_gpt-5.3-codex_run_002",
+    "agent": "codex",
+    "model": "gpt-5.3-codex",
+    "org": "OpenAI",
+    "name": "GPT 5.3 Codex",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "openai"
+  },
+  {
+    "trial_id": "_codex_gpt-5.4_run_002",
+    "agent": "codex",
+    "model": "gpt-5.4",
+    "org": "OpenAI",
+    "name": "GPT 5.4",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "openai"
+  },
+  {
+    "trial_id": "_codex_gpt-5.5_run_002",
+    "agent": "codex",
+    "model": "gpt-5.5",
+    "org": "OpenAI",
+    "name": "GPT 5.5",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "openai"
+  },
+  {
+    "trial_id": "_gemini-cli_gemini-3-flash_run_002",
+    "agent": "gemini-cli",
+    "model": "gemini-3-flash",
+    "org": "Google",
+    "name": "Gemini 3 Flash",
+    "thinking": null,
+    "context": null,
+    "logo_key": "google"
+  },
+  {
+    "trial_id": "_gemini-cli_gemini-3-pro_run_002",
+    "agent": "gemini-cli",
+    "model": "gemini-3-pro",
+    "org": "Google",
+    "name": "Gemini 3 Pro",
+    "thinking": null,
+    "context": null,
+    "logo_key": "google"
+  },
+  {
+    "trial_id": "_gemini-cli_gemini-3.1-pro_run_002",
+    "agent": "gemini-cli",
+    "model": "gemini-3.1-pro",
+    "org": "Google",
+    "name": "Gemini 3.1 Pro",
+    "thinking": null,
+    "context": null,
+    "logo_key": "google"
+  },
+  {
+    "trial_id": "_gemini-cli_gemini-3.5-flash_run_002",
+    "agent": "gemini-cli",
+    "model": "gemini-3.5-flash",
+    "org": "Google",
+    "name": "Gemini 3.5 Flash",
+    "thinking": null,
+    "context": null,
+    "logo_key": "google"
+  },
+  {
+    "trial_id": "_openhands_gemini-3-flash_run_002",
+    "agent": "openhands",
+    "model": "gemini-3-flash",
+    "org": "Google",
+    "name": "Gemini 3 Flash",
+    "thinking": null,
+    "context": null,
+    "logo_key": "google"
+  },
+  {
+    "trial_id": "_openhands_glm-5_run_002",
+    "agent": "openhands",
+    "model": "glm-5",
+    "org": "Z.ai",
+    "name": "GLM-5",
+    "thinking": null,
+    "context": null,
+    "logo_key": "zai"
+  },
+  {
+    "trial_id": "_openhands_gpt-5.3-codex_run_002",
+    "agent": "openhands",
+    "model": "gpt-5.3-codex",
+    "org": "OpenAI",
+    "name": "GPT 5.3 Codex",
+    "thinking": "xhigh",
+    "context": null,
+    "logo_key": "openai"
+  },
+  {
+    "trial_id": "_openhands_kimi-k2.5_run_002",
+    "agent": "openhands",
+    "model": "kimi-k2.5",
+    "org": "Moonshot AI",
+    "name": "Kimi K2.5",
+    "thinking": null,
+    "context": null,
+    "logo_key": "moonshot"
+  },
+  {
+    "trial_id": "_openhands_kimi-k2.6_run_002",
+    "agent": "openhands",
+    "model": "kimi-k2.6",
+    "org": "Moonshot AI",
+    "name": "Kimi K2.6",
+    "thinking": null,
+    "context": null,
+    "logo_key": "moonshot"
+  },
+  {
+    "trial_id": "_openhands_minimax-m2.5_run_002",
+    "agent": "openhands",
+    "model": "minimax-m2.5",
+    "org": "MiniMax",
+    "name": "MiniMax M2.5",
+    "thinking": null,
+    "context": null,
+    "logo_key": "minimax"
+  },
+  {
+    "trial_id": "_openhands_opus-4.6_run_002",
+    "agent": "openhands",
+    "model": "claude-opus-4-6",
+    "org": "Anthropic",
+    "name": "Claude Opus 4.6",
+    "thinking": null,
+    "context": null,
+    "logo_key": "anthropic"
+  }
+]

@@ -1,0 +1,17 @@
+source_id,target_id,type,strength,rationale,confidence_score
+milestone_core_development.3,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 and rusqlite and reedline - cd.3 code uses v3 APIs,0.95
+milestone_G02_da9615f,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 - crate Cargo.toml uses v3 feature syntax,0.95
+milestone_G04_1ddae02,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 - crate Cargo.toml uses v3 feature syntax,0.95
+milestone_G04_ca0e961,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 - crate Cargo.toml uses v3 feature syntax,0.95
+milestone_G05_0b8531e,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 - crate Cargo.toml uses v3 feature syntax,0.95
+milestone_M02_parser,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 - crate Cargo.toml uses v3 feature syntax,0.95
+milestone_M08_docs,milestone_core_development.1,NFR,Strong,cd.1 upgrades ureq v2->v3 - crate Cargo.toml uses v3 feature syntax,0.95
+milestone_G05_0b8531e,milestone_core_development.3,FUNC,Strong,cd.3 adds little_endian field to into::binary::Arguments - G05 snapshot includes it but G05 image does not,0.95
+milestone_M02_parser,milestone_G01_48bca0a,FUNC,Strong,G01 adds custom_completion field to PositionalArg/Flag - M02 GT tests must include the new field,0.95
+milestone_G04_1ddae02,milestone_G01_48bca0a,FUNC,Strong,G01 adds custom_completion field to PositionalArg/Flag - G04_1ddae02 GT tests must include the new field,0.95
+milestone_core_development.2,milestone_G01_48bca0a,FUNC,Strong,G01 adds custom_completion field to PositionalArg/Flag - cd.2 GT tests must include the new field,0.95
+milestone_core_development.3,milestone_G01_48bca0a,FUNC,Strong,G01 adds custom_completion field to PositionalArg/Flag - cd.3 GT tests must include the new field,0.95
+milestone_G02_da9615f,milestone_G01_48bca0a,FUNC,Strong,G01 adds custom_completion field to PositionalArg/Flag - G02_da9615f GT tests must include the new field,0.95
+milestone_G04_ca0e961,milestone_G01_48bca0a,FUNC,Strong,G01 adds custom_completion field to PositionalArg/Flag - G04_ca0e961 GT tests must include the new field,0.95
+milestone_M02_parser,milestone_core_development.2,FUNC,Strong,cd.2 renames PipelineData variants (value->Value etc) - M02 GT tests use the new variant names,0.95
+milestone_G04_1ddae02,milestone_core_development.2,FUNC,Strong,cd.2 renames PipelineData variants (value->Value etc) - G04_1ddae02 GT tests use the new variant names,0.95

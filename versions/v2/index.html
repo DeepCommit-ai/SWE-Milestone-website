@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" type="image/png" href="/assets/evoclaw_icon.png">
+<title>SWE-Milestone</title>
+<meta name="description" content="Benchmarking coding agents on continuous software evolution.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* GitHub dark dimmed (soft dark) */
+    --bg: #0d1117;
+    --bg-soft: #232931;
+    --surface: #2d333b;
+    --surface-hover: #323942;
+    --border: #373e47;
+    --border-strong: #444c56;
+    --heading: #ecf2f8;
+    --text: #cdd9e5;
+    --muted: #98a5b3;
+    --faint: #768390;
+    --accent: #57ab5a;
+    --accent-soft: rgba(87, 171, 90, 0.14);
+    --accent-line: rgba(87, 171, 90, 0.6);
+    --graph-line: #444c56;
+    --sans: "Roboto", -apple-system, "Segoe UI", sans-serif;
+    --mono: "Roboto Mono", ui-monospace, "SF Mono", monospace;
+    --maxw: 1120px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; background: var(--bg); color-scheme: dark; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); color: var(--heading); }
+
+  a { color: inherit; text-decoration: none; }
+  h1, h2 { color: var(--heading); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- shared chrome (header + footer) — injected by build.py ---------- */
+  /* Shared site chrome — header + footer. Injected into every page by build.py.
+   Referenced design tokens (var(--…)) are defined in each page's :root. */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(1, 4, 9, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav {
+  max-width: var(--maxw); margin: 0 auto; padding: 0 28px;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: "Space Grotesk", var(--sans); font-size: 15px; font-weight: 700;
+  color: var(--heading); letter-spacing: -0.01em;
+}
+.brand svg { display: block; }
+.brand-logo { width: 22px; height: 22px; border-radius: 5px; display: block; flex: none; transform: translateY(-2px); }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a {
+  font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted);
+  transition: color 0.15s ease;
+}
+.nav-links a:hover { color: var(--heading); }
+.nav-links a.gh {
+  color: var(--heading); border: 1px solid var(--border-strong);
+  padding: 5px 12px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.nav-links a.gh:hover { background: var(--surface); }
+footer { padding: 44px 0 56px; }
+.foot {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 12px; color: var(--faint);
+}
+.foot a { color: var(--muted); transition: color .15s; }
+.foot a:hover { color: var(--heading); }
+.foot .team { display: inline-flex; align-items: center; gap: 8px; }
+.foot .team i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
+@media (max-width: 720px) { .nav-links a:not(.gh) { display: none; } }
+
+  /* ---------- hero typography (DO NOT REMOVE with hero-bg edits) ---------- */
+  .hero h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(38px, 5.4vw, 62px);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.04;
+    margin: 0; white-space: nowrap;
+  }
+  /* logo + title lockup (logo sits to the left of the wordmark) */
+  /* logo + title/subtitle side lockup: logo left, title over tagline right */
+  .hero-lockup { display: inline-flex; align-items: center; gap: 24px; text-align: left; margin-bottom: 12px; }
+  .hero-logo { width: 130px; height: auto; display: block; }
+  .hero-logo-tile { flex: none; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.04); }
+  .hero-text { }
+  .hero-text .tagline { margin: 12px 0 0; max-width: 500px; }
+  @media (max-width: 620px) { .hero-lockup { flex-direction: column; text-align: center; gap: 12px; } .hero-logo { width: 96px; } .hero h1 { white-space: normal; } .hero-text .tagline { text-align: center; } }
+  .hero .tagline {
+    font-size: 17px; font-weight: 500; color: var(--muted); max-width: 540px;
+    margin: 0 auto; line-height: 1.65;
+  }
+  .hero .tagline .tag-hl { color: var(--heading); font-weight: 600; }
+  .hero .byline {
+    margin-top: 14px;
+    font-family: var(--mono); font-size: 12.5px; color: var(--faint);
+  }
+  .hero .byline a { color: var(--muted); border-bottom: 1px solid var(--border-strong); transition: color .15s; }
+  .hero .byline a:hover { color: var(--heading); }
+  .links-row {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin-top: 40px;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    color: var(--heading);
+    border: 1px solid var(--border-strong);
+    background: rgba(26, 31, 38, 0.6);
+    padding: 8px 18px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .pill .arrow { color: var(--faint); font-size: 12px; transition: color .15s, transform .15s; }
+  .pill:hover { border-color: var(--muted); background: var(--surface-hover); }
+  .pill:hover .arrow { color: var(--accent); transform: translate(1px, -1px); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative;
+    padding: 118px 0 100px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  .hero-inner { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
+
+  /* ---------- sections ---------- */
+  section { padding: 88px 0; border-bottom: 1px solid var(--border); }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 40px; }
+  .sec-head h2 { font-size: 25px; font-weight: 700; letter-spacing: -0.015em; }
+  .sec-sub {
+    margin-top: -28px; margin-bottom: 40px;
+    color: var(--muted); font-size: 14.5px;
+  }
+
+  /* ---------- pareto ---------- */
+  .chart-card {
+    border: 1px solid var(--border-strong);
+    background: var(--bg-soft);
+    padding: 28px 28px 20px;
+  }
+  .chart-card svg { display: block; width: 100%; height: auto; }
+  .chart-note {
+    margin-top: 14px;
+    font-family: var(--mono); font-size: 11.5px; color: var(--faint);
+    display: flex; gap: 22px; flex-wrap: wrap;
+  }
+  .chart-note .key { display: inline-flex; align-items: center; gap: 7px; }
+  .key i { display: inline-block; width: 14px; height: 0; border-top: 2px solid var(--accent-line); }
+  .key b { display: inline-block; width: 7px; height: 7px; background: var(--muted); }
+
+  /* ---------- pareto (interactive ECharts) ---------- */
+  .pareto-card { padding: 0; background: #1a1f26; }
+  .pareto-controls {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--border);
+  }
+  .pc-group { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pc-btn {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    color: var(--muted); background: transparent;
+    border: 1px solid var(--border); padding: 4px 10px; cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .pc-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .pc-btn.active { color: var(--heading); border-color: var(--accent); background: var(--accent-soft); }
+  .pc-div { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
+  .pareto-body { display: flex; }
+  .pareto-chart { flex: 1; min-width: 0; height: 544px; }
+  .pareto-side {
+    width: 240px; flex: none; border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; max-height: 544px;
+  }
+  .ps-head { padding: 13px 16px 9px; }
+  .ps-head h3 { font-size: 14px; font-weight: 700; color: var(--heading); }
+  .ps-legend {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px;
+    font-family: var(--mono); font-size: 10px; color: var(--faint);
+  }
+  .ps-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .ps-legend .dot { width: 8px; height: 8px; display: inline-block; }
+  .ps-legend .dot.strict { background: var(--accent); border: 2px solid var(--accent); }
+  .ps-legend .dot.near { background: transparent; border: 2px solid #c69026; }
+  .ps-list { flex: 1; overflow-y: auto; padding: 0 12px 12px; }
+  .ps-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 4px; border-bottom: 1px solid var(--border); cursor: pointer;
+    transition: background .12s;
+  }
+  .ps-row:last-child { border-bottom: none; }
+  .ps-row:hover { background: rgba(177, 186, 196, 0.05); }
+  .ps-row .tier { width: 8px; height: 8px; flex: none; }
+  .ps-logo {
+    width: 24px; height: 24px; flex: none; border: 1.5px solid;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .ps-logo img { width: 16px; height: 16px; object-fit: contain; }
+  .ps-logo span { font-family: var(--mono); font-size: 12px; font-weight: 700; }
+  .ps-name { flex: 1; min-width: 0; }
+  .ps-name .n { display: block; font-size: 12px; font-weight: 500; color: var(--heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ps-name .s { display: block; font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 1px; }
+  .ps-metric { text-align: right; flex: none; min-width: 52px; }
+  .ps-metric .v { display: block; font-size: 13px; font-weight: 700; color: var(--heading); }
+  .ps-metric .x { display: block; font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 1px; }
+
+  /* ---------- leaderboard ---------- */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--faint); text-align: left;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  #lb-table th.ctr, #lb-table td.ctr { text-align: center; }
+  tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    vertical-align: middle;
+  }
+  tbody tr { transition: background 0.12s ease; }
+  tbody tr:hover { background: rgba(177, 186, 196, 0.06); }
+  td.rank { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--faint); }
+  tr.top td.rank { color: var(--accent); font-weight: 700; }
+  .rank-medal { font-size: 18px; line-height: 1; }
+  td.model .m-name { font-weight: 700; font-size: 15px; color: var(--heading); letter-spacing: -0.01em; }
+  td.model .m-scaffold {
+    display: block; font-family: var(--mono); font-size: 11.5px;
+    color: var(--faint); margin-top: 3px;
+  }
+  /* values — v1-style: sans, larger, bolder, tabular figures for alignment */
+  td.num { font-size: 15px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+  /* hero metrics (Score + Resolve): grouped band + larger/bolder to anchor the eye */
+  th.keycol, td.keycol { background: rgba(177, 186, 196, 0.05); }
+  tbody tr:hover td.keycol { background: rgba(177, 186, 196, 0.10); }
+  /* key metrics get the band (below) + brighter ink only — same size/weight as
+     every other value so the whole table reads uniform. */
+  td.num.keycol { color: var(--heading); }
+  /* per-column top-3 (directional best): distinguished by green ink alone
+     (1st strongest → 3rd lightest), NOT by weight, to keep values even. */
+  td.num.t1 { color: #57ab5a; }
+  td.num.t2 { color: #83c586; }
+  td.num.t3 { color: #b3ddb5; }
+  /* magnitude bar under the key metrics (Score / Resolve) */
+  .bar { display: block; width: 72px; height: 3px; margin: 7px auto 0; background: var(--border); position: relative; overflow: hidden; }
+  .bar i { position: absolute; inset: 0; right: auto; background: var(--accent); opacity: 0.85; }
+  .lb-foot {
+    margin-top: 18px;
+    font-family: var(--mono); font-size: 11.5px; color: var(--faint);
+  }
+  /* sortable headers + data-driven rows */
+  thead th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+  thead th.sortable:hover { color: var(--muted); }
+  thead th.active { color: var(--text); }
+  thead th.ctr { position: relative; }
+  /* Sort arrow: inline for the left-aligned Model header; absolutely positioned
+     (zero layout width) for centered headers so the label stays perfectly
+     centered whether or not the arrow is showing. */
+  thead th .sarrow { color: var(--accent); }
+  thead th .sarrow:not(:empty) { margin-left: 3px; }
+  thead th.ctr .sarrow { position: absolute; top: 50%; right: 3px; transform: translateY(-50%); margin: 0; }
+  td.model .m-logo { width: 17px; height: 17px; object-fit: contain; margin-right: 9px; vertical-align: -3px; }
+  td.model .m-dot { display: inline-block; width: 8px; height: 8px; margin-right: 9px; vertical-align: baseline; }
+  /* column sizing: give Model room so names stay on one line, tighten numerics */
+  #lb-table { table-layout: fixed; }
+  #lb-table th:first-child, #lb-table td.rank { width: 44px; }
+  #lb-table th:nth-child(2), #lb-table td.model { width: 236px; }
+  #lb-table th.num, #lb-table td.num { padding-left: 6px; padding-right: 6px; }
+  /* leaderboard notes / caveats */
+  .lb-notes { margin-top: 22px; border-top: 1px solid var(--border); padding-top: 18px; }
+  .lb-notes .n-title {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint);
+    margin-bottom: 10px;
+  }
+  .lb-notes ul { list-style: none; margin: 0 0 12px; padding: 0; }
+  .lb-notes li {
+    position: relative; padding-left: 16px; margin-bottom: 7px;
+    font-size: 13px; line-height: 1.6; color: var(--muted);
+  }
+  .lb-notes li::before { content: "•"; position: absolute; left: 0; color: var(--faint); }
+  .lb-notes li b { color: var(--text); font-weight: 600; }
+  .lb-notes .n-foot { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin: 0; }
+  /* expand / collapse button */
+  .lb-expand { text-align: center; margin-top: 20px; }
+  #lb-toggle {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    color: var(--muted); background: transparent;
+    border: 1px solid var(--border-strong); padding: 8px 20px; cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  #lb-toggle:hover { color: var(--heading); border-color: var(--muted); background: var(--surface); }
+  /* header hover tooltip (ported from v1 leaderboard, same copy) */
+  .tip-popup {
+    position: fixed; transform: translate(-50%, -100%);
+    background: var(--surface); color: var(--heading);
+    border: 1px solid var(--border-strong); padding: 8px 13px;
+    font-family: var(--sans); font-size: 12.5px; font-weight: 400; line-height: 1.5;
+    max-width: 280px; white-space: normal; text-align: left;
+    letter-spacing: 0; text-transform: none;
+    pointer-events: none; z-index: 9999; opacity: 0; transition: opacity .12s;
+    box-shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+  }
+  .tip-popup.show { opacity: 1; }
+
+  /* ---------- about ---------- */
+  .about-prose p { color: #c9d1d9; margin-bottom: 20px; font-size: 16.5px; line-height: 1.72; }
+  .about-prose p strong { color: var(--heading); font-weight: 700; }
+  .about-prose p code {
+    font-family: var(--mono); font-size: 12.5px;
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 1.5px 6px; color: var(--heading);
+  }
+
+  /* ---------- about ---------- */
+  /* QA accordion */
+  .qa summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 13px 4px;
+    font-size: 16.5px; font-weight: 600; color: var(--heading);
+    transition: color .15s;
+  }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary .q-ico {
+    flex: none; font-family: var(--mono); font-size: 16px; font-weight: 400;
+    color: var(--faint); transition: color .15s;
+  }
+  .qa summary:hover .q-ico { color: var(--accent); }
+  .qa details[open] summary { color: var(--accent); }
+  .qa details[open] .q-ico::before { content: "−"; }
+  .qa details:not([open]) .q-ico::before { content: "+"; }
+  .qa .a { padding: 2px 4px 16px; color: var(--text); font-size: 15.5px; line-height: 1.72; }
+  .qa .a code {
+    font-family: var(--mono); font-size: 12.5px;
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 1.5px 6px; color: var(--heading);
+  }
+
+  /* ---------- tasks ---------- */
+  .task-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .task-card {
+    position: relative; display: block;
+    border: 1px solid var(--border);
+    background: #1a1f26;
+    padding: 22px 24px 20px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  a.task-card:hover { border-color: var(--border-strong); background: var(--surface); }
+  .tc-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; margin-bottom: 12px;
+  }
+  .t-repo {
+    display: inline-flex; align-items: center; gap: 9px; min-width: 0;
+    font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--heading);
+  }
+  .t-repo .gh-mark { flex: none; fill: var(--muted); }
+  .t-repo .org { color: var(--faint); font-weight: 400; }
+  .tc-top .right { flex: none; display: inline-flex; align-items: center; gap: 14px; }
+  .star {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted);
+  }
+  .star .oct { fill: #bf9f56; }
+  .star b { color: var(--text); font-weight: 700; }
+  .t-lang {
+    flex: none; display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+  }
+  .t-lang i { width: 8px; height: 8px; display: inline-block; }
+  .rr { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+  .rr .tc-range + .chip { margin-left: 8px; }
+  .tc-range { flex: none; font-family: var(--mono); font-size: 16px; font-weight: 500; color: var(--text); }
+  .tc-range .to { color: var(--faint); padding: 0 8px; }
+  .chip {
+    flex: none; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 1.5px 8px;
+    border: 1px solid var(--border-strong);
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    line-height: 1.6;
+  }
+  .chip .oct { fill: currentColor; display: block; }
+  .chip b { color: var(--heading); font-weight: 700; }
+  .tc-summary {
+    margin-top: 10px;
+    font-size: 13px; color: var(--muted); line-height: 1.55;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tc-stats { margin-top: 12px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+  .tc-stats b { color: var(--text); font-weight: 700; }
+  .tc-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; flex-wrap: wrap;
+    margin-top: 16px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .ms-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 1.5px 8px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--muted); line-height: 1.6;
+  }
+  .ms-badge svg { display: block; }
+  .tc-diff {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+  }
+  .tc-diff .add { color: #4f8757; }
+  .tc-diff .del { color: #b3554e; }
+  .diffstat { display: inline-flex; gap: 3px; }
+  .diffstat i { width: 8px; height: 8px; display: inline-block; background: var(--border-strong); }
+  .diffstat i.g { background: #4f8757; }
+  .diffstat i.r { background: #b3554e; }
+
+  .lang-py { background: #3572A5; } .lang-rs { background: #dea584; }
+  .lang-java { background: #b07219; }
+  .lang-go { background: #00ADD8; } .lang-ts { background: #3178c6; }
+  .lang-c  { background: #767d86; }
+
+  /* ---------- citation ---------- */
+  .cite-card {
+    position: relative;
+    border: 1px solid var(--border-strong);
+    background: #1a1f26;
+  }
+  .copy-btn {
+    position: absolute; top: 14px; right: 14px;
+    font-family: var(--mono); font-size: 11.5px;
+    color: var(--muted); background: var(--surface);
+    border: 1px solid var(--border-strong);
+    padding: 6px 12px; cursor: pointer;
+    transition: color .15s, border-color .15s;
+  }
+  .copy-btn:hover { color: var(--heading); border-color: var(--muted); }
+
+  /* ---------- citation ---------- */
+  .bib { font-family: var(--mono); font-size: 12.5px; line-height: 1.8; color: var(--muted); }
+  .bib .f { color: var(--text); }
+  .bib .k { color: var(--accent); }
+  .cite-card pre { padding: 26px 28px; overflow-x: auto; }
+
+  /* footer CSS lives in shared chrome (see /* Shared site chrome — header + footer. Injected into every page by build.py.
+   Referenced design tokens (var(--…)) are defined in each page's :root. */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(1, 4, 9, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav {
+  max-width: var(--maxw); margin: 0 auto; padding: 0 28px;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: "Space Grotesk", var(--sans); font-size: 15px; font-weight: 700;
+  color: var(--heading); letter-spacing: -0.01em;
+}
+.brand svg { display: block; }
+.brand-logo { width: 22px; height: 22px; border-radius: 5px; display: block; flex: none; transform: translateY(-2px); }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a {
+  font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted);
+  transition: color 0.15s ease;
+}
+.nav-links a:hover { color: var(--heading); }
+.nav-links a.gh {
+  color: var(--heading); border: 1px solid var(--border-strong);
+  padding: 5px 12px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.nav-links a.gh:hover { background: var(--surface); }
+footer { padding: 44px 0 56px; }
+.foot {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 12px; color: var(--faint);
+}
+.foot a { color: var(--muted); transition: color .15s; }
+.foot a:hover { color: var(--heading); }
+.foot .team { display: inline-flex; align-items: center; gap: 8px; }
+.foot .team i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
+@media (max-width: 720px) { .nav-links a:not(.gh) { display: none; } } above) */
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 720px) {
+    section { padding: 64px 0; }
+    .hero { padding: 84px 0 68px; }
+    .task-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="index.html">
+      <img class="brand-logo" src="/assets/evoclaw_icon.png" alt="">
+      SWE-Milestone
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#leaderboard">Leaderboard</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#tasks">Tasks</a>
+      <a href="index.html#citation">Citation</a>
+      <a class="gh" href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="hero-lockup">
+        <div class="hero-logo-tile"><img class="hero-logo" src="/assets/swe-milestone-logo2-once.gif" alt=""></div>
+        <div class="hero-text">
+          <h1>SWE-Milestone</h1>
+          <p class="tagline">Evaluating AI agents on continuous software evolution, structured as a <span class="tag-hl">milestone DAG</span>, across real release histories.</p>
+        </div>
+      </div>
+      <p class="byline" style="margin-top:0">By the <a href="#citation">SWE-Milestone Team</a></p>
+      <div class="links-row">
+        <a class="pill" href="#" target="_blank" rel="noopener">Paper <span class="arrow">↗</span></a>
+        <a class="pill" href="#" target="_blank" rel="noopener">GitHub <span class="arrow">↗</span></a>
+        <a class="pill" href="#" target="_blank" rel="noopener">Dataset <span class="arrow">↗</span></a>
+        <a class="pill" href="#" target="_blank" rel="noopener">Docker <span class="arrow">↗</span></a>
+        <a class="pill" href="#" target="_blank" rel="noopener">Trajectories <span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 01 PARETO ============ -->
+<section id="pareto">
+  <div class="wrap">
+    <div class="sec-head"><h2>Pareto frontier</h2></div>
+
+    <div class="chart-card pareto-card">
+      <div class="pareto-controls">
+        <div class="pc-group" id="pareto-y"></div>
+        <span class="pc-div"></span>
+        <div class="pc-group" id="pareto-x"></div>
+        <span class="pc-div"></span>
+        <button class="pc-btn" id="pareto-zoom" type="button" title="Toggle wheel-zoom / drag-pan">🔍 Zoom</button>
+      </div>
+      <div class="pareto-body">
+        <div class="pareto-chart" id="pareto-chart"></div>
+        <aside class="pareto-side">
+          <div class="ps-head">
+            <h3>Frontier Models</h3>
+            <div class="ps-legend">
+              <span><i class="dot strict"></i>on staircase</span>
+              <span><i class="dot near"></i>near (<span id="ps-tol">±2.0pp</span>)</span>
+            </div>
+          </div>
+          <div class="ps-list" id="pareto-side-list"></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 LEADERBOARD ============ -->
+<section id="leaderboard">
+  <div class="wrap">
+    <div class="sec-head"><h2>Leaderboard</h2></div>
+
+    <table class="lb" id="lb-table">
+      <thead><tr id="lb-head"></tr></thead>
+      <tbody id="lb-body"></tbody>
+    </table>
+    <div class="lb-expand"><button type="button" id="lb-toggle"></button></div>
+    <div class="lb-notes">
+      <p class="n-title">Notes</p>
+      <ul>
+        <li><b>Time</b> is wall-clock, so it varies with each agent's system prompt and with API response latency. Treat it as a rough indicator rather than an exact efficiency measure.</li>
+        <li>Unless otherwise noted, Claude Code runs use a 200K <b>context</b> window.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 ABOUT ============ -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head"><h2>About SWE-Milestone</h2></div>
+    <div class="about-prose"><p><strong>SWE-Milestone evaluates what isolated-patch benchmarks cannot: whether an agent can carry a codebase forward.</strong> Each task instance is a real open-source repository and a range of consecutive releases. We reconstruct the development history between those releases into an executable milestone DAG, where every milestone carries its own verifiable checks.</p></div>
+      <div class="qa">
+        <details open>
+          <summary>What does SWE-Milestone evaluate?<span class="q-ico"></span></summary>
+          <div class="a">End-to-end software evolution. Each task is a real repository and a range of consecutive releases; the agent must evolve the codebase through the full range in one continuous session, rather than solving isolated patches.</div>
+        </details>
+        <details>
+          <summary>How are task instances constructed?<span class="q-ico"></span></summary>
+          <div class="a">We reconstruct the development history between two releases into an executable milestone DAG. Each milestone corresponds to a coherent unit of development and carries its own verifiable checks, derived automatically from the repository's commit history.</div>
+        </details>
+        <details>
+          <summary>How is a milestone scored?<span class="q-ico"></span></summary>
+          <div class="a">A milestone is resolved when its fail-to-pass tests (<code>F2P</code>) pass while previously-passing tests (<code>P2P</code>) are preserved — a precision–recall structure that penalizes both under-building and regressions.</div>
+        </details>
+        <details>
+          <summary>How is this different from isolated-patch benchmarks?<span class="q-ico"></span></summary>
+          <div class="a">There is no reset between milestones. Earlier mistakes, context pollution and drifting instructions compound across the run, exactly as they do in real long-horizon engineering — which is precisely the failure mode isolated-patch settings cannot observe.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 TASKS ============ -->
+<section id="tasks">
+  <div class="wrap">
+    <div class="sec-head"><h2>Tasks</h2></div>
+    <p class="sec-sub">Each task is one repository over a chosen release range, reconstructed into a milestone DAG where every milestone carries its own tests. The agent works through the whole DAG in a single continuous run, implementing one milestone at a time; a milestone only unlocks once the milestones it depends on are complete.</p>
+
+    <div class="task-grid">
+    <a class="task-card" href="task.html?task=go-zero">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">zeromicro/</span>go-zero</span>
+        <span class="right">
+          <span class="star" data-star="zeromicro/go-zero"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-go"></i>Go</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">v1.6.0<span class="to">→</span>v1.9.3</span>
+        <span class="chip"><b>49</b> releases</span>
+        <span class="chip"><b>466</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>110K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>1,021</b> files</p>
+      <p class="tc-summary">Advances the goctl code generator and API/proto tooling, adds runtime features, and lands broad bug fixes and dependency upgrades.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+4,462</span><span class="del">&minus;1,941</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>23 Milestones</span>
+      </div>
+    </a>
+    <a class="task-card" href="task.html?task=element-web">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">element-hq/</span>element-web</span>
+        <span class="right">
+          <span class="star" data-star="element-hq/element-web"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-ts"></i>TypeScript</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">v1.11.95<span class="to">→</span>v1.11.97</span>
+        <span class="chip"><b>4</b> releases</span>
+        <span class="chip"><b>75</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>476K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>2,430</b> files</p>
+      <p class="tc-summary">Introduces the new room list with its view-model, store and filtering, improves group-call error handling and accessibility, and fixes assorted UI issues.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+4,999</span><span class="del">&minus;2,648</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>18 Milestones</span>
+      </div>
+    </a>
+    <a class="task-card" href="task.html?task=nushell">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">nushell/</span>nushell</span>
+        <span class="right">
+          <span class="star" data-star="nushell/nushell"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-rs"></i>Rust</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">0.106.0<span class="to">→</span>0.108.0</span>
+        <span class="chip"><b>2</b> releases</span>
+        <span class="chip"><b>199</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>264K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>1,727</b> files</p>
+      <p class="tc-summary">Refines the parser and custom completions, adds shell features such as debounced file watching, and fixes many panics and regressions.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+9,717</span><span class="del">&minus;5,803</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>13 Milestones</span>
+      </div>
+    </a>
+    <a class="task-card" href="task.html?task=dubbo">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">apache/</span>dubbo</span>
+        <span class="right">
+          <span class="star" data-star="apache/dubbo"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-java"></i>Java</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">3.3.3<span class="to">→</span>3.3.6</span>
+        <span class="chip"><b>3</b> releases</span>
+        <span class="chip"><b>134</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>350K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>4,279</b> files</p>
+      <p class="tc-summary">Improves server-streaming RPC and configuration handling, removes deprecated test modules, and lands a large batch of bug fixes and dependency upgrades.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+3,429</span><span class="del">&minus;725</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>12 Milestones</span>
+      </div>
+    </a>
+    <a class="task-card" href="task.html?task=scikit-learn">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">scikit-learn/</span>scikit-learn</span>
+        <span class="right">
+          <span class="star" data-star="scikit-learn/scikit-learn"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-py"></i>Python</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">1.5.2<span class="to">→</span>1.6.0</span>
+        <span class="chip"><b>2</b> releases</span>
+        <span class="chip"><b>311</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>280K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>1,314</b> files</p>
+      <p class="tc-summary">Expands Array API support and metadata routing across estimators and metrics, fixes sparse-array validation, and brings extensive documentation and test improvements.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+4,572</span><span class="del">&minus;2,800</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>12 Milestones</span>
+      </div>
+    </a>
+    <a class="task-card" href="task.html?task=ripgrep">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">BurntSushi/</span>ripgrep</span>
+        <span class="right">
+          <span class="star" data-star="BurntSushi/ripgrep"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-rs"></i>Rust</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">14.1.1<span class="to">→</span>15.0.0</span>
+        <span class="chip"><b>1</b> release</span>
+        <span class="chip"><b>95</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>48K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>159</b> files</p>
+      <p class="tc-summary">Adds file-type detection for many new languages, extends and hardens the glob engine, refines replace and JSON output, and migrates to the Rust 2024 edition.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+1,080</span><span class="del">&minus;394</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>11 Milestones</span>
+      </div>
+    </a>
+    <a class="task-card" href="task.html?task=navidrome">
+      <div class="tc-top">
+        <span class="t-repo"><svg class="gh-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="org">navidrome/</span>navidrome</span>
+        <span class="right">
+          <span class="star" data-star="navidrome/navidrome"><svg class="oct" width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><b>&middot;&middot;&middot;</b></span>
+          <span class="t-lang"><i class="lang-go"></i>Go</span>
+        </span>
+      </div>
+      <div class="rr">
+        <span class="tc-range">v0.57.0<span class="to">→</span>v0.58.0</span>
+        <span class="chip"><b>1</b> release</span>
+        <span class="chip"><b>35</b> commits</span>
+      </div>
+      <p class="tc-stats"><b>144K</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>1,110</b> files</p>
+      <p class="tc-summary">Hardens the plugin system with metrics and error handling, fixes the scanner's cover-art and lyrics parsing, and addresses several UI and Subsonic issues.</p>
+      <div class="tc-foot">
+        <span class="tc-diff"><span class="add">+4,695</span><span class="del">&minus;1,205</span><span class="diffstat"><i class="g"></i><i class="g"></i><i class="g"></i><i class="g"></i><i class="r"></i></span></span>
+        <span class="ms-badge"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="4" width="4" height="4" fill="currentColor"/></svg>9 Milestones</span>
+      </div>
+    </a>
+        </div>
+  </div>
+</section>
+
+<!-- ============ 05 CITATION ============ -->
+<section id="citation" style="border-bottom:none">
+  <div class="wrap">
+    <div class="sec-head"><h2>Citation</h2></div>
+    <div class="cite-card">
+      <button class="copy-btn js-copy">copy</button>
+      <pre class="bib js-bib">@article<span class="f">{swemilestone2026,</span>
+  <span class="k">title</span>   = <span class="f">{SWE-Milestone: Benchmarking Coding Agents on Continuous Software Evolution}</span>,
+  <span class="k">author</span>  = <span class="f">{SWE-Milestone Team}</span>,
+  <span class="k">journal</span> = <span class="f">{arXiv preprint arXiv:2606.00000}</span>,
+  <span class="k">year</span>    = <span class="f">{2026}</span>
+<span class="f">}</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot" style="border-top:1px solid var(--border);padding-top:32px">
+    <span class="team"><i></i>© 2026 SWE-Milestone Team</span>
+    <span>
+      <a href="index.html#leaderboard">Leaderboard</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+      <a href="index.html#tasks">Tasks</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.js-copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const pre = btn.closest('.cite-card').querySelector('.js-bib');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'copied ✓';
+        setTimeout(() => { btn.textContent = 'copy'; }, 1600);
+      });
+    });
+  });
+</script>
+
+<!-- ECharts (vendored 5.6.0) + build-time injected leaderboard / Pareto data -->
+<script src="/assets/echarts.min.js"></script>
+<script>window.SITE_DATA={"records":[{"agent":"claude-code","agent_display":"Claude Code","model":"claude-opus-4-8","model_display":"Claude Opus 4.8 max 1M","org":"Anthropic","score":50.72,"precision":48.17,"recall":67.23,"resolve":20.52,"cost":138.56,"out_tok_k":642,"time_h":7.28,"turns":1791,"is_official":true,"rank":1,"color":"#F5D5C4","logo_key":"anthropic","label":"Opus 4.8 max 1M","id":"claude-code__claude-opus-4-8"},{"agent":"claude-code","agent_display":"Claude Code","model":"glm-5.2","model_display":"GLM-5.2","org":"Z.ai","score":40.14,"precision":40.6,"recall":59.2,"resolve":20.62,"cost":25.12,"out_tok_k":784,"time_h":10.41,"turns":1941,"is_official":true,"rank":2,"color":"#D4D6DD","logo_key":"zai","label":"GLM-5.2","id":"claude-code__glm-5.2"},{"agent":"claude-code","agent_display":"Claude Code","model":"claude-opus-4-7","model_display":"Claude Opus 4.7 xhigh","org":"Anthropic","score":39.81,"precision":36.76,"recall":61.82,"resolve":15.2,"cost":81.33,"out_tok_k":464,"time_h":2.96,"turns":1244,"is_official":true,"rank":3,"color":"#E8A08C","logo_key":"anthropic","label":"Opus 4.7 xhigh","id":"claude-code__claude-opus-4-7"},{"agent":"openhands","agent_display":"OpenHands","model":"claude-opus-4-6","model_display":"Claude Opus 4.6","org":"Anthropic","score":38.03,"precision":37.33,"recall":55.21,"resolve":9.08,"cost":75.73,"out_tok_k":524,"time_h":15.62,"turns":1970,"is_official":false,"rank":4,"color":"#C96B50","logo_key":"anthropic","label":"Opus 4.6","id":"openhands__claude-opus-4-6"},{"agent":"codex","agent_display":"Codex CLI","model":"gpt-5.5","model_display":"GPT 5.5 xhigh","org":"OpenAI","score":37.77,"precision":35.47,"recall":63.52,"resolve":16.43,"cost":111.96,"out_tok_k":442,"time_h":1.63,"turns":1097,"is_official":true,"rank":5,"color":"#C8E6C8","logo_key":"openai","label":"GPT 5.5 xhigh","id":"codex__gpt-5.5"},{"agent":"claude-code","agent_display":"Claude Code","model":"claude-opus-4-7[1m]","model_display":"Claude Opus 4.7 xhigh 1M","org":"Anthropic","score":37.4,"precision":35.56,"recall":52.99,"resolve":18.76,"cost":125.13,"out_tok_k":212,"time_h":1.51,"turns":632,"is_official":true,"rank":6,"color":"#8B3A1F","logo_key":"anthropic","label":"Opus 4.7 xhigh 1M","id":"claude-code__claude-opus-4-7[1m]"},{"agent":"claude-code","agent_display":"Claude Code","model":"claude-opus-4-6","model_display":"Claude Opus 4.6","org":"Anthropic","score":36.29,"precision":37.84,"recall":56.32,"resolve":11.57,"cost":88.22,"out_tok_k":578,"time_h":2.73,"turns":1914,"is_official":true,"rank":7,"color":"#F5D5C4","logo_key":"anthropic","label":"Opus 4.6","id":"claude-code__claude-opus-4-6"},{"agent":"claude-code","agent_display":"Claude Code","model":"kimi-k2.6","model_display":"Kimi K2.6","org":"Moonshot AI","score":34.69,"precision":32.16,"recall":54.78,"resolve":9.96,"cost":49.7,"out_tok_k":690,"time_h":8.93,"turns":2597,"is_official":true,"rank":8,"color":"#D8DBE2","logo_key":"moonshot","label":"Kimi K2.6","id":"claude-code__kimi-k2.6"},{"agent":"claude-code","agent_display":"Claude Code","model":"glm-5.2-1m","model_display":"GLM-5.2 1M","org":"Z.ai","score":33.96,"precision":36.8,"recall":49.16,"resolve":15.46,"cost":69.0,"out_tok_k":366,"time_h":4.91,"turns":854,"is_official":true,"rank":9,"color":"#9FA3B0","logo_key":"zai","label":"GLM-5.2 1M","id":"claude-code__glm-5.2-1m"},{"agent":"codex","agent_display":"Codex CLI","model":"gpt-5.4","model_display":"GPT 5.4 xhigh","org":"OpenAI","score":33.71,"precision":31.0,"recall":59.36,"resolve":16.26,"cost":55.11,"out_tok_k":952,"time_h":3.31,"turns":996,"is_official":true,"rank":10,"color":"#82B882","logo_key":"openai","label":"GPT 5.4 xhigh","id":"codex__gpt-5.4"},{"agent":"gemini-cli","agent_display":"Gemini CLI","model":"gemini-3.5-flash","model_display":"Gemini 3.5 Flash","org":"Google","score":32.66,"precision":31.64,"recall":51.82,"resolve":11.52,"cost":112.54,"out_tok_k":535,"time_h":2.35,"turns":1342,"is_official":true,"rank":11,"color":"#B8D4EC","logo_key":"google","label":"Gemini 3.5 Flash","id":"gemini-cli__gemini-3.5-flash"},{"agent":"claude-code","agent_display":"Claude Code","model":"claude-sonnet-4-6","model_display":"Claude Sonnet 4.6","org":"Anthropic","score":29.58,"precision":29.62,"recall":47.63,"resolve":5.88,"cost":68.88,"out_tok_k":852,"time_h":4.41,"turns":1559,"is_official":true,"rank":12,"color":"#E8A08C","logo_key":"anthropic","label":"Sonnet 4.6","id":"claude-code__claude-sonnet-4-6"},{"agent":"codex","agent_display":"Codex CLI","model":"gpt-5.3-codex","model_display":"GPT 5.3 Codex xhigh","org":"OpenAI","score":28.88,"precision":27.81,"recall":49.7,"resolve":10.2,"cost":25.01,"out_tok_k":392,"time_h":8.23,"turns":1122,"is_official":true,"rank":13,"color":"#4A7A4A","logo_key":"openai","label":"GPT 5.3 Codex xhigh","id":"codex__gpt-5.3-codex"},{"agent":"claude-code","agent_display":"Claude Code","model":"glm-5.1","model_display":"GLM-5.1","org":"Z.ai","score":28.77,"precision":30.76,"recall":42.69,"resolve":16.15,"cost":39.42,"out_tok_k":364,"time_h":7.76,"turns":1348,"is_official":true,"rank":14,"color":"#6E7280","logo_key":"zai","label":"GLM-5.1","id":"claude-code__glm-5.1"},{"agent":"openhands","agent_display":"OpenHands","model":"gpt-5.3-codex","model_display":"GPT 5.3 Codex xhigh","org":"OpenAI","score":26.47,"precision":25.01,"recall":37.32,"resolve":12.5,"cost":30.13,"out_tok_k":553,"time_h":19.61,"turns":1047,"is_official":false,"rank":15,"color":"#C8E6C8","logo_key":"openai","label":"GPT 5.3 Codex xhigh","id":"openhands__gpt-5.3-codex"},{"agent":"claude-code","agent_display":"Claude Code","model":"claude-opus-4-5-20251101","model_display":"Claude Opus 4.5","org":"Anthropic","score":25.85,"precision":28.04,"recall":40.8,"resolve":6.28,"cost":71.1,"out_tok_k":309,"time_h":2.35,"turns":1023,"is_official":true,"rank":16,"color":"#C96B50","logo_key":"anthropic","label":"Opus 4.5","id":"claude-code__claude-opus-4-5-20251101"},{"agent":"claude-code","agent_display":"Claude Code","model":"deepseek-v4-pro","model_display":"DeepSeek V4 Pro","org":"DeepSeek","score":24.81,"precision":25.89,"recall":43.58,"resolve":12.79,"cost":2.08,"out_tok_k":564,"time_h":8.88,"turns":1070,"is_official":true,"rank":17,"color":"#4D6BFE","logo_key":"deepseek","label":"DeepSeek V4 Pro","id":"claude-code__deepseek-v4-pro"},{"agent":"gemini-cli","agent_display":"Gemini CLI","model":"gemini-3-pro","model_display":"Gemini 3 Pro","org":"Google","score":24.25,"precision":25.46,"recall":32.7,"resolve":13.37,"cost":114.96,"out_tok_k":294,"time_h":3.65,"turns":733,"is_official":true,"rank":18,"color":"#6A9ECF","logo_key":"google","label":"Gemini 3 Pro","id":"gemini-cli__gemini-3-pro"},{"agent":"gemini-cli","agent_display":"Gemini CLI","model":"gemini-3-flash","model_display":"Gemini 3 Flash","org":"Google","score":24.22,"precision":24.31,"recall":42.12,"resolve":8.99,"cost":12.1,"out_tok_k":255,"time_h":5.02,"turns":1541,"is_official":true,"rank":19,"color":"#3A6B9F","logo_key":"google","label":"Gemini 3 Flash","id":"gemini-cli__gemini-3-flash"},{"agent":"gemini-cli","agent_display":"Gemini CLI","model":"gemini-3.1-pro","model_display":"Gemini 3.1 Pro","org":"Google","score":23.32,"precision":21.59,"recall":37.22,"resolve":10.95,"cost":62.97,"out_tok_k":207,"time_h":3.89,"turns":1248,"is_official":true,"rank":20,"color":"#B8D4EC","logo_key":"google","label":"Gemini 3.1 Pro","id":"gemini-cli__gemini-3.1-pro"},{"agent":"codex","agent_display":"Codex CLI","model":"gpt-5.2","model_display":"GPT 5.2 xhigh","org":"OpenAI","score":23.3,"precision":20.89,"recall":45.76,"resolve":8.18,"cost":56.9,"out_tok_k":814,"time_h":5.35,"turns":1729,"is_official":true,"rank":21,"color":"#82B882","logo_key":"openai","label":"GPT 5.2 xhigh","id":"codex__gpt-5.2"},{"agent":"openhands","agent_display":"OpenHands","model":"kimi-k2.6","model_display":"Kimi K2.6","org":"Moonshot AI","score":23.26,"precision":28.42,"recall":35.35,"resolve":6.73,"cost":79.57,"out_tok_k":3963,"time_h":21.01,"turns":6435,"is_official":false,"rank":22,"color":"#A8ACB7","logo_key":"moonshot","label":"Kimi K2.6","id":"openhands__kimi-k2.6"},{"agent":"claude-code","agent_display":"Claude Code","model":"glm-5","model_display":"GLM-5","org":"Z.ai","score":23.13,"precision":29.39,"recall":31.92,"resolve":10.03,"cost":13.97,"out_tok_k":147,"time_h":2.41,"turns":646,"is_official":true,"rank":23,"color":"#484C58","logo_key":"zai","label":"GLM-5","id":"claude-code__glm-5"},{"agent":"openhands","agent_display":"OpenHands","model":"gemini-3-flash","model_display":"Gemini 3 Flash","org":"Google","score":22.32,"precision":25.2,"recall":37.13,"resolve":6.59,"cost":16.9,"out_tok_k":1516,"time_h":23.59,"turns":2632,"is_official":false,"rank":24,"color":"#6A9ECF","logo_key":"google","label":"Gemini 3 Flash","id":"openhands__gemini-3-flash"},{"agent":"claude-code","agent_display":"Claude Code","model":"qwen3.6-27b","model_display":"Qwen3.6 27B","org":"Qwen","score":21.95,"precision":25.55,"recall":37.14,"resolve":4.87,"cost":35.09,"out_tok_k":569,"time_h":10.93,"turns":1371,"is_official":true,"rank":25,"color":"#615CED","logo_key":"qwen","label":"Qwen3.6 27B","id":"claude-code__qwen3.6-27b"},{"agent":"openhands","agent_display":"OpenHands","model":"glm-5","model_display":"GLM-5","org":"Z.ai","score":20.57,"precision":23.42,"recall":34.01,"resolve":3.68,"cost":29.82,"out_tok_k":755,"time_h":8.0,"turns":2500,"is_official":false,"rank":26,"color":"#D4D6DD","logo_key":"zai","label":"GLM-5","id":"openhands__glm-5"},{"agent":"openhands","agent_display":"OpenHands","model":"kimi-k2.5","model_display":"Kimi K2.5","org":"Moonshot AI","score":20.2,"precision":26.29,"recall":31.37,"resolve":8.49,"cost":4.32,"out_tok_k":279,"time_h":21.29,"turns":800,"is_official":true,"rank":27,"color":"#7B7F8D","logo_key":"moonshot","label":"Kimi K2.5","id":"openhands__kimi-k2.5"},{"agent":"openhands","agent_display":"OpenHands","model":"minimax-m2.5","model_display":"MiniMax M2.5","org":"MiniMax","score":17.6,"precision":22.48,"recall":34.6,"resolve":1.3,"cost":3.57,"out_tok_k":598,"time_h":12.13,"turns":1846,"is_official":true,"rank":28,"color":"#B392F0","logo_key":"minimax","label":"MiniMax M2.5","id":"openhands__minimax-m2.5"},{"agent":"claude-code","agent_display":"Claude Code","model":"claude-sonnet-4-5-20250929","model_display":"Claude Sonnet 4.5","org":"Anthropic","score":15.16,"precision":18.88,"recall":28.5,"resolve":5.49,"cost":27.02,"out_tok_k":243,"time_h":2.06,"turns":876,"is_official":true,"rank":29,"color":"#8B3A1F","logo_key":"anthropic","label":"Sonnet 4.5","id":"claude-code__claude-sonnet-4-5-20250929"},{"agent":"codex","agent_display":"Codex CLI","model":"gpt-5.2-codex","model_display":"GPT 5.2 Codex xhigh","org":"OpenAI","score":13.46,"precision":12.65,"recall":26.65,"resolve":4.78,"cost":38.11,"out_tok_k":701,"time_h":3.56,"turns":1271,"is_official":true,"rank":30,"color":"#4A7A4A","logo_key":"openai","label":"GPT 5.2 Codex xhigh","id":"codex__gpt-5.2-codex"}],"logos":{"anthropic":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB2aWV3Qm94PSIwIC0uMDEgMzkuNSAzOS41MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtNy43NSAyNi4yNyA3Ljc3LTQuMzYuMTMtLjM4LS4xMy0uMjFoLS4zOGwtMS4zLS4wOC00LjQ0LS4xMi0zLjg1LS4xNi0zLjczLS4yLS45NC0uMi0uODgtMS4xNi4wOS0uNTguNzktLjUzIDEuMTMuMSAyLjUuMTcgMy43NS4yNiAyLjcyLjE2IDQuMDMuNDJoLjY0bC4wOS0uMjYtLjIyLS4xNi0uMTctLjE2LTMuODgtMi42My00LjItMi43OC0yLjItMS42LTEuMTktLjgxLS42LS43Ni0uMjYtMS42NiAxLjA4LTEuMTkgMS40NS4xLjM3LjEgMS40NyAxLjEzIDMuMTQgMi40MyA0LjEgMy4wMi42LjUuMjQtLjE3LjAzLS4xMi0uMjctLjQ1LTIuMjMtNC4wMy0yLjM4LTQuMS0xLjA2LTEuNy0uMjgtMS4wMmMtLjEtLjQyLS4xNy0uNzctLjE3LTEuMmwxLjIzLTEuNjcuNjgtLjIyIDEuNjQuMjIuNjkuNiAxLjAyIDIuMzMgMS42NSAzLjY3IDIuNTYgNC45OS43NSAxLjQ4LjQgMS4zNy4xNS40MmguMjZ2LS4yNGwuMjEtMi44MS4zOS0zLjQ1LjM4LTQuNDQuMTMtMS4yNS42Mi0xLjUgMS4yMy0uODEuOTYuNDYuNzkgMS4xMy0uMTEuNzMtLjQ3IDMuMDUtLjkyIDQuNzgtLjYgMy4yaC4zNWwuNC0uNCAxLjYyLTIuMTUgMi43Mi0zLjQgMS4yLTEuMzUgMS40LTEuNDkuOS0uNzFoMS43bDEuMjUgMS44Ni0uNTYgMS45Mi0xLjc1IDIuMjItMS40NSAxLjg4LTIuMDggMi44LTEuMyAyLjI0LjEyLjE4LjMxLS4wMyA0LjctMSAyLjU0LS40NiAzLjAzLS41MiAxLjM3LjY0LjE1LjY1LS41NCAxLjMzLTMuMjQuOC0zLjguNzYtNS42NiAxLjM0LS4wNy4wNS4wOC4xIDIuNTUuMjQgMS4wOS4wNmgyLjY3bDQuOTcuMzcgMS4zLjg2Ljc4IDEuMDUtLjEzLjgtMiAxLjAyLTIuNy0uNjQtNi4zLTEuNS0yLjE2LS41NGgtLjN2LjE4bDEuOCAxLjc2IDMuMyAyLjk4IDQuMTMgMy44NC4yMS45NS0uNTMuNzUtLjU2LS4wOC0zLjYzLTIuNzMtMS40LTEuMjMtMy4xNy0yLjY3aC0uMjF2LjI4bC43MyAxLjA3IDMuODYgNS44LjIgMS43OC0uMjguNTgtMSAuMzUtMS4xLS4yLTIuMjYtMy4xNy0yLjMzLTMuNTctMS44OC0zLjItLjIzLjEzLTEuMTEgMTEuOTUtLjUyLjYxLTEuMi40Ni0xLS43Ni0uNTMtMS4yMy41My0yLjQzLjY0LTMuMTcuNTItMi41Mi40Ny0zLjEzLjI4LTEuMDQtLjAyLS4wNy0uMjMuMDMtMi4zNiAzLjI0LTMuNTkgNC44NS0yLjg0IDMuMDQtLjY4LjI3LTEuMTgtLjYxLjExLTEuMDkuNjYtLjk3IDMuOTMtNSAyLjM3LTMuMSAxLjUzLTEuNzktLjAxLS4yNmgtLjA5bC0xMC40NCA2Ljc4LTEuODYuMjQtLjgtLjc1LjEtMS4yMy4zOC0uNCAzLjE0LTIuMTZ6IiBmaWxsPSIjZDk3NzU3Ii8+PC9zdmc+","openai":"data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0iIzEwQTM3RiI+CjxwYXRoIGQ9Ik0yMi4yODE5IDkuODIxMWE1Ljk4NDcgNS45ODQ3IDAgMCAwLS41MTU3LTQuOTEwOCA2LjA0NjIgNi4wNDYyIDAgMCAwLTYuNTA5OC0yLjlBNi4wNjUxIDYuMDY1MSAwIDAgMCA0Ljk4MDcgNC4xODE4YTUuOTg0NyA1Ljk4NDcgMCAwIDAtMy45OTc3IDIuOSA2LjA0NjIgNi4wNDYyIDAgMCAwIC43NDI3IDcuMDk2NiA1Ljk4IDUuOTggMCAwIDAgLjUxMSA0LjkxMDcgNi4wNTEgNi4wNTEgMCAwIDAgNi41MTQ2IDIuOTAwMUE1Ljk4NDcgNS45ODQ3IDAgMCAwIDEzLjI1OTkgMjRhNi4wNTU3IDYuMDU1NyAwIDAgMCA1Ljc3MTgtNC4yMDU4IDUuOTg5NCA1Ljk4OTQgMCAwIDAgMy45OTc3LTIuOTAwMSA2LjA1NTcgNi4wNTU3IDAgMCAwLS43NDc1LTcuMDcyOXptLTkuMDIyIDEyLjYwODFhNC40NzU1IDQuNDc1NSAwIDAgMS0yLjg3NjQtMS4wNDA4bC4xNDE5LS4wODA0IDQuNzc4My0yLjc1ODJhLjc5NDguNzk0OCAwIDAgMCAuMzkyNy0uNjgxM3YtNi43MzY5bDIuMDIgMS4xNjg2YS4wNzEuMDcxIDAgMCAxIC4wMzguMDUydjUuNTgyNmE0LjUwNCA0LjUwNCAwIDAgMS00LjQ5NDUgNC40OTQ0em0tOS42NjA3LTQuMTI1NGE0LjQ3MDggNC40NzA4IDAgMCAxLS41MzQ2LTMuMDEzN2wuMTQyLjA4NTIgNC43ODMgMi43NTgyYS43NzEyLjc3MTIgMCAwIDAgLjc4MDYgMGw1Ljg0MjgtMy4zNjg1djIuMzMyNGEuMDgwNC4wODA0IDAgMCAxLS4wMzMyLjA2MTVMOS43NCAxOS45NTAyYTQuNDk5MiA0LjQ5OTIgMCAwIDEtNi4xNDA4LTEuNjQ2NHpNMi4zNDA4IDcuODk1NmE0LjQ4NSA0LjQ4NSAwIDAgMSAyLjM2NTUtMS45NzI4VjExLjZhLjc2NjQuNzY2NCAwIDAgMCAuMzg3OS42NzY1bDUuODE0NCAzLjM1NDMtMi4wMjAxIDEuMTY4NWEuMDc1Ny4wNzU3IDAgMCAxLS4wNzEgMGwtNC44MzAzLTIuNzg2NUE0LjUwNCA0LjUwNCAwIDAgMSAyLjM0MDggNy44OTU2em0xNi4wOTkzIDMuODU1OEwxMi42IDguMzgyOWwyLjAyLTEuMTYzOGEuMDc1Ny4wNzU3IDAgMCAxIC4wNzEgMGw0LjgzMDMgMi43OTEzYTQuNDk0NCA0LjQ5NDQgMCAwIDEtLjY3NjUgOC4xMDQydi01LjY3NzJhLjc5Ljc5IDAgMCAwLS40MDctLjY2N3ptMi4wMTA3LTMuMDIzMWwtLjE0Mi0uMDg1Mi00Ljc3MzUtMi43ODE4YS43NzU5Ljc3NTkgMCAwIDAtLjc4NTQgMEw5LjQwOSA5LjIyOTdWNi44OTc0YS4wNjYyLjA2NjIgMCAwIDEgLjAyODQtLjA2MTVsNC44MzAzLTIuNzg2NmE0LjQ5OTIgNC40OTkyIDAgMCAxIDYuMTQwOCA0LjY2ek04LjMwNjUgMTIuODYzbC0yLjAyLTEuMTYzOGEuMDgwNC4wODA0IDAgMCAxLS4wMzgtLjA1NjdWNi4wNzQyYTQuNDk5MiA0LjQ5OTIgMCAwIDEgNy4zNzU3LTMuNDUzN2wtLjE0Mi4wODA1TDguNzA0IDUuNDU5YS43OTQ4Ljc5NDggMCAwIDAtLjM5MjcuNjgxM3ptMS4wOTc2LTIuMzY1NGwyLjYwMi0xLjQ5OTggMi42MDY5IDEuNDk5OHYyLjk5OTRsLTIuNTk3NCAxLjQ5OTctMi42MDY3LTEuNDk5N1oiLz4KPC9zdmc+Cg==","google":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNDI4NUY0IiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+R29vZ2xlPC90aXRsZT48cGF0aCBkPSJNMTIuNDggMTAuOTJ2My4yOGg3Ljg0Yy0uMjQgMS44NC0uODUzIDMuMTg3LTEuNzg3IDQuMTMzLTEuMTQ3IDEuMTQ3LTIuOTMzIDIuNC02LjA1MyAyLjQtNC44MjcgMC04LjYtMy44OTMtOC42LTguNzJzMy43NzMtOC43MiA4LjYtOC43MmMyLjYgMCA0LjUwNyAxLjAyNyA1LjkwNyAyLjM0N2wyLjMwNy0yLjMwN0MxOC43NDcgMS40NCAxNi4xMzMgMCAxMi40OCAwIDUuODY3IDAgLjMwNyA1LjM4Ny4zMDcgMTJzNS41NiAxMiAxMi4xNzMgMTJjMy41NzMgMCA2LjI2Ny0xLjE3MyA4LjM3My0zLjM2IDIuMTYtMi4xNiAyLjg0LTUuMjEzIDIuODQtNy42NjcgMC0uNzYtLjA1My0xLjQ2Ny0uMTczLTIuMDUzSDEyLjQ4eiIvPjwvc3ZnPg==","moonshot":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0eWxlPSJmbGV4Om5vbmU7bGluZS1oZWlnaHQ6MSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0aXRsZT5Nb29uc2hvdEFJPC90aXRsZT48cGF0aCBkPSJNMS4wNTIgMTYuOTE2bDkuNTM5IDIuNTUyYTIxLjAwNyAyMS4wMDcgMCAwMC4wNiAyLjAzM2w1Ljk1NiAxLjU5M2ExMS45OTcgMTEuOTk3IDAgMDEtNS41ODYuODY1bC0uMTgtLjAxNi0uMDQ0LS4wMDQtLjA4NC0uMDA5LS4wOTQtLjAxYTExLjYwNSAxMS42MDUgMCAwMS0uMTU3LS4wMmwtLjEwNy0uMDE0LS4xMS0uMDE2YTExLjk2MiAxMS45NjIgMCAwMS0uMzItLjA1MWwtLjA0Mi0uMDA4LS4wNzUtLjAxMy0uMTA3LS4wMi0uMDctLjAxNS0uMDkzLS4wMTktLjA3NS0uMDE2LS4wOTUtLjAyLS4wOTctLjAyMy0uMDk0LS4wMjItLjA2OC0uMDE3LS4wODgtLjAyMi0uMDktLjAyNC0uMDk1LS4wMjUtLjA4Mi0uMDIzLS4xMDktLjAzLS4wNjItLjAyLS4wODQtLjAyNS0uMDkzLS4wMjgtLjEwNS0uMDM0LS4wNTgtLjAxOS0uMDgtLjAyNi0uMDktLjAzMS0uMDY2LS4wMjRhNi4yOTMgNi4yOTMgMCAwMS0uMDQ0LS4wMTVsLS4wNjgtLjAyNS0uMTAxLS4wMzctLjA1Ny0uMDIyLS4wOC0uMDMtLjA4Ny0uMDM1LS4wODgtLjAzNS0uMDc5LS4wMzItLjA5NS0uMDQtLjA2My0uMDI4LS4wNjMtLjAyN2E1LjY1NSA1LjY1NSAwIDAxLS4wNDEtLjAxOGwtLjA2Ni0uMDMtLjEwMy0uMDQ3LS4wNTItLjAyNC0uMDk2LS4wNDYtLjA2Mi0uMDMtLjA4NC0uMDQtLjA4Ni0uMDQ0LS4wOTMtLjA0Ny0uMDUyLS4wMjctLjEwMy0uMDU1LS4wNTctLjAzLS4wNTgtLjAzMmE2LjQ5IDYuNDkgMCAwMS0uMDQ2LS4wMjZsLS4wOTQtLjA1My0uMDYtLjAzNC0uMDUxLS4wMy0uMDcyLS4wNDEtLjA4Mi0uMDUtLjA5My0uMDU2LS4wNTItLjAzMi0uMDg0LS4wNTMtLjA2MS0uMDM5LS4wNzktLjA1LS4wNy0uMDQ3LS4wNTMtLjAzNWE3Ljc4NSA3Ljc4NSAwIDAxLS4wNTQtLjAzNmwtLjA0NC0uMDMtLjA0NC0uMDNhNi4wNjYgNi4wNjYgMCAwMS0uMDQtLjAyOGwtLjA1Ny0uMDQtLjA3Ni0uMDU0LS4wNjktLjA1LS4wNzQtLjA1NC0uMDU2LS4wNDItLjA3Ni0uMDU3LS4wNzYtLjA1OS0uMDg2LS4wNjctLjA0NS0uMDM1LS4wNjQtLjA1Mi0uMDc0LS4wNi0uMDg5LS4wNzMtLjA0Ni0uMDM5LS4wNDYtLjAzOWE3LjUxNiA3LjUxNiAwIDAxLS4wNDMtLjAzN2wtLjA0NS0uMDQtLjA2MS0uMDUzLS4wNy0uMDYyLS4wNjgtLjA2LS4wNjItLjA1OC0uMDY3LS4wNjItLjA1My0uMDUtLjA4OC0uMDg0YTEzLjI4IDEzLjI4IDAgMDEtLjA5OS0uMDk3bC0uMDI5LS4wMjgtLjA0MS0uMDQyLS4wNjktLjA3LS4wNS0uMDUxLS4wNS0uMDUzYTYuNDU3IDYuNDU3IDAgMDEtLjE2OC0uMTc5bC0uMDgtLjA4OC0uMDYyLS4wNy0uMDcxLS4wOC0uMDQyLS4wNDktLjA1My0uMDYyLS4wNTgtLjA2OC0uMDQ2LS4wNTZhNy4xNzUgNy4xNzUgMCAwMS0uMDI3LS4wMzNsLS4wNDUtLjA1NS0uMDY2LS4wODItLjA0MS0uMDUyLS4wNS0uMDY0LS4wMi0uMDI1YTExLjk5IDExLjk5IDAgMDEtMS40NC0yLjQwMnptLTEuMDItNS43OTRsMTEuMzUzIDMuMDM3YTIwLjQ2OCAyMC40NjggMCAwMC0uNDY5IDIuMDExbDEwLjgxNyAyLjg5NGExMi4wNzYgMTIuMDc2IDAgMDEtMS44NDUgMi4wMDVMLjY1NyAxNS45MjNsLS4wMTYtLjA0Ni0uMDM1LS4xMDRhMTEuOTY1IDExLjk2NSAwIDAxLS4wNS0uMTUzbC0uMDA3LS4wMjNhMTEuODk2IDExLjg5NiAwIDAxLS4yMDctLjc0MWwtLjAzLS4xMjYtLjAxOC0uMDgtLjAyMS0uMDk3LS4wMTgtLjA4MS0uMDE4LS4wOS0uMDE3LS4wODQtLjAxOC0uMDk0Yy0uMDI2LS4xNDEtLjA1LS4yODMtLjA3MS0uNDI2bC0uMDE3LS4xMTgtLjAxMS0uMDgzLS4wMTMtLjEwMmExMi4wMSAxMi4wMSAwIDAxLS4wMTktLjE2MWwtLjAwNS0uMDQ3YTEyLjEyIDEyLjEyIDAgMDEtLjAzNC0yLjE0NXptMS41OTMtNS4xNWwxMS45NDggMy4xOTZjLS4zNjguNjA1LS43MDUgMS4yMzEtMS4wMSAxLjg3NWwxMS4yOTUgMy4wMjJjLS4xNDIuODItLjM2OCAxLjYxMi0uNjY4IDIuMzY1bC0xMS41NS0zLjA5TC4xMjQgMTAuMjZsLjAxNS0uMS4wMDgtLjA0OS4wMS0uMDY3LjAxNS0uMDg3LjAxOC0uMDk4Yy4wMjYtLjE0OC4wNTYtLjI5NS4wODgtLjQ0MmwuMDI4LS4xMjQuMDItLjA4NS4wMjQtLjA5N2MuMDIyLS4wOS4wNDUtLjE4LjA3LS4yNjhsLjAyOC0uMTAyLjAyMy0uMDgzLjAzLS4xLjAyNS0uMDgyLjAzLS4wOTYuMDI2LS4wODIuMDMxLS4wOTVhMTEuODk2IDExLjg5NiAwIDAxMS4wMS0yLjIzMnptNC40NDItNC40TDE3LjM1MiA0LjU5YTIwLjc3IDIwLjc3IDAgMDAtMS42ODggMS43MjFsNy44MjMgMi4wOTNjLjI2Ny44NTIuNDQyIDEuNzQ0LjUxMyAyLjY2NUwyLjEwNiA1LjIxM2wuMDQ1LS4wNjUuMDI3LS4wNC4wNC0uMDU1LjA0Ni0uMDY1LjA1NS0uMDc2LjA1NC0uMDcyLjA2NC0uMDg2LjA1LS4wNjUuMDU3LS4wNzMuMDU1LS4wNy4wNi0uMDc0LjA1NS0uMDY5LjA2NS0uMDc3LjA1NC0uMDY2LjA2Ni0uMDc3LjA1My0uMDYuMDcyLS4wODIuMDUzLS4wNi4wNjctLjA3NC4wNTQtLjA1OC4wNzMtLjA3OC4wNTgtLjA2LjA2My0uMDY3LjE2OC0uMTcuMS0uMDk4LjA1OS0uMDU2LjA3Ni0uMDcxYTEyLjA4NCAxMi4wODQgMCAwMTIuMjcyLTEuNjc3ek0xMi4wMTcgMGguMDk3bC4wODIuMDAxLjA2OS4wMDEuMDU0LjAwMi4wNjguMDAyLjA0Ni4wMDEuMDc2LjAwMy4wNDcuMDAyLjA2LjAwMy4wNTQuMDAyLjA4Ny4wMDUuMTA1LjAwNy4xNDQuMDExLjA4OC4wMDcuMDQ0LjAwNC4wNzcuMDA4LjA4Mi4wMDguMDQ3LjAwNS4xMDIuMDEyLjA1LjAwNi4xMDguMDE0LjA4MS4wMS4wNDIuMDA2LjA2NS4wMS4yMDcuMDMyLjA3LjAxMi4wNjUuMDExLjE0LjAyNi4wOTIuMDE4LjExLjAyMi4wNDYuMDEuMDc1LjAxNi4wNDEuMDFMMTQuNy4zbC4wNDIuMDEuMDY1LjAxNS4wNDkuMDEyLjA3MS4wMTcuMDk2LjAyNC4xMTIuMDMuMTEzLjAzLjExMy4wMzIuMDUuMDE1LjA3LjAyLjA3OC4wMjQuMDczLjAyMy4wNS4wMTYuMDUuMDE2LjA3Ni4wMjUuMDk5LjAzMy4xMDIuMDM2LjA0OC4wMTcuMDY0LjAyMy4wOTMuMDM0LjExLjA0MS4xMTYuMDQ1LjEuMDQuMDQ3LjAyLjA2LjAyNC4wNDEuMDE4LjA2My4wMjYuMDQuMDE4LjA1Ny4wMjUuMTEuMDQ4LjEuMDQ2LjA3NC4wMzUuMDc1LjAzNi4wNi4wMjguMDkyLjA0Ni4wOTEuMDQ1LjEwMi4wNTIuMDUzLjAyOC4wNDkuMDI2LjA0Ni4wMjQuMDYuMDMzLjA0MS4wMjIuMDUyLjAyOS4wODguMDUuMTA2LjA2LjA4Ny4wNTEuMDU3LjAzNC4wNTMuMDMyLjA5Ni4wNTkuMDg4LjA1NS4wOTguMDYyLjAzNi4wMjQuMDY0LjA0MS4wODQuMDU2LjA0LjAyNy4wNjIuMDQyLjA2Mi4wNDMuMDIzLjAxN2MuMDU0LjAzNy4xMDguMDc1LjE2MS4xMTRsLjA4My4wNi4wNjUuMDQ4LjA1Ni4wNDMuMDg2LjA2NS4wODIuMDY0LjA0LjAzLjA1LjA0MS4wODYuMDY5LjA3OS4wNjUuMDg1LjA3MWMuNzEyLjYgMS4zNTMgMS4yODMgMS45MDkgMi4wMzFMNy4yMjIuOTk0bC4wNjItLjAyNy4wNjUtLjAyOC4wODEtLjAzNC4wODYtLjAzNWMuMTEzLS4wNDUuMjI3LS4wOS4zNDEtLjEzMWwuMDk2LS4wMzUuMDkzLS4wMzMuMDg0LS4wMy4wOTYtLjAzMWMuMDg3LS4wMy4xNzYtLjA1OC4yNjQtLjA4NWwuMDkxLS4wMjcuMDg2LS4wMjUuMTAyLS4wMy4wODUtLjAyMy4xLS4wMjZMOS4wNC4zN2wuMDktLjAyMy4wOTEtLjAyMi4wOTUtLjAyMi4wOS0uMDIuMDk4LS4wMjEuMDkxLS4wMi4wOTUtLjAxOC4wOTItLjAxOC4xLS4wMTguMDkxLS4wMTYuMDk4LS4wMTcuMDkyLS4wMTQuMDk3LS4wMTUuMDkyLS4wMTMuMTAyLS4wMTMuMDkxLS4wMTIuMTA1LS4wMTIuMDktLjAxLjEwNS0uMDFjLjA5My0uMDEuMTg2LS4wMTguMjgtLjAyNGwuMTA2LS4wMDguMDktLjAwNS4xMS0uMDA2LjA5My0uMDA0LjEtLjAwNC4wOTctLjAwMi4wOTktLjAwMi4xOTctLjAwMnoiPjwvcGF0aD48L3N2Zz4=","minimax":"data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iZmxleDpub25lO2xpbmUtaGVpZ2h0OjEiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+TWluaW1heDwvdGl0bGU+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJsb2JlLWljb25zLW1pbmltYXgtZmlsbCIgeDE9IjAlIiB4Mj0iMTAwLjE4MiUiIHkxPSI1MC4wNTclIiB5Mj0iNTAuMDU3JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0UyMTY3RSI+PC9zdG9wPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZFNjAzQyI+PC9zdG9wPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xNi4yNzggMmMxLjE1NiAwIDIuMDkzLjkyNyAyLjA5MyAyLjA3djEyLjUwMWEuNzQuNzQgMCAwMC43NDQuNzA5Ljc0Ljc0IDAgMDAuNzQzLS43MDlWOS4wOTlhMi4wNiAyLjA2IDAgMDEyLjA3MS0yLjA0OUEyLjA2IDIuMDYgMCAwMTI0IDkuMXY2LjU2MWEuNjQ5LjY0OSAwIDAxLS42NTIuNjQ1LjY0OS42NDkgMCAwMS0uNjUzLS42NDVWOS4xYS43NjIuNzYyIDAgMDAtLjc2Ni0uNzU4Ljc2Mi43NjIgMCAwMC0uNzY2Ljc1OHY3LjQ3MmEyLjAzNyAyLjAzNyAwIDAxLTIuMDQ4IDIuMDI2IDIuMDM3IDIuMDM3IDAgMDEtMi4wNDgtMi4wMjZ2LTEyLjVhLjc4NS43ODUgMCAwMC0uNzg4LS43NTMuNzg1Ljc4NSAwIDAwLS43ODkuNzUybC0uMDAxIDE1LjkwNEEyLjAzNyAyLjAzNyAwIDAxMTMuNDQxIDIyYTIuMDM3IDIuMDM3IDAgMDEtMi4wNDgtMi4wMjZWMTguMDRjMC0uMzU2LjI5Mi0uNjQ1LjY1Mi0uNjQ1LjM2IDAgLjY1Mi4yODkuNjUyLjY0NXYxLjkzNGMwIC4yNjMuMTQyLjUwNi4zNzIuNjM4LjIzLjEzMS41MTQuMTMxLjc0NCAwYS43MzQuNzM0IDAgMDAuMzcyLS42MzhWNC4wN2MwLTEuMTQzLjkzNy0yLjA3IDIuMDkzLTIuMDd6bS01LjY3NCAwYzEuMTU2IDAgMi4wOTMuOTI3IDIuMDkzIDIuMDd2MTEuNTIzYS42NDguNjQ4IDAgMDEtLjY1Mi42NDUuNjQ4LjY0OCAwIDAxLS42NTItLjY0NVY0LjA3YS43ODUuNzg1IDAgMDAtLjc4OS0uNzguNzg1Ljc4NSAwIDAwLS43ODkuNzh2MTQuMDEzYTIuMDYgMi4wNiAwIDAxLTIuMDcgMi4wNDggMi4wNiAyLjA2IDAgMDEtMi4wNzEtMi4wNDhWOS4xYS43NjIuNzYyIDAgMDAtLjc2Ni0uNzU4Ljc2Mi43NjIgMCAwMC0uNzY2Ljc1OHYzLjhhMi4wNiAyLjA2IDAgMDEtMi4wNzEgMi4wNDlBMi4wNiAyLjA2IDAgMDEwIDEyLjl2LTEuMzc4YzAtLjM1Ny4yOTItLjY0Ni42NTItLjY0Ni4zNiAwIC42NTMuMjkuNjUzLjY0NlYxMi45YzAgLjQxOC4zNDMuNzU3Ljc2Ni43NTdzLjc2Ni0uMzM5Ljc2Ni0uNzU3VjkuMDk5YTIuMDYgMi4wNiAwIDAxMi4wNy0yLjA0OCAyLjA2IDIuMDYgMCAwMTIuMDcxIDIuMDQ4djguOTg0YzAgLjQxOS4zNDMuNzU4Ljc2Ny43NTguNDIzIDAgLjc2Ni0uMzM5Ljc2Ni0uNzU4VjQuMDdjMC0xLjE0My45MzctMi4wNyAyLjA5My0yLjA3eiIgZmlsbD0idXJsKCNsb2JlLWljb25zLW1pbmltYXgtZmlsbCkiIGZpbGwtcnVsZT0ibm9uemVybyI+PC9wYXRoPjwvc3ZnPg==","zai":"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI1LjMuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDMwIDMwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMCAzMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtvcGFjaXR5OjAuMztmaWxsOiNFMkU0RTc7fQoJLnN0MXtvcGFjaXR5OjAuODtmaWxsOiNFMkU0RTc7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MntmaWxsOnVybCgjU1ZHSURfMV8pO30KCS5zdDN7ZmlsbDpub25lO3N0cm9rZTojRTBFNEU5O3N0cm9rZS13aWR0aDowLjI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDR7ZmlsbDpub25lO30KCS5zdDV7ZmlsbDojOURBMUE1O30KCS5zdDZ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDpub25lO30KCS5zdDd7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojREZFMkU3O30KCS5zdDh7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojQ0RENERBO30KCS5zdDl7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojQjNCQ0M3O30KCS5zdDEwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzlEQUFCNzt9Cgkuc3QxMXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiM4Njk4QTg7fQoJLnN0MTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDp1cmwoI1NWR0lEXzJfKTt9Cgkuc3QxM3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfM18pO30KCS5zdDE0e2ZpbGw6IzFGNjNFQzt9Cgkuc3QxNXtmaWxsOiMyRDJEMkQ7fQoJLnN0MTZ7ZmlsbDpub25lO3N0cm9rZTojRTBFNEU5O3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTd7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDp1cmwoI1NWR0lEXzRfKTt9Cgkuc3QxOHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNV8pO30KCS5zdDE5e2ZpbGw6bm9uZTtzdHJva2U6IzY3NzM4MDtzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDIwe2ZpbGw6bm9uZTtzdHJva2U6dXJsKCNTVkdJRF82Xyk7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MjF7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDp1cmwoI1NWR0lEXzdfKTt9Cgkuc3QyMntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfOF8pO30KCS5zdDIze2ZpbGw6I0ZGRkZGRjt9Cgkuc3QyNHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiMyRDJEMkQ7fQoJLnN0MjV7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMTBfKTt9Cgkuc3QyNntjbGlwLXBhdGg6dXJsKCNTVkdJRF8xMl8pO30KCS5zdDI3e2ZpbGw6dXJsKCNTVkdJRF8xM18pO30KCS5zdDI4e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6dXJsKCNTVkdJRF8xNF8pO30KCS5zdDI5e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6dXJsKCNTVkdJRF8xNV8pO30KCS5zdDMwe2NsaXAtcGF0aDp1cmwoI1NWR0lEXzE3Xyk7fQoJLnN0MzF7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMTlfKTt9Cgkuc3QzMntmaWxsOnVybCgjU1ZHSURfMjBfKTt9Cgkuc3QzM3tmaWxsOm5vbmU7c3Ryb2tlOnVybCgjU1ZHSURfMjFfKTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QzNHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfMjJfKTt9Cgkuc3QzNXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfMjNfKTt9Cgkuc3QzNntjbGlwLXBhdGg6dXJsKCNTVkdJRF8yNV8pO30KCS5zdDM3e2NsaXAtcGF0aDp1cmwoI1NWR0lEXzI3Xyk7fQoJLnN0Mzh7ZmlsbDp1cmwoI1NWR0lEXzI4Xyk7fQoJLnN0Mzl7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMzBfKTt9Cgkuc3Q0MHtjbGlwLXBhdGg6dXJsKCNTVkdJRF8zMl8pO30KCS5zdDQxe2ZpbGw6dXJsKCNTVkdJRF8zM18pO30KCS5zdDQye2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzEyNkVGNjt9Cgkuc3Q0M3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkZGRkY7fQoJLnN0NDR7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMzVfKTt9Cgkuc3Q0NXtjbGlwLXBhdGg6dXJsKCNTVkdJRF8zN18pO30KCS5zdDQ2e2ZpbGw6dXJsKCNTVkdJRF8zOF8pO30KCS5zdDQ3e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzlEQTFBNTt9Cgkuc3Q0OHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfMzlfKTt9Cgkuc3Q0OXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDBfKTt9Cgkuc3Q1MHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDFfKTt9Cgkuc3Q1MXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDJfKTt9Cgkuc3Q1MntmaWxsOm5vbmU7c3Ryb2tlOnVybCgjU1ZHSURfNDNfKTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1M3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOm5vbmU7c3Ryb2tlOiNFMEU0RTk7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1NHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDRfKTt9Cgkuc3Q1NXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDVfKTt9Cgkuc3Q1NntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDZfKTt9Cgkuc3Q1N3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDdfKTt9Cgkuc3Q1OHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDhfKTt9Cgkuc3Q1OXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNDlfKTt9Cgkuc3Q2MHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNTBfKTt9Cgkuc3Q2MXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNTFfKTt9Cgkuc3Q2MntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNTJfKTt9Cgkuc3Q2M3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfNTNfKTt9Cgkuc3Q2NHtjbGlwLXBhdGg6dXJsKCNTVkdJRF81NV8pO30KCS5zdDY1e2NsaXAtcGF0aDp1cmwoI1NWR0lEXzU3Xyk7fQoJLnN0NjZ7ZmlsbDp1cmwoI1NWR0lEXzU4Xyk7fQoJLnN0Njd7Y2xpcC1wYXRoOnVybCgjU1ZHSURfNjBfKTt9Cgkuc3Q2OHtjbGlwLXBhdGg6dXJsKCNTVkdJRF82Ml8pO30KCS5zdDY5e2ZpbGw6dXJsKCNTVkdJRF82M18pO30KCS5zdDcwe2ZpbGw6bm9uZTtzdHJva2U6dXJsKCNTVkdJRF82NF8pO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDcxe2NsaXAtcGF0aDp1cmwoI1NWR0lEXzY2Xyk7fQoJLnN0NzJ7Y2xpcC1wYXRoOnVybCgjU1ZHSURfNjhfKTt9Cgkuc3Q3M3tmaWxsOnVybCgjU1ZHSURfNjlfKTt9Cgkuc3Q3NHtjbGlwLXBhdGg6dXJsKCNTVkdJRF83MV8pO30KCS5zdDc1e2NsaXAtcGF0aDp1cmwoI1NWR0lEXzczXyk7fQoJLnN0NzZ7ZmlsbDp1cmwoI1NWR0lEXzc0Xyk7fQoJLnN0Nzd7Y2xpcC1wYXRoOnVybCgjU1ZHSURfNzZfKTt9Cgkuc3Q3OHtjbGlwLXBhdGg6dXJsKCNTVkdJRF83OF8pO30KCS5zdDc5e2ZpbGw6dXJsKCNTVkdJRF83OV8pO30KCS5zdDgwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6dXJsKCNTVkdJRF84MF8pO30KCS5zdDgxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6dXJsKCNTVkdJRF84MV8pO30KCS5zdDgye2NsaXAtcGF0aDp1cmwoI1NWR0lEXzgzXyk7fQoJLnN0ODN7Y2xpcC1wYXRoOnVybCgjU1ZHSURfODVfKTt9Cgkuc3Q4NHtmaWxsOnVybCgjU1ZHSURfODZfKTt9Cgkuc3Q4NXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfODdfKTt9Cgkuc3Q4NntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOnVybCgjU1ZHSURfODhfKTt9Cgkuc3Q4N3tjbGlwLXBhdGg6dXJsKCNTVkdJRF85MF8pO30KCS5zdDg4e2NsaXAtcGF0aDp1cmwoI1NWR0lEXzkyXyk7fQoJLnN0ODl7ZmlsbDp1cmwoI1NWR0lEXzkzXyk7fQoJLnN0OTB7ZmlsbDpub25lO3N0cm9rZTp1cmwoI1NWR0lEXzk0Xyk7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0OTF7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDp1cmwoI1NWR0lEXzk1Xyk7fQoJLnN0OTJ7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDp1cmwoI1NWR0lEXzk2Xyk7fQoJLnN0OTN7Y2xpcC1wYXRoOnVybCgjU1ZHSURfOThfKTt9Cgkuc3Q5NHtjbGlwLXBhdGg6dXJsKCNTVkdJRF8xMDBfKTt9Cgkuc3Q5NXtmaWxsOnVybCgjU1ZHSURfMTAxXyk7fQoJLnN0OTZ7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMTAzXyk7fQoJLnN0OTd7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMTA1Xyk7fQoJLnN0OTh7ZmlsbDp1cmwoI1NWR0lEXzEwNl8pO30KCS5zdDk5e2NsaXAtcGF0aDp1cmwoI1NWR0lEXzEwOF8pO30KCS5zdDEwMHtjbGlwLXBhdGg6dXJsKCNTVkdJRF8xMTBfKTt9Cgkuc3QxMDF7ZmlsbDp1cmwoI1NWR0lEXzExMV8pO30KCS5zdDEwMntmaWxsOiNGRkZGRkY7c3Ryb2tlOiNCM0JDQzc7c3Ryb2tlLXdpZHRoOjAuMjc1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDEwM3tjbGlwLXBhdGg6dXJsKCNTVkdJRF8xMTNfKTt9Cgkuc3QxMDR7ZmlsbDojRkREMTM4O30KCS5zdDEwNXtmaWxsOiNGQ0E2MkY7fQoJLnN0MTA2e2ZpbGw6I0ZCNzkyNzt9Cgkuc3QxMDd7ZmlsbDojRjQ0QjIyO30KCS5zdDEwOHtmaWxsOiNEODE5MTU7fQoJLnN0MTA5e2ZpbGw6IzJEMkQyRDtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC4zMzU0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDExMHtmaWxsOm5vbmU7c3Ryb2tlOiM2NTcyN0Y7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTExe2ZpbGw6bm9uZTtzdHJva2U6IzY1NzI3RjtzdHJva2Utd2lkdGg6MC43NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxMTJ7ZmlsbDp1cmwoI1NWR0lEXzExNF8pO30KCS5zdDExM3tmaWxsOiNEMDZDNTA7fQoJLnN0MTE0e2ZpbGw6IzJEMkQyRDtzdHJva2U6I0IzQkNDNztzdHJva2Utd2lkdGg6MC4yNzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTE1e29wYWNpdHk6MC4yO30KCS5zdDExNntmaWxsOm5vbmU7c3Ryb2tlOiM2NzczODA7c3Ryb2tlLXdpZHRoOjAuMzU2NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxMTd7ZmlsbDpub25lO3N0cm9rZTojNjc3MzgwO3N0cm9rZS13aWR0aDowLjM1NjQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7c3Ryb2tlLWRhc2hhcnJheToxLjAyMTIsMS4wMjEyO30KCS5zdDExOHtmaWxsOm5vbmU7c3Ryb2tlOiM2NzczODA7c3Ryb2tlLXdpZHRoOjAuMzU2NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2UtZGFzaGFycmF5OjEuMDIwNSwxLjAyMDU7fQoJLnN0MTE5e29wYWNpdHk6MC4yO2ZpbGw6bm9uZTt9Cgkuc3QxMjB7ZmlsbDpub25lO3N0cm9rZTojNjc3MzgwO3N0cm9rZS13aWR0aDowLjM2ODk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTIxe2ZpbGw6bm9uZTtzdHJva2U6IzY3NzM4MDtzdHJva2Utd2lkdGg6MC4zNjg5O3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MS4wNTA5LDEuMDUwOTt9Cgkuc3QxMjJ7b3BhY2l0eTowLjM7ZmlsbDojMUY2M0VDO30KCS5zdDEyM3tmaWxsOiMyRDJEMkQ7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjAuMzE2MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxMjR7ZmlsbDojRkZGRkZGO3N0cm9rZTojQjNCQ0M3O3N0cm9rZS13aWR0aDowLjMxNjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTI1e2NsaXAtcGF0aDp1cmwoI1NWR0lEXzExOF8pO30KCS5zdDEyNntmaWxsOnVybCgjU1ZHSURfMTE5Xyk7fQoJLnN0MTI3e2ZpbGw6bm9uZTtzdHJva2U6I0RGRTJFNztzdHJva2Utd2lkdGg6MC43NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxMjh7ZmlsbDojOURBMUE1O3N0cm9rZTojRkZGRkZGO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDEyOXtmaWxsOnVybCgjU1ZHSURfMTIwXyk7fQoJLnN0MTMwe2ZpbGw6bm9uZTtzdHJva2U6IzY3NzM4MDtzdHJva2Utd2lkdGg6MC43NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxMzF7b3BhY2l0eTowLjQ7fQoJLnN0MTMye2NsaXAtcGF0aDp1cmwoI1NWR0lEXzEyMl8pO30KCS5zdDEzM3tjbGlwLXBhdGg6dXJsKCNTVkdJRF8xMjRfKTt9Cgkuc3QxMzR7ZmlsbDp1cmwoI1NWR0lEXzEyNV8pO30KCS5zdDEzNXtmaWxsOm5vbmU7c3Ryb2tlOiM4MzkyQTM7c3Ryb2tlLXdpZHRoOjAuMzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTM2e2ZpbGw6bm9uZTtzdHJva2U6IzgzOTJBMztzdHJva2Utd2lkdGg6MC4zNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2UtZGFzaGFycmF5OjAuOTk1MSwwLjk5NTE7fQoJLnN0MTM3e2ZpbGw6bm9uZTtzdHJva2U6IzgzOTJBMztzdHJva2Utd2lkdGg6MC4zNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2UtZGFzaGFycmF5OjEuMDA0LDEuMDA0O30KCS5zdDEzOHtmaWxsOm5vbmU7c3Ryb2tlOnVybCgjU1ZHSURfMTI2Xyk7c3Ryb2tlLXdpZHRoOjEuNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxMzl7ZmlsbDp1cmwoI1NWR0lEXzEyN18pO30KCS5zdDE0MHtmaWxsOm5vbmU7c3Ryb2tlOiNEREUwRTQ7c3Ryb2tlLXdpZHRoOjAuMzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTQxe2ZpbGw6IzJEMkQyRDtzdHJva2U6I0E5QjNCRTtzdHJva2Utd2lkdGg6MC4yNzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTQye2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzEyNkVGNDt9Cgkuc3QxNDN7ZmlsbDojRkZGRkZGO3N0cm9rZTojQjFCQUM0O3N0cm9rZS13aWR0aDowLjI3NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxNDR7ZmlsbDojQ0U2QzUwO30KCS5zdDE0NXtmaWxsOiM1QjVCNUI7fQoJLnN0MTQ2e2ZpbGw6IzgzOTJBMzt9Cgkuc3QxNDd7ZmlsbDpub25lO3N0cm9rZTp1cmwoI1NWR0lEXzEyOF8pO3N0cm9rZS13aWR0aDoxLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTQ4e2ZpbGw6dXJsKCNTVkdJRF8xMjlfKTt9Cgkuc3QxNDl7ZmlsbDpub25lO3N0cm9rZTojQjVCREM0O3N0cm9rZS13aWR0aDowLjc7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTUwe29wYWNpdHk6MC42O2ZpbGw6bm9uZTtzdHJva2U6Izc4ODM4RTtzdHJva2Utd2lkdGg6MC4zNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxNTF7b3BhY2l0eTowLjI7ZmlsbDpub25lO3N0cm9rZTojODM5MkEzO3N0cm9rZS13aWR0aDowLjM1O3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MSwxO30KCS5zdDE1MntmaWxsOm5vbmU7c3Ryb2tlOiNEREUwRTQ7c3Ryb2tlLXdpZHRoOjAuNzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTUze2ZpbGw6bm9uZTtzdHJva2U6IzgzOTJBMztzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDE1NHtvcGFjaXR5OjAuMjtmaWxsOm5vbmU7c3Ryb2tlOiM2NzczODA7c3Ryb2tlLXdpZHRoOjAuMzU2NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDtzdHJva2UtZGFzaGFycmF5OjEuMDE4MiwxLjAxODI7fQoJLnN0MTU1e2ZpbGw6bm9uZTtzdHJva2U6I0RERTBFNDtzdHJva2Utd2lkdGg6MC43NjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTU2e2ZpbGw6dXJsKCNTVkdJRF8xMzBfKTt9Cgkuc3QxNTd7ZmlsbDp1cmwoI1NWR0lEXzEzMV8pO30KCS5zdDE1OHtmaWxsOiNCMUJBQzQ7fQoJLnN0MTU5e2ZpbGw6I0NCRDFEODt9Cgkuc3QxNjB7ZmlsbDojMEIxQjJCO30KCS5zdDE2MXtmaWxsOiM5MUQxMTk7fQoJLnN0MTYye29wYWNpdHk6MC43O30KCS5zdDE2M3tmaWxsOiNGRkZGRkY7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNDQxODtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxNjR7ZmlsbDpub25lO3N0cm9rZTojOTM5Q0FBO3N0cm9rZS13aWR0aDowLjIyMDk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTY1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6My4wOTI0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDE2NntmaWxsOnVybCgjU1ZHSURfMTMyXyk7fQoJLnN0MTY3e2ZpbGw6bm9uZTtzdHJva2U6dXJsKCNTVkdJRF8xMzNfKTtzdHJva2Utd2lkdGg6MS43MTQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTY4e2ZpbGw6dXJsKCNTVkdJRF8xMzRfKTt9Cgkuc3QxNjl7ZmlsbDp1cmwoI1NWR0lEXzEzNV8pO30KCS5zdDE3MHtmaWxsOnVybCgjU1ZHSURfMTM2Xyk7fQoJLnN0MTcxe2ZpbGw6dXJsKCNTVkdJRF8xMzdfKTt9Cgkuc3QxNzJ7ZmlsbDp1cmwoI1NWR0lEXzEzOF8pO30KCS5zdDE3M3tmaWxsOnVybCgjU1ZHSURfMTM5Xyk7fQoJLnN0MTc0e2ZpbGw6dXJsKCNTVkdJRF8xNDBfKTt9Cgkuc3QxNzV7ZmlsbDp1cmwoI1NWR0lEXzE0MV8pO30KCS5zdDE3NntmaWxsOnVybCgjU1ZHSURfMTQyXyk7fQoJLnN0MTc3e2ZpbGw6dXJsKCNTVkdJRF8xNDNfKTt9Cgkuc3QxNzh7ZmlsbDp1cmwoI1NWR0lEXzE0NF8pO30KCS5zdDE3OXtmaWxsOm5vbmU7c3Ryb2tlOiMxRjYzRUM7c3Ryb2tlLXdpZHRoOjQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTgwe2ZpbGw6bm9uZTtzdHJva2U6IzBCMUIyQjtzdHJva2Utd2lkdGg6NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxODF7ZmlsbDpub25lO3N0cm9rZTojNjc3MzgwO3N0cm9rZS13aWR0aDowLjM5ODk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTgye2ZpbGw6bm9uZTtzdHJva2U6IzY3NzM4MDtzdHJva2Utd2lkdGg6MC4zOTg5O3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MS4xNCwxLjE0O30KCS5zdDE4M3tmaWxsOiMyNTdBRjE7fQoJLnN0MTg0e29wYWNpdHk6MC4zO2ZpbGw6I0ZGRkZGRjt9Cgkuc3QxODV7ZmlsbDpub25lO3N0cm9rZTojOThBNUIyO3N0cm9rZS13aWR0aDo0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDE4NntmaWxsOm5vbmU7c3Ryb2tlOiM2NTcyN0Y7c3Ryb2tlLXdpZHRoOjAuMzk4OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxODd7ZmlsbDpub25lO3N0cm9rZTojNjU3MjdGO3N0cm9rZS13aWR0aDowLjM5ODk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7c3Ryb2tlLWRhc2hhcnJheToxLjE0LDEuMTQ7fQoJLnN0MTg4e2ZpbGw6bm9uZTtzdHJva2U6I0REREZFNDtzdHJva2Utd2lkdGg6MC43NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3QxODl7ZmlsbDojOUE5RUEyO30KCS5zdDE5MHtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiMzMjY3QUM7fQoJLnN0MTkxe2ZpbGw6I0ZGRkZGRjtzdHJva2U6I0FGQjhDMztzdHJva2Utd2lkdGg6MC4yNzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MTkye2ZpbGw6I0M1Njk0RTt9Cgkuc3QxOTN7ZmlsbDojODE5MkEyO30KCS5zdDE5NHtmaWxsOiMyRDJEMkQ7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjAuNjMxNztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cjwvc3R5bGU+CjxnIGlkPSLlm77lsYJfMiI+CjwvZz4KPGcgaWQ9IuWbvuWxgl8xIj4KCTxwYXRoIGNsYXNzPSJzdDE5NCIgZD0iTTI0LjUxLDI4LjUxSDUuNDljLTIuMjEsMC00LTEuNzktNC00VjUuNDljMC0yLjIxLDEuNzktNCw0LTRoMTkuMDNjMi4yMSwwLDQsMS43OSw0LDR2MTkuMDMKCQlDMjguNTEsMjYuNzIsMjYuNzIsMjguNTEsMjQuNTEsMjguNTF6Ii8+Cgk8Zz4KCQk8Zz4KCQkJPGc+CgkJCQk8Zz4KCQkJCQk8cGF0aCBjbGFzcz0ic3QyMyIgZD0iTTE1LjQ3LDcuMWwtMS4zLDEuODVjLTAuMiwwLjI5LTAuNTQsMC40Ny0wLjksMC40N2gtNy4xVjcuMDlDNi4xNiw3LjEsMTUuNDcsNy4xLDE1LjQ3LDcuMXoiLz4KCQkJCQk8cG9seWdvbiBjbGFzcz0ic3QyMyIgcG9pbnRzPSIyNC4zLDcuMSAxMy4xNCwyMi45MSA1LjcsMjIuOTEgMTYuODYsNy4xIAkJCQkJIi8+CgkJCQkJPHBhdGggY2xhc3M9InN0MjMiIGQ9Ik0xNC41MywyMi45MWwxLjMxLTEuODZjMC4yLTAuMjksMC41NC0wLjQ3LDAuOS0wLjQ3aDcuMDl2Mi4zM0gxNC41M3oiLz4KCQkJCTwvZz4KCQkJPC9nPgoJCTwvZz4KCTwvZz4KPC9nPgo8L3N2Zz4K","deepseek":"data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjFlbSIgc3R5bGU9ImZsZXg6bm9uZTtsaW5lLWhlaWdodDoxIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIxZW0iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPkRlZXBTZWVrPC90aXRsZT48cGF0aCBkPSJNMjMuNzQ4IDQuNDgyYy0uMjU0LS4xMjQtLjM2NC4xMTMtLjUxMi4yMzQtLjA1MS4wMzktLjA5NC4wOS0uMTM3LjEzNi0uMzcyLjM5Ny0uODA2LjY1Ny0xLjM3My42MjYtLjgyOS0uMDQ2LTEuNTM3LjIxNC0yLjE2My44NDgtLjEzMy0uNzgyLS41NzUtMS4yNDgtMS4yNDctMS41NDgtLjM1Mi0uMTU2LS43MDgtLjMxMS0uOTU1LS42NS0uMTcyLS4yNDEtLjIxOS0uNTEtLjMwNS0uNzc0LS4wNTUtLjE2LS4xMS0uMzIzLS4yOTMtLjM1LS4yLS4wMzEtLjI3OC4xMzYtLjM1Ni4yNzYtLjMxMy41NzItLjQzNCAxLjIwMi0uNDIyIDEuODQuMDI3IDEuNDM2LjYzMyAyLjU4IDEuODM4IDMuMzkzLjEzNy4wOTMuMTcyLjE4Ny4xMjkuMzIzLS4wODIuMjgtLjE4LjU1Mi0uMjY2LjgzMy0uMDU1LjE3OS0uMTM3LjIxNy0uMzI5LjE0YTUuNTI2IDUuNTI2IDAgMDEtMS43MzYtMS4xOGMtLjg1Ny0uODI4LTEuNjMxLTEuNzQyLTIuNTk3LTIuNDU4YTExLjM2NSAxMS4zNjUgMCAwMC0uNjg5LS40NzFjLS45ODUtLjk1Ny4xMy0xLjc0My4zODgtMS44MzYuMjctLjA5OC4wOTMtLjQzMi0uNzc5LS40MjgtLjg3Mi4wMDQtMS42Ny4yOTUtMi42ODcuNjg0YTMuMDU1IDMuMDU1IDAgMDEtLjQ2NS4xMzcgOS41OTcgOS41OTcgMCAwMC0yLjg4My0uMTAyYy0xLjg4NS4yMS0zLjM5IDEuMTAyLTQuNDk3IDIuNjIzQy4wODIgOC42MDYtLjIzMSAxMC42ODQuMTUyIDEyLjg1Yy40MDMgMi4yODQgMS41NjkgNC4xNzUgMy4zNiA1LjY1MyAxLjg1OCAxLjUzMyAzLjk5NyAyLjI4NCA2LjQzOCAyLjE0IDEuNDgyLS4wODUgMy4xMzMtLjI4NCA0Ljk5NC0xLjg2LjQ3LjIzNC45NjIuMzI3IDEuNzguMzk3LjYzLjA1OSAxLjIzNi0uMDMgMS43MDUtLjEyOC43MzUtLjE1Ni42ODQtLjgzNy40MTktLjk2MS0yLjE1NS0xLjAwNC0xLjY4Mi0uNTk1LTIuMTEzLS45MjYgMS4wOTYtMS4yOTYgMi43NDYtMi42NDIgMy4zOTItNy4wMDMuMDUtLjM0Ny4wMDctLjU2NSAwLS44NDUtLjAwNC0uMTcuMDM1LS4yMzcuMjMtLjI1NmE0LjE3MyA0LjE3MyAwIDAwMS41NDUtLjQ3NWMxLjM5Ni0uNzYzIDEuOTYtMi4wMTUgMi4wOTMtMy41MTcuMDItLjIzLS4wMDQtLjQ2Ny0uMjQ3LS41ODh6TTExLjU4MSAxOGMtMi4wODktMS42NDItMy4xMDItMi4xODMtMy41Mi0yLjE2LS4zOTIuMDI0LS4zMjEuNDcxLS4yMzUuNzYzLjA5LjI4OC4yMDcuNDg2LjM3MS43MzkuMTE0LjE2Ny4xOTIuNDE2LS4xMTMuNjAzLS42NzMuNDE2LTEuODQyLS4xNC0xLjg5Ny0uMTY3LTEuMzYxLS44MDItMi41LTEuODYtMy4zMDEtMy4zMDctLjc3NC0xLjM5My0xLjIyNC0yLjg4Ny0xLjI5OC00LjQ4Mi0uMDItLjM4Ni4wOTMtLjUyMi40NzctLjU5MmE0LjY5NiA0LjY5NiAwIDAxMS41MjktLjAzOWMyLjEzMi4zMTIgMy45NDYgMS4yNjUgNS40NjggMi43NzQuODY4Ljg2IDEuNTI1IDEuODg3IDIuMjAyIDIuODkxLjcyIDEuMDY2IDEuNDk0IDIuMDgyIDIuNDggMi45MTQuMzQ4LjI5Mi42MjUuNTE0Ljg5MS42NzctLjgwMi4wOS0yLjE0LjExLTMuMDU0LS42MTR6bTEtNi40NGEuMzA2LjMwNiAwIDAxLjQxNS0uMjg3LjMwMi4zMDIgMCAwMS4yLjI4OC4zMDYuMzA2IDAgMDEtLjMxLjMwNy4zMDMuMzAzIDAgMDEtLjMwNC0uMzA4em0zLjExIDEuNTk2Yy0uMi4wODEtLjM5OS4xNTEtLjU5LjE2YTEuMjQ1IDEuMjQ1IDAgMDEtLjc5OC0uMjU0Yy0uMjc0LS4yMy0uNDctLjM1OC0uNTUyLS43NThhMS43MyAxLjczIDAgMDEuMDE2LS41ODhjLjA3LS4zMjctLjAwOC0uNTM3LS4yMzktLjcyNy0uMTg3LS4xNTYtLjQyNi0uMTk5LS42ODgtLjE5OWEuNTU5LjU1OSAwIDAxLS4yNTQtLjA3OGMtLjExLS4wNTQtLjItLjE5LS4xMTQtLjM1OC4wMjgtLjA1NC4xNi0uMTg2LjE5Mi0uMjEuMzU2LS4yMDIuNzY3LS4xMzYgMS4xNDYuMDE2LjM1Mi4xNDQuNjE4LjQwOCAxLjAwMS43ODIuMzkxLjQ1MS40NjIuNTc2LjY4NS45MTQuMTc2LjI2NS4zMzYuNTM3LjQ0NS44NDguMDY3LjE5NS0uMDE5LjM1NC0uMjUuNDUyeiIgZmlsbD0iIzRENkJGRSI+PC9wYXRoPjwvc3ZnPg==","qwen":"data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjFlbSIgc3R5bGU9ImZsZXg6bm9uZTtsaW5lLWhlaWdodDoxIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIxZW0iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPlF3ZW48L3RpdGxlPjxwYXRoIGQ9Ik0xMi42MDQgMS4zNGMuMzkzLjY5Ljc4NCAxLjM4MiAxLjE3NCAyLjA3NWEuMTguMTggMCAwMC4xNTcuMDkxaDUuNTUyYy4xNzQgMCAuMzIyLjExLjQ0Ni4zMjdsMS40NTQgMi41N2MuMTkuMzM3LjI0LjQ3OC4wMjQuODM3LS4yNi40My0uNTEzLjg2NC0uNzYgMS4zbC0uMzY3LjY1OGMtLjEwNi4xOTYtLjIyMy4yOC0uMDQuNTEybDIuNjUyIDQuNjM3Yy4xNzIuMzAxLjExMS40OTQtLjA0My43Ny0uNDM3Ljc4NS0uODgyIDEuNTY0LTEuMzM1IDIuMzQtLjE1OS4yNzItLjM1Mi4zNzUtLjY4LjM3LS43NzctLjAxNi0xLjU1Mi0uMDEtMi4zMjcuMDE2YS4wOTkuMDk5IDAgMDAtLjA4MS4wNSA1NzUuMDk3IDU3NS4wOTcgMCAwMS0yLjcwNSA0Ljc0Yy0uMTY5LjI5My0uMzguMzYzLS43MjUuMzY0LS45OTcuMDAzLTIuMDAyLjAwNC0zLjAxNy4wMDJhLjUzNy41MzcgMCAwMS0uNDY1LS4yNzFsLTEuMzM1LTIuMzIzYS4wOS4wOSAwIDAwLS4wODMtLjA0OUg0Ljk4MmMtLjI4NS4wMy0uNTUzLS4wMDEtLjgwNS0uMDkybC0xLjYwMy0yLjc3YS41NDMuNTQzIDAgMDEtLjAwMi0uNTRsMS4yMDctMi4xMmEuMTk4LjE5OCAwIDAwMC0uMTk3IDU1MC45NTEgNTUwLjk1MSAwIDAxLTEuODc1LTMuMjcybC0uNzktMS4zOTVjLS4xNi0uMzEtLjE3My0uNDk2LjA5NS0uOTY1LjQ2NS0uODEzLjkyNy0xLjYyNSAxLjM4Ny0yLjQzNi4xMzItLjIzNC4zMDQtLjMzNC41ODQtLjMzNWEzMzguMyAzMzguMyAwIDAxMi41ODktLjAwMS4xMjQuMTI0IDAgMDAuMTA3LS4wNjNsMi44MDYtNC44OTVhLjQ4OC40ODggMCAwMS40MjItLjI0NmMuNTI0LS4wMDEgMS4wNTMgMCAxLjU4My0uMDA2TDExLjcwNCAxYy4zNDEtLjAwMy43MjQuMDMyLjkuMzR6bS0zLjQzMi40MDNhLjA2LjA2IDAgMDAtLjA1Mi4wM0w2LjI1NCA2Ljc4OGEuMTU3LjE1NyAwIDAxLS4xMzUuMDc4SDMuMjUzYy0uMDU2IDAtLjA3LjAyNS0uMDQxLjA3NGw1LjgxIDEwLjE1NmMuMDI1LjA0Mi4wMTMuMDYyLS4wMzQuMDYzbC0yLjc5NS4wMTVhLjIxOC4yMTggMCAwMC0uMi4xMTZsLTEuMzIgMi4zMWMtLjA0NC4wNzgtLjAyMS4xMTguMDY4LjExOGw1LjcxNi4wMDhjLjA0NiAwIC4wOC4wMi4xMDQuMDYxbDEuNDAzIDIuNDU0Yy4wNDYuMDgxLjA5Mi4wODIuMTM5IDBsNS4wMDYtOC43Ni43ODMtMS4zODJhLjA1NS4wNTUgMCAwMS4wOTYgMGwxLjQyNCAyLjUzYS4xMjIuMTIyIDAgMDAuMTA3LjA2MmwyLjc2My0uMDJhLjA0LjA0IDAgMDAuMDM1LS4wMi4wNDEuMDQxIDAgMDAwLS4wNGwtMi45LTUuMDg2YS4xMDguMTA4IDAgMDEwLS4xMTNsLjI5My0uNTA3IDEuMTItMS45NzdjLjAyNC0uMDQxLjAxMi0uMDYyLS4wMzUtLjA2Mkg5LjJjLS4wNTkgMC0uMDczLS4wMjYtLjA0My0uMDc3bDEuNDM0LTIuNTA1YS4xMDcuMTA3IDAgMDAwLS4xMTRMOS4yMjUgMS43NzRhLjA2LjA2IDAgMDAtLjA1My0uMDMxem02LjI5IDguMDJjLjA0NiAwIC4wNTguMDIuMDM0LjA2bC0uODMyIDEuNDY1LTIuNjEzIDQuNTg1YS4wNTYuMDU2IDAgMDEtLjA1LjAyOS4wNTguMDU4IDAgMDEtLjA1LS4wMjlMOC40OTggOS44NDFjLS4wMi0uMDM0LS4wMS0uMDUyLjAyOC0uMDU0bC4yMTYtLjAxMiA2LjcyMi0uMDEyeiIgZmlsbD0idXJsKCNsb2JlLWljb25zLXF3ZW4tX1JfMF8pIiBmaWxsLXJ1bGU9Im5vbnplcm8iPjwvcGF0aD48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImxvYmUtaWNvbnMtcXdlbi1fUl8wXyIgeDE9IjAlIiB4Mj0iMTAwJSIgeTE9IjAlIiB5Mj0iMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM2MzM2RTciIHN0b3Atb3BhY2l0eT0iLjg0Ij48L3N0b3A+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNkY2OUY3IiBzdG9wLW9wYWNpdHk9Ii44NCI+PC9zdG9wPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg=="}};</script>
+<script>
+(function () {
+  const DATA = window.SITE_DATA || { records: [], logos: {} };
+  const RECORDS = DATA.records || [];
+  const LOGOS = DATA.logos || {};
+  if (!RECORDS.length) return;
+
+  // GitHub dark-dimmed tokens mapped to the v2 palette (see :root above).
+  const GH = {
+    success: '#57ab5a', attention: '#c69026',
+    fg: '#cdd9e5', fgMuted: '#98a5b3',
+    border: '#444c56', borderMuted: '#373e47',
+    bgHeader: '#12181e', bgOverlay: '#2d333b',
+  };
+
+  /* ============================ Leaderboard ============================ */
+  // Score + Resolve are the two hero metrics (adjacent, highlighted). `dir`
+  // marks whether higher (max) or lower (min) is better, for per-column top-3.
+  const LB_COLS = [
+    { key: 'rank',      label: '#',           num: false, fmt: r => String(r.rank) },
+    { key: 'model',     label: 'Model',       num: false },
+    { key: 'score',     label: 'Score %',     num: true, hero: true, dir: 'max', tip: 'F1 of Precision and Recall. Balances fixing required tests and avoiding regressions.', fmt: r => r.score.toFixed(2) },
+    { key: 'resolve',   label: 'Resolve %',   num: true, hero: true, dir: 'max', tip: '% of milestones fully resolved, where all required tests pass with no regressions.', fmt: r => r.resolve.toFixed(2) },
+    { key: 'precision', label: 'Precision %', num: true, dir: 'max', tip: 'Ratio of bugs fixed without breaking existing tests. Higher means cleaner changes.', fmt: r => r.precision.toFixed(2) },
+    { key: 'recall',    label: 'Recall %',    num: true, dir: 'max', tip: 'Ratio of required test cases successfully fixed. Higher means the agent addresses more of the required changes.', fmt: r => r.recall.toFixed(2) },
+    { key: 'cost',      label: 'Cost $',      num: true, dir: 'min', tip: 'Average API cost per evolution range ($)', fmt: r => r.cost.toFixed(2) },
+    { key: 'out_tok_k', label: 'Out Tok K',   num: true, dir: 'min', tip: 'Average output tokens per evolution range, incl. reasoning/thinking (K)', fmt: r => r.out_tok_k ? String(Math.round(r.out_tok_k)) : '—' },
+    { key: 'time_h',    label: 'Time h',      num: true, dir: 'min', tip: 'Average wall-clock time per evolution range (hours)', fmt: r => r.time_h ? r.time_h.toFixed(2) : '—' },
+    { key: 'turns',     label: 'Turns',       num: true, dir: 'min', tip: 'Average agent turns per evolution range', fmt: r => r.turns ? String(Math.round(r.turns)) : '—' },
+  ];
+  const LB_COLLAPSED = 15;
+  let lbKey = 'rank', lbDesc = false, lbExpanded = false;
+
+  // Per-column top-3 (directional best): record.id -> medal position (1..3).
+  // Only ranks records with a valid (> 0) value so missing metrics ("—") never
+  // count as the cheapest/fastest.
+  const LB_TOP3 = {};
+  LB_COLS.forEach(c => {
+    if (!c.num || !c.dir) return;
+    const valid = RECORDS.filter(r => r[c.key] != null && r[c.key] > 0);
+    valid.sort((a, b) => c.dir === 'max' ? b[c.key] - a[c.key] : a[c.key] - b[c.key]);
+    const m = {};
+    valid.slice(0, 3).forEach((r, i) => { m[r.id] = i + 1; });
+    LB_TOP3[c.key] = m;
+  });
+
+  function lbRender() {
+    const head = document.getElementById('lb-head');
+    const body = document.getElementById('lb-body');
+    if (!head || !body) return;
+
+    head.innerHTML = LB_COLS.map(c => {
+      const active = c.key === lbKey;
+      const arrow = active ? (lbDesc ? '↓' : '↑') : '';
+      const centered = c.key !== 'model';
+      const cls = 'sortable' + (c.num ? ' num' : '') + (centered ? ' ctr' : '') +
+        (c.hero ? ' keycol' : '') + (active ? ' active' : '');
+      const tip = c.tip ? ' data-tip="' + c.tip + '"' : '';
+      return '<th class="' + cls + '" data-key="' + c.key + '"' + tip + '>' + c.label +
+        '<span class="sarrow">' + arrow + '</span></th>';
+    }).join('');
+
+    const dir = lbDesc ? -1 : 1;
+    const sorted = RECORDS.slice().sort((a, b) => {
+      if (lbKey === 'model') return dir * a.model_display.localeCompare(b.model_display);
+      return dir * (a[lbKey] - b[lbKey]);
+    });
+    const rows = lbExpanded ? sorted : sorted.slice(0, LB_COLLAPSED);
+
+    body.innerHTML = rows.map(r => {
+      const top = r.rank === 1 ? ' class="top"' : '';
+      const cells = LB_COLS.map(c => {
+        if (c.key === 'rank') {
+          const medal = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : '';
+          return '<td class="rank ctr">' + (medal ? '<span class="rank-medal">' + medal + '</span>' : r.rank) + '</td>';
+        }
+        if (c.key === 'model') {
+          const uri = LOGOS[r.logo_key];
+          const mark = uri
+            ? '<img class="m-logo" src="' + uri + '" alt="">'
+            : '<span class="m-dot" style="background:' + r.color + '"></span>';
+          return '<td class="model"><span class="m-name">' + mark + r.model_display +
+            '</span><span class="m-scaffold">' + r.agent_display + '</span></td>';
+        }
+        const pos = LB_TOP3[c.key] && LB_TOP3[c.key][r.id];
+        const cls = 'num ctr' + (c.hero ? ' keycol' : '') + (pos ? ' t' + pos : '');
+        if (c.key === 'score') {
+          // Bar is scaled to a full scale of 100 (a perfect score fills it).
+          const w = Math.max(2, Math.min(100, Math.round(r.score)));
+          return '<td class="' + cls + '">' + c.fmt(r) + '<span class="bar"><i style="width:' + w + '%"></i></span></td>';
+        }
+        return '<td class="' + cls + '">' + c.fmt(r) + '</td>';
+      }).join('');
+      return '<tr' + top + '>' + cells + '</tr>';
+    }).join('');
+
+    const toggle = document.getElementById('lb-toggle');
+    if (toggle) {
+      toggle.textContent = lbExpanded ? 'Show top ' + LB_COLLAPSED : 'Show all ' + RECORDS.length + ' models';
+      toggle.style.display = RECORDS.length > LB_COLLAPSED ? '' : 'none';
+    }
+
+    head.querySelectorAll('th').forEach(th => {
+      th.addEventListener('click', () => {
+        const k = th.getAttribute('data-key');
+        if (k === lbKey) lbDesc = !lbDesc;
+        else { lbKey = k; lbDesc = (k !== 'rank' && k !== 'model'); }
+        lbRender();
+      });
+    });
+  }
+  lbRender();
+
+  // Expand / collapse the leaderboard (default shows top 15).
+  (function () {
+    const t = document.getElementById('lb-toggle');
+    if (t) t.addEventListener('click', function () { lbExpanded = !lbExpanded; lbRender(); });
+  })();
+
+  // Header hover explanations — same copy as the v1 leaderboard. Delegated so
+  // it survives header re-renders on sort/expand.
+  (function () {
+    const tip = document.createElement('div');
+    tip.className = 'tip-popup';
+    document.body.appendChild(tip);
+    document.addEventListener('mouseover', function (e) {
+      const el = e.target.closest ? e.target.closest('[data-tip]') : null;
+      if (!el) return;
+      tip.textContent = el.getAttribute('data-tip');
+      const r = el.getBoundingClientRect();
+      tip.style.left = (r.left + r.width / 2) + 'px';
+      tip.style.top = (r.top - 8) + 'px';
+      tip.classList.add('show');
+    });
+    document.addEventListener('mouseout', function (e) {
+      const el = e.target.closest ? e.target.closest('[data-tip]') : null;
+      if (el && !el.contains(e.relatedTarget)) tip.classList.remove('show');
+    });
+  })();
+
+  /* ============================ Pareto frontier ============================ */
+  const X_OPTS = [
+    { v: 'cost',       label: 'Cost ($)' },
+    { v: 'time',       label: 'Duration (min)' },
+    { v: 'turns',      label: 'Turns' },
+    { v: 'out_tokens', label: 'Output Tokens (K)' },
+  ];
+  const Y_OPTS = [
+    { v: 'score',        label: 'Score' },
+    { v: 'resolve_rate', label: 'Resolve Rate' },
+    { v: 'precision',    label: 'Precision' },
+    { v: 'recall',       label: 'Recall' },
+  ];
+  let xKind = 'cost', yKind = 'score', zoomMode = false, chart = null;
+
+  const getX = r => xKind === 'cost' ? r.cost : xKind === 'time' ? r.time_h * 60 : xKind === 'turns' ? r.turns : r.out_tok_k;
+  const getY = r => yKind === 'score' ? r.score : yKind === 'resolve_rate' ? r.resolve : yKind === 'precision' ? r.precision : r.recall;
+
+  const NEAR_FRAC = 0.15, NEAR_MIN = 2;
+  function yTol(ys) {
+    if (ys.length < 2) return NEAR_MIN;
+    return Math.max((Math.max.apply(null, ys) - Math.min.apply(null, ys)) * NEAR_FRAC, NEAR_MIN);
+  }
+  function computePareto(pts, tol) {
+    tol = tol || 0;
+    const sorted = pts.slice().sort((a, b) => getX(a) - getX(b));
+    const front = []; let best = -Infinity;
+    for (const p of sorted) { if (getY(p) >= best - tol) { front.push(p); if (getY(p) > best) best = getY(p); } }
+    return front;
+  }
+  function staircase(front, xMax) {
+    if (!front.length) return [];
+    const s = front.slice().sort((a, b) => getX(a) - getX(b));
+    const pts = [[0, getY(s[0])]];
+    for (let i = 0; i < s.length; i++) {
+      pts.push([getX(s[i]), getY(s[i])]);
+      if (i < s.length - 1) pts.push([getX(s[i + 1]), getY(s[i])]);
+    }
+    pts.push([xMax, getY(s[s.length - 1])]);
+    return pts;
+  }
+  function frontierSymbol(r, strict) {
+    const uri = LOGOS[r.logo_key];
+    const stroke = strict ? GH.success : GH.attention;
+    const sw = strict ? 2.5 : 1.5, op = strict ? 1 : 0.6;
+    let svg;
+    if (uri) {
+      svg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">' +
+        '<rect x="1" y="1" width="30" height="30" fill="' + GH.bgHeader + '" stroke="' + stroke + '" stroke-width="' + sw + '"/>' +
+        '<image x="6" y="6" width="20" height="20" href="' + uri + '" opacity="' + op + '"/></svg>';
+    } else {
+      const letter = (r.label || '?').charAt(0);
+      svg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">' +
+        '<rect x="1" y="1" width="30" height="30" fill="' + GH.bgHeader + '" stroke="' + stroke + '" stroke-width="' + sw + '"/>' +
+        '<text x="16" y="22" text-anchor="middle" fill="' + (strict ? GH.fg : GH.fgMuted) + '" font-size="16" font-weight="bold" font-family="sans-serif">' + letter + '</text></svg>';
+    }
+    return 'image://data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+
+  function buildOption() {
+    const agg = RECORDS;
+    const ys = agg.map(getY), xs = agg.map(getX);
+    const strict = computePareto(agg, 0);
+    const relaxed = computePareto(agg, yTol(ys));
+    const strictSet = new Set(strict.map(r => r.id));
+    const frontSet = new Set(relaxed.map(r => r.id));
+    const yMax = Math.min(100, Math.ceil((Math.max.apply(null, ys.concat([10])) + 5) / 5) * 5);
+    const yMin = Math.max(0, Math.floor((Math.min.apply(null, ys.concat([0])) - 3) / 5) * 5);
+    const rawXMax = Math.max.apply(null, xs.concat([0]));
+    const xMax = rawXMax + (rawXMax > 20 ? rawXMax * 0.05 : 1);
+    const stair = staircase(strict, xMax);
+
+    const scatter = agg.map(r => {
+      const st = strictSet.has(r.id), on = frontSet.has(r.id), near = on && !st;
+      return {
+        name: r.id, type: 'scatter',
+        data: [[getX(r), getY(r), r.cost, r.time_h * 60, r.turns, r.out_tok_k, r.score, r.resolve, r.precision, r.recall, r.label, r.agent_display]],
+        symbol: on ? frontierSymbol(r, st) : 'rect',
+        symbolSize: st ? 28 : near ? 18 : 8,
+        itemStyle: { color: r.color, opacity: st ? 1 : near ? 0.75 : 0.4 },
+        label: {
+          show: true, formatter: r.label, position: 'top', distance: st ? 6 : near ? 5 : 4,
+          fontSize: st ? 10 : 9, fontWeight: st ? 500 : 400, color: st ? GH.fg : GH.fgMuted,
+          backgroundColor: st ? (GH.bgHeader + 'e6') : 'transparent', borderColor: st ? (GH.border + '80') : 'transparent',
+          borderWidth: st ? 1 : 0, padding: st ? [2, 6] : [1, 3],
+        },
+        z: st ? 10 : near ? 7 : 5,
+        emphasis: { focus: 'series', itemStyle: { opacity: 1 } },
+        blur: { itemStyle: { opacity: 0.12 } },
+      };
+    });
+
+    const xMeta = X_OPTS.find(o => o.v === xKind), yMeta = Y_OPTS.find(o => o.v === yKind);
+    return {
+      tooltip: {
+        trigger: 'item',
+        formatter: p => {
+          if (p.seriesName === '_frontier') return '';
+          const d = p.data;
+          return '<div style="font-weight:600;margin-bottom:1px">' + d[10] + '</div>' +
+            '<div style="font-size:11px;color:' + GH.fgMuted + ';margin-bottom:6px">' + d[11] + '</div>' +
+            '<div style="font-size:12px;line-height:1.6">' +
+            'Score: <b>' + d[6].toFixed(1) + '%</b><br/>' +
+            'Resolve Rate: <b>' + d[7].toFixed(1) + '%</b><br/>' +
+            'Precision: <b>' + d[8].toFixed(1) + '%</b><br/>' +
+            'Recall: <b>' + d[9].toFixed(1) + '%</b><br/>' +
+            'Cost: <b>$' + d[2].toFixed(2) + '</b><br/>' +
+            'Duration: <b>' + d[3].toFixed(1) + ' min</b><br/>' +
+            'Turns: <b>' + d[4] + '</b><br/>' +
+            'Output Tokens: <b>' + d[5].toFixed(0) + 'K</b></div>';
+        },
+        backgroundColor: GH.bgOverlay, borderColor: GH.border, textStyle: { color: GH.fg, fontSize: 13 },
+        extraCssText: 'box-shadow:0 8px 24px rgba(1,4,9,0.7);',
+      },
+      legend: { show: false },
+      toolbox: {
+        show: true, right: 8, top: 10, itemSize: 13,
+        iconStyle: { borderColor: GH.fgMuted }, emphasis: { iconStyle: { borderColor: GH.fg } },
+        feature: { dataZoom: { yAxisIndex: 'all', title: { zoom: 'Box zoom', back: 'Undo zoom' } }, restore: { title: 'Reset zoom' } },
+      },
+      dataZoom: [
+        { type: 'inside', xAxisIndex: 0, filterMode: 'none', zoomOnMouseWheel: zoomMode, moveOnMouseMove: zoomMode },
+        { type: 'inside', yAxisIndex: 0, filterMode: 'none', zoomOnMouseWheel: zoomMode, moveOnMouseMove: zoomMode },
+      ],
+      grid: { top: 40, bottom: 44, left: 56, right: 20 },
+      xAxis: {
+        type: 'value', name: xMeta.label, nameLocation: 'middle', nameGap: 26, min: 0, max: xMax,
+        nameTextStyle: { color: GH.fgMuted, fontSize: 12 },
+        axisLabel: { color: GH.fgMuted, fontSize: 11, formatter: function (v) { return Math.round(v); } },
+        axisLine: { lineStyle: { color: GH.borderMuted } }, splitLine: { lineStyle: { color: GH.borderMuted, type: 'dashed' } },
+      },
+      yAxis: {
+        type: 'value', name: yMeta.label + ' (%)', min: yMin, max: yMax,
+        nameTextStyle: { color: GH.fgMuted, fontSize: 12 }, axisLabel: { color: GH.fgMuted, fontSize: 11, formatter: '{value}%' },
+        axisLine: { lineStyle: { color: GH.borderMuted } }, splitLine: { lineStyle: { color: GH.borderMuted, type: 'dashed' } },
+      },
+      backgroundColor: 'transparent',
+      series: [
+        { name: '_frontier', type: 'line', data: stair, lineStyle: { color: GH.success, width: 2.5 }, symbol: 'none', smooth: false, z: 2, silent: true, animationDuration: 650, animationEasing: 'cubicOut' },
+        ...scatter,
+      ],
+    };
+  }
+
+  function sideRender() {
+    const list = document.getElementById('pareto-side-list');
+    const tolEl = document.getElementById('ps-tol');
+    if (!list) return;
+    const agg = RECORDS;
+    const tol = yTol(agg.map(getY));
+    if (tolEl) tolEl.textContent = '±' + tol.toFixed(1) + 'pp';
+    const strict = new Set(computePareto(agg, 0).map(r => r.id));
+    const front = new Set(computePareto(agg, tol).map(r => r.id));
+    const sorted = agg.slice().sort((a, b) => getY(b) - getY(a));
+
+    list.innerHTML = sorted.map(r => {
+      const st = strict.has(r.id), on = front.has(r.id), near = on && !st;
+      const tierColor = st ? GH.success : near ? GH.attention : GH.borderMuted;
+      const tierBg = st ? GH.success : 'transparent';
+      const uri = LOGOS[r.logo_key];
+      const logo = uri ? '<img src="' + uri + '" alt="">' : '<span style="color:' + r.color + '">' + (r.label || '?').charAt(0) + '</span>';
+      const xv = getX(r);
+      const xLabel = xKind === 'cost' ? '$' + xv.toFixed(2) : xKind === 'time' ? xv.toFixed(0) + 'm' : xKind === 'turns' ? String(Math.round(xv)) : xv.toFixed(0) + 'K';
+      const op = st ? 1 : near ? 0.82 : 0.5;
+      return '<div class="ps-row" data-id="' + r.id + '" style="opacity:' + op + '">' +
+        '<span class="tier" style="border:2px solid ' + tierColor + ';background:' + tierBg + '"></span>' +
+        '<span class="ps-logo" style="border-color:' + r.color + ';background:' + r.color + '1f">' + logo + '</span>' +
+        '<span class="ps-name"><span class="n">' + r.label + '</span><span class="s">' + r.agent_display + '</span></span>' +
+        '<span class="ps-metric"><span class="v">' + getY(r).toFixed(1) + '%</span><span class="x">' + xLabel + '</span></span>' +
+        '</div>';
+    }).join('');
+
+    list.querySelectorAll('.ps-row').forEach(row => {
+      const id = row.getAttribute('data-id');
+      row.addEventListener('mouseenter', () => chart && chart.dispatchAction({ type: 'highlight', seriesName: id }));
+      row.addEventListener('mouseleave', () => chart && chart.dispatchAction({ type: 'downplay' }));
+    });
+  }
+
+  function controlsRender() {
+    const yBox = document.getElementById('pareto-y'), xBox = document.getElementById('pareto-x');
+    yBox.innerHTML = Y_OPTS.map(o => '<button class="pc-btn' + (o.v === yKind ? ' active' : '') + '" data-y="' + o.v + '">' + o.label + '</button>').join('');
+    xBox.innerHTML = X_OPTS.map(o => '<button class="pc-btn' + (o.v === xKind ? ' active' : '') + '" data-x="' + o.v + '">' + o.label + '</button>').join('');
+    yBox.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { yKind = b.getAttribute('data-y'); update(); }));
+    xBox.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { xKind = b.getAttribute('data-x'); update(); }));
+  }
+  function update() {
+    controlsRender();
+    if (!chart) return;
+    // Full fresh render on every toggle: clear() resets the chart so the next
+    // setOption behaves exactly like the initial load — the frontier line
+    // replays its left→right draw animation and every scatter series
+    // re-renders. (A partial-merge re-add of just the line aligned by array
+    // index onto scatter[0] = the top-scoring model, dropping that point.)
+    chart.clear();
+    chart.setOption(buildOption());
+    sideRender();
+  }
+
+  function initPareto() {
+    const el = document.getElementById('pareto-chart');
+    if (!el || !window.echarts) return;
+    chart = window.echarts.init(el, null, { renderer: 'canvas' });
+    controlsRender();
+    chart.setOption(buildOption(), true);
+    sideRender();
+    const zoomBtn = document.getElementById('pareto-zoom');
+    zoomBtn.addEventListener('click', () => {
+      zoomMode = !zoomMode;
+      zoomBtn.classList.toggle('active', zoomMode);
+      zoomBtn.textContent = zoomMode ? '🔍 Zoom on' : '🔍 Zoom';
+      chart.setOption(buildOption(), true);
+    });
+    window.addEventListener('resize', () => chart && chart.resize());
+  }
+  initPareto();
+})();
+</script>
+
+<!-- live GitHub star counts for the task cards (cached 12h; hidden on failure) -->
+<script>
+(function () {
+  const fmt = n => n >= 1000 ? (n / 1000).toFixed(n < 10000 ? 1 : 0) + 'k' : String(n);
+  document.querySelectorAll('.star[data-star]').forEach(el => {
+    const repo = el.getAttribute('data-star');
+    const key = 'gh-stars:' + repo, b = el.querySelector('b');
+    try {
+      const c = JSON.parse(localStorage.getItem(key) || 'null');
+      if (c && Date.now() - c.t < 43200000) { b.textContent = fmt(c.n); return; }
+    } catch (e) {}
+    fetch('https://api.github.com/repos/' + repo)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d && typeof d.stargazers_count === 'number') {
+          b.textContent = fmt(d.stargazers_count);
+          try { localStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, t: Date.now() })); } catch (e) {}
+        } else { el.style.display = 'none'; }
+      })
+      .catch(() => { el.style.display = 'none'; });
+  });
+})();
+</script>
+
+</body>
+</html>

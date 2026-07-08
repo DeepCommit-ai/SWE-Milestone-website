@@ -1,0 +1,29 @@
+source_id,target_id,type,strength,rationale,confidence_score
+milestone_G04_1ddae02,milestone_M03_polars,FUNC,Strong,Both milestones deal with command signatures supporting multiple input/output type pairs,0.90
+milestone_G04_ca0e961,milestone_M03_polars,FUNC,Strong,Overlay list table output demonstrates proper Table type usage in signatures critical for polars commands,0.85
+milestone_G01_48bca0a,milestone_M08_docs,TEXT,Weak,Both modify Signature struct but independently docs dont use custom_completion feature,0.85
+milestone_M03_polars,milestone_G02_0f505d0,NFR,Weak,Polars commits precede detect type in git history but detect type doesnt functionally use polars features,0.65
+milestone_core_development.1,milestone_core_development.4,FUNC,Strong,Layer 0 commits provide foundation for layer 1-4 features,0.95
+milestone_core_development.4,milestone_core_development.5,FUNC,Strong,Layer 1-4 commits provide foundation for layer 5-8 features,0.95
+milestone_G02_da9615f,milestone_core_development.4,FUNC,Weak,Type checking enhancement used by core development,0.70
+milestone_G05_be6e868,milestone_core_development.4,TEXT,Weak,LSP testing refactoring cleanup without blocking core,0.80
+milestone_M02_parser,milestone_core_development.5,TEXT,Weak,Parser bug fixes improve edge case handling,0.75
+milestone_M08_docs,milestone_core_development.4,TEXT,Weak,Documentation improvements dont block core execution,0.70
+milestone_core_development.4,milestone_M07_refactor,TEXT,Weak,Refactoring reorganizes core infrastructure,0.75
+milestone_core_development.4,milestone_G02_a647707,FUNC,Strong,Runtime type enforcement requires core infrastructure,0.90
+milestone_core_development.4,milestone_M01_deps,NFR,Weak,Dependency version bumps follow core development,0.85
+milestone_core_development.4,milestone_M09_datetime,TEXT,Weak,Date format additions extend existing capabilities,0.80
+milestone_core_development.1,milestone_M03_polars,TEXT,Weak,Polars plugin independent improvements,0.80
+milestone_core_development.5,milestone_G02_0f505d0,FUNC,Weak,Type detection uses advanced features,0.70
+milestone_core_development.3,milestone_M03_polars,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+milestone_core_development.5,milestone_G01_d96dbbd,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+milestone_core_development.5,milestone_G05_08822b5,FUNC,Weak,Auto-inferred from commit-level dependencies,0.70
+milestone_core_development.3,milestone_G05_be6e868,FUNC,Strong,LSP commits d1a8249 46be984 1f68415 depend on e1ce67e in core_development.3,0.95
+milestone_G05_0b8531e,milestone_core_development.4,FUNC,Strong,milestone_core_development.4 uses NuCow type defined in milestone_G05_0b8531e,0.95
+milestone_core_development.2,milestone_G05_be6e868,FUNC,Strong,API dependency - list_stream and byte_stream functions required,0.95
+milestone_core_development.2,milestone_G02_da9615f,FUNC,Strong,API dependency - list_stream and byte_stream functions required,0.95
+milestone_core_development.2,milestone_G04_ca0e961,FUNC,Strong,API dependency - list_stream and byte_stream functions required,0.95
+milestone_core_development.2,milestone_G05_0b8531e,FUNC,Strong,API dependency - list_stream and byte_stream functions required,0.95
+milestone_core_development.2,milestone_G05_ac3f93f,FUNC,Strong,API dependency - list_stream and byte_stream functions required,0.95
+milestone_core_development.2,milestone_M08_docs,FUNC,Weak,API dependency - list_stream and byte_stream functions required,0.95
+milestone_core_development.2,milestone_M04_std,FUNC,Strong,API dependency - list_stream and byte_stream functions required,0.95

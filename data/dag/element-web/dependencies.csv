@@ -1,0 +1,13 @@
+source_id,target_id,type,strength,rationale,confidence_score
+maintenance_ui_ux,feature_enhancements,TEXT,Weak,Both modify RoomSummaryCard.tsx - textual overlap no functional API usage,0.75
+milestone_seed_56c7fc1_1,feature_enhancements,TEXT,Weak,feature_enhancements commit e1970df lands between milestone_seed_56c7fc1_1 commits - ensures correct merge order,0.80
+milestone_seed_be3778b_1,feature_enhancements,TEXT,Weak,feature_enhancements commit e1970df (2025-03-21) lands after milestone_seed_be3778b_1 last commit cdd2622 (2025-03-18) - ensures correct merge order,0.80
+feature_enhancements,milestone_seed_3f47487_1,TEXT,Weak,feature_enhancements last commit a6e8d51 (2025-03-24) precedes milestone_seed_3f47487_1 commit 3f47487 (2025-03-26) - ensures ReportRoomDialog.pcss is included in milestone_seed_3f47487_1,0.85
+milestone_seed_3f47487_1,maintenance_bug_fixes,TEXT,Weak,milestone_seed_3f47487_1 creates src/renderer/ module before maintenance_bug_fixes - ensures renderer module is included in maintenance_bug_fixes-end,0.85
+milestone_seed_3762d40_1,milestone_seed_05df321_1,TEXT,Weak,Both modify React type imports - rageshake improvements precede React 19 migration,0.65
+maintenance_bug_fixes,milestone_seed_05df321_1,TEXT,Weak,maintenance_bug_fixes commits (2025-03-26) precede milestone_seed_05df321_1 commit 05df321 (2025-03-27),0.85
+milestone_seed_7ff1fd2_1,milestone_seed_e9a3625_1_sub-01,FUNC,Strong,Room List V3 ViewModel uses RoomListStoreV3.getSortedRoomsInActiveSpace() from Filter Infrastructure,0.95
+milestone_seed_aa99601_1,milestone_seed_f59af37_1,NFR,Weak,Both modify RoomViewStore.tsx for different features - no functional coupling,0.75
+milestone_seed_aa99601_1,milestone_seed_8bb4d44_1,TEXT,Weak,Both modify Call.ts in different methods - textual dependency for same file,0.70
+milestone_seed_e9a3625_1_sub-01,milestone_seed_e9a3625_1_sub-02,FUNC,Strong,Sub-milestone 02 UI components depend on sub-milestone 01 ViewModel foundation for state management,0.95
+milestone_seed_e9a3625_1_sub-02,milestone_seed_e9a3625_1_sub-03,FUNC,Strong,Sub-milestone 03 room behavior features depend on sub-milestone 02 UI components for rendering,0.95

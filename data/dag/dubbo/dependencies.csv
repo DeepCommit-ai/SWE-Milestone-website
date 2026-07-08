@@ -1,0 +1,10 @@
+source_id,target_id,type,strength,rationale,confidence_score
+M015,M021,TEXT,Weak,Both modify pom.xml files but perform independent build configuration cleanups - no functional blocking dependency.,0.90
+M016.1,M018,FUNC,Weak,M016 refactored charset parsing in HttpUtils.java; M018 optimized same method. Performance optimization that enhances prior refactoring but can execute independently.,0.85
+M016.1,M025,NFR,Weak,M016 fixed concurrency bug in ConsistentHashLoadBalance.java; M025 added early return optimization. Performance enhancement that improves upon source fix but can function independently.,0.80
+M020,M021,TEXT,Weak,M020 added test dependencies; M021 removed them as useless. Sequential work but no functional blocking - target removal does not break builds.,0.90
+M001.1,M001.2,FUNC,Strong,"M001.2 (Spring 6 module split) moves OAuth2 serialization code created in M001.1 to the new module, requiring M001.1 to be completed first.",0.90
+M003.1,M003.2,FUNC,Strong,M003.2 (Core Abstractions) depends on M003.1 (Infrastructure) which provides Maven dependencies and build configuration required for core reactive abstractions.,0.95
+M003.2,M003.3,FUNC,Strong,M003.3 (Calls and Handlers) depends on M003.2 (Core Abstractions) which provides Publisher/Subscriber base classes required by client/server call utilities and method handlers.,0.95
+M005.1,M005.2,FUNC,Strong,M005.2 (Config Implementations) depends on M005.1 (Core Infrastructure) which provides AffinityStateRouter base class and model classes required by config-based router implementations.,0.95
+M004,M001.1,FUNC,Strong,M001.1's test code (GreeterServiceImpl.java in dubbo-demo) imports ServerSentEvent class which is added by M004. Without M004 the test code cannot compile.,0.95

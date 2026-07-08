@@ -1,0 +1,10 @@
+source_id,target_id,type,strength,rationale,confidence_score
+milestone_002,milestone_001,FUNC,Strong,Target's plugins/runtime.go requires SchedulerService.TimeNow interface which source's commit 5b73a4d adds,0.95
+milestone_006,milestone_001,FUNC,Strong,milestone_001 commits depend on milestone_006's UI changes,0.95
+milestone_006,milestone_003_sub-01,FUNC,Strong,Multi-library split commits were created on top of milestone_006 commit 089dbe9,0.95
+milestone_001,milestone_003_sub-02,FUNC,Strong,Sub-02's 2edb969 modifies core/scrobbler/play_tracker.go which is also modified by milestone_001's 66eaac2,0.95
+milestone_003_sub-01,milestone_003_sub-02,FUNC,Strong,Core library service and scanner depend on database schema and persistence layer foundation,0.95
+milestone_003_sub-02,milestone_003_sub-03,FUNC,Strong,Server APIs depend on core library service for library management and validation,0.95
+milestone_003_sub-03,milestone_003_sub-04,FUNC,Strong,UI components depend on server APIs for library data and management endpoints,0.95
+milestone_003_sub-04,milestone_004,FUNC,Strong,Scanner quality improvements depend on multi-library UI components,0.95
+milestone_002,milestone_003_sub-01,FUNC,Strong,Multi-library database foundation depends on plugin API extensions,0.95

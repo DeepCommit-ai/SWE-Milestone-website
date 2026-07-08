@@ -1,0 +1,548 @@
+/* Dark theme (GitHub dark-dimmed) for the milestone DetailPanel + SRS modal.
+   Plain CSS — the build has no Tailwind. All classes are prefixed `dp-`.
+   The side panel is compact, narrow, near-square corners (matches the site's
+   sharp chrome); the SRS reading modal stays roomy. */
+
+@keyframes dp-slideIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Panel container (compact, narrow, square-ish) ---------- */
+.dp-panel {
+  position: absolute;
+  top: 80px;
+  right: 14px;
+  width: 288px;
+  max-height: 85vh;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  background: #1a1f26;
+  border: 1px solid #444c56;
+  font-family: ui-sans-serif, system-ui, Roboto, sans-serif;
+  color: #cdd9e5;
+  animation: dp-slideIn 0.25s ease-out;
+}
+
+/* Generic vertical stacks (replace Tailwind space-y-*) */
+.dp-stack-6 { display: flex; flex-direction: column; gap: 15px; }
+.dp-stack-4 { display: flex; flex-direction: column; gap: 11px; }
+.dp-stack-3 { display: flex; flex-direction: column; gap: 8px; }
+.dp-stack-2 { display: flex; flex-direction: column; gap: 6px; }
+
+.dp-files-section { padding-top: 6px; }
+.dp-commits-section { padding-top: 6px; }
+
+/* ---------- Header ---------- */
+.dp-header {
+  border-bottom: 1px solid #2d333b;
+  background: #12181e;
+}
+.dp-header-top {
+  padding: 11px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dp-header-top-tight { padding-bottom: 6px; }
+
+.dp-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #ecf2f8;
+  max-width: 210px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dp-id-wrap { padding: 0 12px 10px; }
+.dp-id-chip {
+  padding: 5px 8px;
+  background: #0d1117;
+  border: 1px solid #2d333b;
+  border-radius: 3px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.63rem;
+  color: #adbac7;
+  word-break: break-all;
+  user-select: all;
+}
+
+/* Close button (X) — used by panel header and modal header */
+.dp-close-btn {
+  padding: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #768390;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.dp-close-btn:hover {
+  background: #22282f;
+  color: #ecf2f8;
+}
+
+/* ---------- Body (scroll region) ---------- */
+.dp-body {
+  padding: 13px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #2d333b transparent;
+}
+.dp-body::-webkit-scrollbar { width: 7px; }
+.dp-body::-webkit-scrollbar-track { background: transparent; }
+.dp-body::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 3px; }
+
+/* ---------- Node title + badges ---------- */
+.dp-node-title {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ecf2f8;
+  line-height: 1.3;
+}
+
+.dp-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dp-cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: #12181e;
+  border: 1px solid #2d333b;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #cdd9e5;
+}
+.dp-cat-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* View SRS — a solid, prominent primary button */
+.dp-srs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  background: #2f6fed;
+  border: 1px solid #2f6fed;
+  border-radius: 4px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(47, 111, 237, 0.45);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.dp-srs-btn:hover { background: #4785f2; box-shadow: 0 2px 8px rgba(47, 111, 237, 0.55); }
+.dp-srs-btn:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+
+/* ---------- Description box ---------- */
+.dp-description {
+  padding: 9px;
+  background: #12181e;
+  border: 1px solid #2d333b;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  color: #cdd9e5;
+  line-height: 1.5;
+}
+
+/* ---------- Section titles ---------- */
+.dp-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #768390;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Stat grids / StatBox ---------- */
+.dp-stat-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.dp-stat-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+
+.dp-statbox {
+  background: #12181e;
+  padding: 6px;
+  border-radius: 3px;
+  border: 1px solid #2d333b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.dp-statbox-label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 3px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #768390;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.dp-statbox-value {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ecf2f8;
+  line-height: 1.25;
+}
+.dp-statbox-sub {
+  margin-top: 2px;
+  font-size: 8.5px;
+  color: #768390;
+}
+
+/* ---------- Src Added / Deleted ---------- */
+.dp-src-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+.dp-src-box {
+  padding: 6px 8px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dp-src-added {
+  background: rgba(87, 171, 90, 0.12);
+  border: 1px solid rgba(87, 171, 90, 0.25);
+  color: #6bd6a6;
+}
+.dp-src-deleted {
+  background: rgba(201, 107, 80, 0.12);
+  border: 1px solid rgba(201, 107, 80, 0.25);
+  color: #e0967d;
+}
+.dp-src-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.dp-src-value {
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.72rem;
+}
+
+/* ---------- Collapsible file sections ---------- */
+.dp-icon-blue { color: #58a6ff; }
+.dp-icon-green { color: #6bd6a6; }
+
+.dp-collapsible {
+  border: 1px solid #2d333b;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.dp-collapsible-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px;
+  background: #12181e;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dp-collapsible-header:hover { background: #22282f; }
+.dp-collapsible-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #cdd9e5;
+}
+.dp-collapsible-count {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 8.5px;
+  font-weight: 700;
+}
+.dp-collapsible-chevron { color: #768390; }
+.dp-collapsible-body {
+  padding: 9px;
+  background: #0d1117;
+  border-top: 1px solid #2d333b;
+  max-height: 160px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #2d333b transparent;
+}
+.dp-collapsible-body::-webkit-scrollbar { width: 7px; }
+.dp-collapsible-body::-webkit-scrollbar-track { background: transparent; }
+.dp-collapsible-body::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 3px; }
+
+.dp-file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dp-file-item {
+  font-size: 0.62rem;
+  font-family: ui-monospace, monospace;
+  color: #98a5b3;
+  word-break: break-all;
+  padding-left: 7px;
+  border-left: 2px solid #2d333b;
+}
+
+/* ---------- Commit chips ---------- */
+.dp-commit-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.dp-commit-chip {
+  padding: 3px 6px;
+  border: 1px solid #2d333b;
+  border-radius: 3px;
+  font-size: 8.5px;
+  font-family: ui-monospace, monospace;
+  cursor: default;
+  background: #22282f;
+  color: #adbac7;
+  transition: background 0.15s;
+}
+.dp-commit-chip:hover { background: #2d333b; }
+.dp-commit-chip-integration {
+  background: rgba(87, 171, 90, 0.15);
+  color: #6bd6a6;
+  border-color: rgba(87, 171, 90, 0.3);
+  font-weight: 600;
+}
+.dp-commit-chip-integration:hover { background: rgba(87, 171, 90, 0.15); }
+
+/* ---------- Edge (dependency) details ---------- */
+.dp-edge-title { margin-bottom: 4px; }
+.dp-edge-sub {
+  margin: 0;
+  font-size: 0.7rem;
+  color: #98a5b3;
+  font-family: ui-monospace, monospace;
+}
+.dp-edge-arrow { color: #768390; }
+
+.dp-edge-box {
+  padding: 11px;
+  background: rgba(88, 166, 255, 0.08);
+  border: 1px solid rgba(88, 166, 255, 0.2);
+  border-radius: 3px;
+}
+.dp-edge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dp-edge-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #79b8f2;
+}
+.dp-edge-value {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ecf2f8;
+}
+.dp-edge-value-upper { text-transform: uppercase; }
+
+.dp-rationale {
+  padding: 9px;
+  background: #12181e;
+  border: 1px solid #2d333b;
+  border-radius: 3px;
+  color: #cdd9e5;
+  font-size: 0.7rem;
+  white-space: pre-line;
+  line-height: 1.5;
+}
+
+/* ---------- SRS Modal (roomy — for reading) ---------- */
+.dp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.dp-modal {
+  width: 720px;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #1a1f26;
+  border: 1px solid #444c56;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-family: ui-sans-serif, system-ui, Roboto, sans-serif;
+  animation: dp-slideIn 0.2s ease-out;
+}
+.dp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid #2d333b;
+  background: #12181e;
+}
+.dp-modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dp-modal-icon { color: #58a6ff; }
+.dp-modal-title {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #ecf2f8;
+}
+.dp-modal-id {
+  font-size: 0.75rem;
+  color: #768390;
+  font-family: ui-monospace, monospace;
+}
+.dp-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #2d333b transparent;
+}
+.dp-modal-body::-webkit-scrollbar { width: 8px; }
+.dp-modal-body::-webkit-scrollbar-track { background: transparent; }
+.dp-modal-body::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 4px; }
+
+.dp-srs-error {
+  text-align: center;
+  padding: 32px 0;
+  font-size: 0.875rem;
+  color: #e0967d;
+}
+
+/* ---------- SRS markdown typography ---------- */
+.dp-srs {
+  font-size: 0.875rem;
+  color: #cdd9e5;
+  line-height: 1.625;
+}
+.dp-srs h1 {
+  color: #ecf2f8;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 1rem 0 0.5rem;
+}
+.dp-srs h2 {
+  color: #ecf2f8;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+}
+.dp-srs h3 {
+  color: #cdd9e5;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0.75rem 0 0.25rem;
+}
+.dp-srs h4 {
+  color: #cdd9e5;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0.25rem;
+}
+.dp-srs p {
+  color: #cdd9e5;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+.dp-srs strong { color: #ecf2f8; font-weight: 700; }
+.dp-srs em { font-style: italic; }
+.dp-srs a { color: #58a6ff; }
+.dp-srs li { color: #cdd9e5; margin-bottom: 0.25rem; }
+.dp-srs code {
+  background: #12181e;
+  color: #e0a878;
+  font-family: ui-monospace, monospace;
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* Elements emitted with explicit dp- classes by renderMarkdown */
+.dp-srs-ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.dp-srs-ul li { margin-bottom: 0.25rem; }
+.dp-srs-hr {
+  border: none;
+  border-top: 1px solid #2d333b;
+  margin: 1rem 0;
+}
+.dp-srs-pre {
+  background: #0d1117;
+  border: 1px solid #2d333b;
+  border-radius: 6px;
+  padding: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+/* Inner code inside a code block gets no extra chip styling */
+.dp-srs-pre code,
+.dp-srs pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
