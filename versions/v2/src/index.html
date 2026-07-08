@@ -453,7 +453,7 @@
   #analysis .an-legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
   #analysis .an-cap{width:100%;text-align:center;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
   #analysis .an-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;transition:opacity .12s,color .12s}
-  #analysis .an-legend .lg:hover{color:var(--heading)}
+  #analysis .an-legend .lg:hover{color:var(--accent);font-weight:500}
   #analysis .an-legend .lg.off{opacity:.28}
   #analysis .an-card rect{transition:opacity .12s}
   #analysis .an-card g[aria-label="tip"] text{fill:#cdd9e5}
@@ -495,10 +495,9 @@ __HEADER__
       </div>
       <p class="byline" style="margin-top:0">By the <a href="#citation">SWE-Milestone Team</a></p>
       <div class="links-row">
-        <a class="pill" href="#" target="_blank" rel="noopener">Paper <span class="arrow">↗</span></a>
+        <a class="pill" href="https://arxiv.org/abs/2603.13428" target="_blank" rel="noopener">Paper <span class="arrow">↗</span></a>
         <a class="pill" href="#" target="_blank" rel="noopener">GitHub <span class="arrow">↗</span></a>
         <a class="pill" href="#" target="_blank" rel="noopener">Dataset <span class="arrow">↗</span></a>
-        <a class="pill" href="#" target="_blank" rel="noopener">Docker <span class="arrow">↗</span></a>
         <a class="pill" href="#" target="_blank" rel="noopener">Trajectories <span class="arrow">↗</span></a>
       </div>
     </div>
@@ -625,11 +624,14 @@ __TASK_CARDS__
     <div class="sec-head"><h2>Citation</h2></div>
     <div class="cite-card">
       <button class="copy-btn js-copy">copy</button>
-      <pre class="bib js-bib">@article<span class="f">{swemilestone2026,</span>
-  <span class="k">title</span>   = <span class="f">{SWE-Milestone: Benchmarking Coding Agents on Continuous Software Evolution}</span>,
-  <span class="k">author</span>  = <span class="f">{SWE-Milestone Team}</span>,
-  <span class="k">journal</span> = <span class="f">{arXiv preprint arXiv:2606.00000}</span>,
-  <span class="k">year</span>    = <span class="f">{2026}</span>
+      <pre class="bib js-bib">@misc<span class="f">{deng2026evoclawevaluatingaiagents,</span>
+      <span class="k">title</span>={<span class="f">EvoClaw: Evaluating AI Agents on Continuous Software Evolution</span>},
+      <span class="k">author</span>={<span class="f">Gangda Deng and Zhaoling Chen and Zhongming Yu and Haoyang Fan and Yuhong Liu and Yuxin Yang and Dhruv Parikh and Rajgopal Kannan and Le Cong and Mengdi Wang and Qian Zhang and Viktor Prasanna and Xiangru Tang and Xingyao Wang</span>},
+      <span class="k">year</span>={<span class="f">2026</span>},
+      <span class="k">eprint</span>={<span class="f">2603.13428</span>},
+      <span class="k">archivePrefix</span>={<span class="f">arXiv</span>},
+      <span class="k">primaryClass</span>={<span class="f">cs.SE</span>},
+      <span class="k">url</span>={<span class="f">https://arxiv.org/abs/2603.13428</span>},
 <span class="f">}</span></pre>
     </div>
   </div>
