@@ -119,8 +119,8 @@
   .cmp-note b{color:var(--muted)}
   .tbl-card{border:1px solid var(--border)}
   .scroller{overflow-x:auto}
-  .cmp{table-layout:fixed}
-  col.msc{width:106px} col.ordc{width:56px}
+  .cmp{table-layout:auto;width:100%}
+  col.ordc{width:56px}
   .cmp thead .grp th{padding:12px 12px 10px;text-align:center;color:var(--heading);font-weight:700;font-size:13px;background:var(--box)}
   .cmp thead .grp .ga{border-bottom:2px solid var(--ca)}
   .cmp thead .grp .gb{border-bottom:2px solid var(--cb)}
@@ -136,7 +136,7 @@
   .cmp tbody td{padding:10px 12px;border-bottom:1px solid rgba(55,62,71,.5);font-size:13px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
   .cmp tbody tr:last-child td{border-bottom:none}
   .cmp tbody tr:hover{background:rgba(255,255,255,.02)}
-  .cmp td.ms{text-align:left;font-family:var(--mono);color:var(--text);font-size:12.5px}
+  .cmp td.ms{text-align:left;font-family:var(--mono);color:var(--text);font-size:12.5px;white-space:nowrap}
   .cmp td.ordv{text-align:center;font-family:var(--mono);color:var(--muted);font-size:12.5px}
   .cmp td.stc{text-align:left} .cmp td.mR{text-align:right}
   .mc{border-right:1px solid var(--border-strong)}

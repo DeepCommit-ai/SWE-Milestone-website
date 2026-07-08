@@ -268,6 +268,192 @@ def compute_per_repo_milestones():
     return by_ws, order_ws
 
 
+# ── Analysis section: Score-vs-Complexity + Full P/R per Model, for the top-N
+# leaderboard models (same set + colors as the leaderboard, leak already
+# excluded). Everything is aggregated to tiny tables here so the site inlines
+# only the summary, never the raw per-milestone rows.
+MS_INFO_CSV = DATA_DIR / "milestone_info.csv"
+
+
+def _truthy(v) -> bool:
+    return str(v).strip().lower() in ("true", "1", "1.0")
+
+
+def _bin_layer(v):
+    if pd.isna(v):
+        return None
+    v = int(round(float(v)))
+    return "0 (root)" if v == 0 else "1" if v == 1 else "2-3" if v <= 3 else "4+"
+
+
+def _bin_order(v):
+    if pd.isna(v):
+        return None
+    v = int(v)
+    return "1-3" if v < 4 else "4-6" if v < 7 else "7-9" if v < 10 else "10-14" if v < 15 else "15+"
+
+
+def _bin_loc(v):
+    if pd.isna(v):
+        return None
+    v = float(v)
+    return "<150" if v < 150 else "150-300" if v < 300 else "300-500" if v < 500 else "500+"
+
+
+def _bin_srs(v):
+    if pd.isna(v):
+        return None
+    v = float(v)
+    return "<1k" if v < 1000 else "1k-1.3k" if v < 1300 else "1.3k-1.8k" if v < 1800 else "1.8k+"
+
+
+def _bin_indeg(v):
+    if pd.isna(v):
+        return None
+    v = int(round(float(v)))
+    return "0" if v == 0 else "1" if v == 1 else "2" if v == 2 else "3+"
+
+
+def _cat(r):
+    if _truthy(r.get("cat_bugfix")):
+        return "Bugfix"
+    if _truthy(r.get("cat_feature")) or _truthy(r.get("cat_enhance")):
+        return "Feature"
+    if _truthy(r.get("cat_refactor")):
+        return "Refactor"
+    return None
+
+
+# (key, label, canonical bin order, per-row binner)
+_DIMS = [
+    ("order", "Milestone Order", ["1-3", "4-6", "7-9", "10-14", "15+"], lambda r: _bin_order(r.get("milestone_order"))),
+    ("layer", "DAG Layer", ["0 (root)", "1", "2-3", "4+"], lambda r: _bin_layer(r.get("layer"))),
+    ("loc", "Source LOC", ["<150", "150-300", "300-500", "500+"], lambda r: _bin_loc(r.get("src_loc"))),
+    ("srs", "SRS Words", ["<1k", "1k-1.3k", "1.3k-1.8k", "1.8k+"], lambda r: _bin_srs(r.get("srs_word_count"))),
+    ("category", "Category", ["Bugfix", "Feature", "Refactor"], _cat),
+    ("indeg", "In-Degree", ["0", "1", "2", "3+"], lambda r: _bin_indeg(r.get("in_degree"))),
+]
+
+
+def compute_analysis_data(top_n: int = 12):
+    """Aggregated tables for the Analysis section (top-N leaderboard models).
+
+    Returns {models, dims, pr}:
+      models: [{id, agent, model, label, score}]  — leaderboard order, top N
+      dims:   [{key, label, bins, data:{model_id: {bin: mean_score}}}]  — per
+              complexity dimension, mean Score% per (model, bin)
+      pr:     {model_id: {recall:[10], precision:[10]}}  — accumulated P/R across
+              milestone-execution progress (10 bins, macro-averaged over repos)
+    """
+    all_rows = [r for r in compute_records() if r["agent"] != "openhands"]
+    top = all_rows[:top_n]
+    # Chart order: group by model org (orgs ranked by their best score, desc),
+    # models within an org by score ascending — e.g. Sonnet 4.6 → Opus 4.6 →
+    # Opus 4.7 → Opus 4.8. openhands is excluded by default.
+    org_best = {}
+    for r in top:
+        org_best[r["org"]] = max(org_best.get(r["org"], 0.0), r["score"])
+    top.sort(key=lambda r: (-org_best[r["org"]], r["org"], r["score"]))
+    e2e = load_e2e()
+    info = pd.read_csv(MS_INFO_CSV)
+    keep = ["workspace", "milestone_id", "layer", "in_degree", "src_loc", "srs_word_count",
+            "cat_feature", "cat_enhance", "cat_bugfix", "cat_refactor"]
+    info = info[[c for c in keep if c in info.columns]]
+    df = e2e.merge(info, on=["workspace", "milestone_id"], how="inner")
+
+    mid_of = {(r["agent"], r["model"]): f'{r["agent"]}__{r["model"]}' for r in all_rows}
+    models = [{"id": mid_of[(r["agent"], r["model"])], "agent": r["agent"], "model": r["model"],
+               "org": r["org"], "label": r["model_display"], "score": r["score"]} for r in top]
+
+    # Score vs Complexity: mean of each metric per (model, bin), per dimension.
+    metric_cols = {"score": "score_reliable", "precision": "score_precision",
+                   "recall": "score_recall", "resolve": "is_resolved"}
+    dims_out = []
+    for key, label, order, binner in _DIMS:
+        col = df.copy()
+        col["_bin"] = col.apply(binner, axis=1)
+        col = col[col["_bin"].notna() & col["score_reliable"].notna()]
+        data = {}
+        for (agent, model), g in col.groupby(["agent_name", "model"]):
+            mid = mid_of.get((agent, model))
+            if not mid:
+                continue
+            per_bin = {}
+            for b, gb in g.groupby("_bin"):
+                if b in order:
+                    per_bin[b] = {mk: round(float(gb[c].mean()) * 100, 1) for mk, c in metric_cols.items()}
+            data[mid] = per_bin
+        dims_out.append({"key": key, "label": label, "bins": order, "data": data})
+
+    # Full P/R per Model: accumulated Recall/Precision across execution progress.
+    # Computed for every model (not just the top-N bar set) so the P/R picker can
+    # toggle any of them on/off.
+    NB = 10
+    pr = {}
+    for r in all_rows:
+        mid = mid_of[(r["agent"], r["model"])]
+        sub = e2e[(e2e["agent_name"] == r["agent"]) & (e2e["model"] == r["model"])].copy()
+        sub = sub[sub["score_reliable"].notna()]
+        if len(sub) == 0:
+            continue
+        maxo = sub.groupby(["workspace", "trial_name"])["milestone_order"].transform("max").clip(lower=1)
+        sub["_b"] = ((sub["milestone_order"] / maxo) * NB - 1e-9).clip(lower=0, upper=NB - 1).astype(int)
+        binR, binP = [0.0] * NB, [0.0] * NB
+        for b in range(NB):
+            rows = sub[sub["_b"] == b]
+            if len(rows) == 0:
+                continue
+            binR[b] = float(rows.groupby("workspace")["score_recall"].mean().mean())
+            binP[b] = float(rows.groupby("workspace")["score_precision"].mean().mean())
+        cr = cp = 0.0
+        accR, accP = [], []
+        for b in range(NB):
+            cr += binR[b]
+            cp += binP[b]
+            accR.append(round(cr / NB * 100, 1))
+            accP.append(round(cp / NB * 100, 1))
+        pr[mid] = {"recall": accR, "precision": accP}
+
+    # P/R picker list: every model with P/R data, score ascending. `models`
+    # (top-N, org-grouped) still drives the Score-vs-Complexity bars/legend.
+    pr_rows = sorted(all_rows, key=lambda r: r["score"])
+    pr_models = [{"id": mid_of[(r["agent"], r["model"])], "agent": r["agent"], "model": r["model"],
+                  "org": r["org"], "label": r["model_display"], "score": r["score"]}
+                 for r in pr_rows if mid_of[(r["agent"], r["model"])] in pr]
+
+    # Default P/R selection grouped by org: the two best-scoring orgs each fill a
+    # full row (their top 4), remaining slots filled by each next org's best — so
+    # row 1 = Anthropic, row 2 = OpenAI, row 3 = other companies in score order.
+    valid = {m["id"] for m in pr_models}
+    org_best_all = {}
+    for r in all_rows:
+        if mid_of[(r["agent"], r["model"])] in valid:
+            org_best_all[r["org"]] = max(org_best_all.get(r["org"], 0.0), r["score"])
+    primary = [o for o in ("Anthropic", "OpenAI") if o in org_best_all]
+    others = sorted([o for o in org_best_all if o not in primary], key=lambda o: -org_best_all[o])
+    org_order = primary + others
+    by_org = {}
+    for r in sorted(all_rows, key=lambda r: -r["score"]):
+        mid = mid_of[(r["agent"], r["model"])]
+        if mid in valid:
+            by_org.setdefault(r["org"], []).append(mid)
+    pr_default = []
+    for oi, org in enumerate(org_order):
+        take = by_org[org][:4] if oi < 2 else by_org[org][:1]
+        for mid in take:
+            if len(pr_default) < 12:
+                pr_default.append(mid)
+        if len(pr_default) >= 12:
+            break
+
+    return {
+        "models": models, "dims": dims_out, "pr": pr, "pr_models": pr_models,
+        "pr_default": pr_default, "org_order": org_order,
+        "metrics": [{"key": "score", "label": "Score"}, {"key": "resolve", "label": "Resolve Rate"},
+                    {"key": "precision", "label": "Precision"}, {"key": "recall", "label": "Recall"}],
+    }
+
+
 if __name__ == "__main__":
     recs = compute_records()
     RECORDS_JSON.write_text(json.dumps(recs, indent=2))

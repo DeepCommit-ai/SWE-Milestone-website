@@ -40,9 +40,9 @@ PAGES = ["index.html", "task.html"]
 # theme.ts so the Pareto point colors match the analysis dashboard. Within a
 # family the best-scoring model gets the lightest (most visible on dark) shade.
 FAMILY_PALETTES = {
-    "claude":    ["#F5D5C4", "#E8A08C", "#C96B50", "#8B3A1F"],
-    "gpt":       ["#C8E6C8", "#82B882", "#4A7A4A"],
-    "gemini":    ["#B8D4EC", "#6A9ECF", "#3A6B9F"],
+    "claude":    ["#F5D5C4", "#EBB59E", "#DE9376", "#C96B50", "#A64C30", "#8B3A1F", "#732A14"],
+    "gpt":       ["#C8E6C8", "#82B882", "#4A7A4A", "#3A6135", "#2B4A28"],
+    "gemini":    ["#B8D4EC", "#6A9ECF", "#3A6B9F", "#2A5080"],
     "zai":       ["#D4D6DD", "#9FA3B0", "#6E7280", "#484C58"],
     "moonshot":  ["#D8DBE2", "#A8ACB7", "#7B7F8D", "#54576A"],
     "deepseek":  ["#4D6BFE", "#7C90FE", "#3450D4"],
@@ -93,12 +93,21 @@ def enrich(records: list) -> list:
         key=lambda r: (FAMILY_ORDER.index(r["_fam"]) if r["_fam"] in FAMILY_ORDER else 99,
                        -r["score"]),
     )
+    # One shade per distinct model_display: an openhands run of a model reuses the
+    # native model's shade instead of consuming its own palette slot, so palette
+    # length only needs to cover the native models actually shown.
+    model_color = {}
     for r in order:
         fam = r["_fam"]
+        md = r["model_display"]
+        if md in model_color:
+            r["color"] = model_color[md]
+            continue
         pal = FAMILY_PALETTES.get(fam, FALLBACK_PALETTE)
         idx = counters.get(fam, 0)
         r["color"] = pal[idx % len(pal)]
         counters[fam] = idx + 1
+        model_color[md] = r["color"]
 
     for r in records:
         r["logo_key"] = ORG_LOGO.get(r["org"])
@@ -201,6 +210,30 @@ def load_task_data() -> str:
     return "window.TASK_DATA=" + json.dumps(payload, separators=(",", ":")) + ";"
 
 
+def load_analysis_data() -> str:
+    """`window.ANALYSIS_DATA` — aggregated Score-vs-Complexity + P/R tables for
+    the top-15 leaderboard models, with each model's brand color + short label
+    added (same color mapping as the leaderboard). Aggregated in compute.py to a
+    tiny (~11 KB) summary, so only that is inlined, never the raw milestone rows.
+    """
+    sys.path.insert(0, str(DATA))
+    import compute  # data/compute.py — reads only from data/
+    ad = compute.compute_analysis_data()
+    by_id = {r["id"]: r for r in enrich(json.loads((DATA / "records.json").read_text()))}
+    for m in ad["models"]:
+        e = by_id.get(m["id"])
+        if e:
+            m["color"] = e["color"]
+            # disambiguate the two same-model rows (native agent vs openhands)
+            m["label"] = e["label"] + (" · OH" if m["agent"] == "openhands" else "")
+    for m in ad.get("pr_models", []):   # every model in the P/R picker (openhands/leak excluded)
+        e = by_id.get(m["id"])
+        if e:
+            m["color"] = e["color"]
+            m["label"] = e["label"]
+    return "window.ANALYSIS_DATA=" + json.dumps(ad, separators=(",", ":")) + ";"
+
+
 def main():
     # Refresh records.json from the shared data layer so the site never ships
     # stale numbers. (compute.py writes data/records.json on __main__.)
@@ -212,6 +245,7 @@ def main():
     site_data = load_site_data()
     task_cards = render_task_cards(load_repos())
     task_data = load_task_data()
+    analysis_data = load_analysis_data()
 
     for page in PAGES:
         html = (SRC / page).read_text()
@@ -221,8 +255,9 @@ def main():
         html = html.replace("__SITE_DATA__", site_data)
         html = html.replace("__TASK_CARDS__", task_cards)
         html = html.replace("__TASK_DATA__", task_data)
-        (V2 / page).write_text(html)
-        print(f"  built versions/v2/{page}")
+        html = html.replace("__ANALYSIS_DATA__", analysis_data)
+        (ROOT / page).write_text(html)
+        print(f"  built {page} (repo root — live site)")
 
 
 if __name__ == "__main__":

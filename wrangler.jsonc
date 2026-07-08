@@ -2,6 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "evo-claw",
   "compatibility_date": "2025-09-27",
+  "routes": [
+    { "pattern": "swe-milestone.com", "custom_domain": true }
+  ],
   "observability": {
     "enabled": true
   },

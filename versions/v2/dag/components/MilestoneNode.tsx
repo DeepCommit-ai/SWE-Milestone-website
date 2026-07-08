@@ -47,7 +47,7 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
       >
         <span
           title={data.id}
-          style={{ fontWeight: 700, color: T.head, fontFamily: 'ui-monospace, monospace', fontSize: 15.5 }}
+          style={{ fontWeight: 700, color: T.head, fontFamily: 'ui-monospace, monospace', fontSize: 17.5 }}
         >
           {truncateId(data.id)}
         </span>
@@ -58,7 +58,7 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
               style={{
                 padding: '2px 7px',
                 borderRadius: 6,
-                fontSize: 11.5,
+                fontSize: 13.5,
                 fontWeight: 700,
                 color: '#9fb4ff',
                 background: '#1c2540',
@@ -75,7 +75,7 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
               gap: 5,
               padding: '3px 10px',
               borderRadius: 999,
-              fontSize: 11.5,
+              fontSize: 13.5,
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '.03em',
@@ -93,9 +93,9 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
       <div style={{ padding: '11px 20px', flex: 1, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
         <h3
           style={{
-            fontWeight: 600,
+            fontWeight: 700,
             color: T.head,
-            fontSize: 16,
+            fontSize: 18,
             lineHeight: 1.3,
             margin: 0,
             display: '-webkit-box',
@@ -117,7 +117,8 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
           display: 'grid',
           gridTemplateColumns: 'repeat(3,1fr)',
           gap: 10,
-          fontSize: 12,
+          fontSize: 14,
+          fontWeight: 600,
           color: T.muted,
           borderRadius: '0 0 8px 8px',
         }}

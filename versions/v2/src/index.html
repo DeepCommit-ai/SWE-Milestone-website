@@ -436,6 +436,45 @@
     .hero { padding: 84px 0 68px; }
     .task-grid { grid-template-columns: 1fr; }
   }
+  /* ---------- Analysis section ---------- */
+  #analysis .an-sub{display:flex;align-items:baseline;gap:14px;margin:0 0 14px}
+  #analysis .an-sub2{margin-top:40px}
+  #analysis .an-sub h3{font-size:17px;font-weight:700;color:var(--heading);margin:0}
+  #analysis .an-note{font-size:12.5px;color:var(--faint)}
+  #analysis .an-ctrl{display:inline-flex;align-items:center;gap:9px;margin-left:auto}
+  #analysis .an-ctrl label{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  #analysis select{appearance:none;-webkit-appearance:none;background:var(--box);border:1px solid var(--border-strong);color:var(--heading);
+    font:500 13px ui-sans-serif,system-ui,Roboto,sans-serif;padding:7px 30px 7px 12px;cursor:pointer;outline:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2398a5b3' stroke-width='1.4' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center}
+  #analysis select:hover{border-color:var(--muted)}
+  #analysis .an-card{background:var(--box);border:1px solid var(--border);padding:16px 16px 10px;overflow-x:auto}
+  #analysis .an-card svg{overflow:visible;max-width:100%;height:auto}
+  #analysis .an-card svg [aria-label*="grid"] line{stroke:#232a33}
+  #analysis .an-legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+  #analysis .an-cap{width:100%;text-align:center;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+  #analysis .an-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:default;transition:opacity .12s}
+  #analysis .an-card rect{transition:opacity .12s}
+  #analysis .an-card g[aria-label="tip"] text{fill:#cdd9e5}
+  #analysis .an-legend .lg i{width:11px;height:11px;border-radius:2px;flex:none}
+  #analysis .prgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  #analysis .prcell{background:#141920;border:1px solid #28303a;border-radius:3px;padding:10px 8px 6px;cursor:grab;transition:opacity .12s,box-shadow .13s ease,border-color .13s ease}
+  #analysis .prcell.dragging{opacity:.35;cursor:grabbing}
+  #analysis .prcell:hover{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--border-strong)}
+  #analysis .prcell .nm{text-align:center;font-size:12px;font-weight:700;margin:0 0 1px}
+  #analysis .prcell .sc{text-align:center;font-family:ui-monospace,monospace;font-size:9.5px;color:var(--faint);margin:0 0 3px}
+  #analysis .prleg{display:flex;gap:18px;margin-left:auto;font-size:12px;color:var(--text)}
+  #analysis .an-note2{font-size:12px;color:var(--faint);margin:-4px 0 14px}
+  #analysis .prleg .pl{display:inline-flex;align-items:center;gap:7px}
+  #analysis .prleg .pl i{width:15px;height:3px;display:inline-block}
+  #analysis .prleg .pl.id i{height:0;border-top:1px dashed var(--faint)}
+  #analysis .prpick{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  #analysis .anbins{margin:2px 0 14px}
+  #analysis .prchip{display:inline-flex;align-items:center;gap:6px;background:#141920;border:1px solid #28303a;color:var(--faint);font-family:var(--sans);font-size:11px;line-height:1;padding:4px 8px;cursor:pointer;transition:border-color .12s,color .12s}
+  #analysis .prchip i{width:8px;height:8px;border-radius:2px;display:inline-block;opacity:.35;transition:opacity .12s}
+  #analysis .prchip:hover{border-color:var(--border-strong)}
+  #analysis .prchip.on{color:var(--text);border-color:var(--border-strong)}
+  #analysis .prchip.on i{opacity:1}
+  @media(max-width:760px){#analysis .prgrid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -554,7 +593,33 @@ __TASK_CARDS__
   </div>
 </section>
 
-<!-- ============ 05 CITATION ============ -->
+<!-- ============ 05 ANALYSIS ============ -->
+<section id="analysis">
+  <div class="wrap">
+    <div class="sec-head"><h2>Analysis</h2></div>
+    <p class="sec-sub">How the top-15 models' scores break down by milestone complexity, and how Precision and Recall accumulate as each run works through its milestones.</p>
+
+    <div class="an-sub">
+      <h3>Score vs Complexity</h3>
+      <div class="an-ctrl"><label for="anMetric">Y</label><select id="anMetric"></select><label for="anDim" class="xlab">X</label><select id="anDim"></select></div>
+    </div>
+    <div class="prpick anbins" id="anBinPick"></div>
+    <div class="an-card">
+      <div id="anBars"></div>
+      <div class="an-legend" id="anLegend"><span class="an-cap">Models &middot; shared across all bins</span></div>
+    </div>
+
+    <div class="an-sub an-sub2">
+      <h3>Precision &amp; Recall over milestone execution progress</h3>
+      <div class="prleg"><span class="pl"><i style="background:#D08770"></i>Recall</span><span class="pl"><i style="background:#5E81AC"></i>Precision</span><span class="pl id"><i></i>Ideal</span></div>
+    </div>
+    <p class="an-note2">accumulated &middot; Ideal = y&#61;x &middot; toggle models to show/hide &middot; drag a card to reorder</p>
+    <div class="prpick" id="anPRpick"></div>
+    <div class="prgrid" id="anPR"></div>
+  </div>
+</section>
+
+<!-- ============ 06 CITATION ============ -->
 <section id="citation" style="border-bottom:none">
   <div class="wrap">
     <div class="sec-head"><h2>Citation</h2></div>
@@ -587,7 +652,10 @@ __FOOTER__
 
 <!-- ECharts (vendored 5.6.0) + build-time injected leaderboard / Pareto data -->
 <script src="/assets/echarts.min.js"></script>
+<script src="/assets/d3.min.js"></script>
+<script src="/assets/plot.umd.min.js"></script>
 <script>__SITE_DATA__</script>
+<script>__ANALYSIS_DATA__</script>
 <script>
 (function () {
   const DATA = window.SITE_DATA || { records: [], logos: {} };
@@ -968,6 +1036,275 @@ __FOOTER__
       })
       .catch(() => { el.style.display = 'none'; });
   });
+})();
+</script>
+
+<!-- Analysis: Score-vs-Complexity (Observable Plot bars) + P/R per model (minimal blocks) -->
+<script>
+(function () {
+  var A = window.ANALYSIS_DATA;
+  if (!A || !window.Plot) return;
+  var models = A.models;
+  var SANS = "ui-sans-serif, system-ui, Roboto, sans-serif";
+
+  // ---- Score vs Complexity: grouped bars faceted by bin, shared external legend ----
+  var sel = document.getElementById('anDim');
+  A.dims.forEach(function (d, i) { sel.insertAdjacentHTML('beforeend', '<option value="' + i + '">' + d.label + '</option>'); });
+  var msel = document.getElementById('anMetric');
+  (A.metrics || [{ key: "score", label: "Score" }]).forEach(function (mt) { msel.insertAdjacentHTML('beforeend', '<option value="' + mt.key + '">' + mt.label + '</option>'); });
+  var barsEl = document.getElementById('anBars');
+  var binPick = document.getElementById('anBinPick');
+  var selectedBins = {};                                // which bins of the current dim to show
+  function renderBars() {
+    var dim = A.dims[+sel.value], metric = msel.value, mlabel = msel.options[msel.selectedIndex].text, data = [];
+    var bins = dim.bins.filter(function (b) { return selectedBins[b]; });
+    if (!bins.length) bins = dim.bins;                  // never render an empty chart
+    models.forEach(function (m) {
+      var md = dim.data[m.id] || {};
+      bins.forEach(function (b) { if (md[b] && md[b][metric] != null) data.push({ model: m.label, bin: b, v: md[b][metric] }); });
+    });
+    barsEl.innerHTML = '';
+    var w = Math.max(560, barsEl.clientWidth || 900);
+    barsEl.append(Plot.plot({
+      width: w, height: 330, marginLeft: 44, marginRight: 10, marginBottom: 38, marginTop: 8,
+      style: { background: "transparent", color: "#8b98a6", fontFamily: SANS, fontSize: "11px" },
+      fx: { domain: bins, label: null, padding: 0.16 },
+      x: { domain: models.map(function (m) { return m.label; }), axis: null, padding: 0.06 },
+      y: { grid: true, label: "Mean " + mlabel + " %", labelAnchor: "center", ticks: 6 },
+      color: { domain: models.map(function (m) { return m.label; }), range: models.map(function (m) { return m.color; }), legend: false },
+      marks: [
+        Plot.barY(data, { fx: "bin", x: "model", y: "v", fill: "model", inset: 0.3 }),
+        Plot.ruleY([0], { stroke: "#444c56" }),
+        Plot.tip(data, Plot.pointerX({
+          fx: "bin", x: "model", y: "v", fill: "#1a1f26", stroke: "#444c56",
+          title: function (d) { return d.model + "\n" + d.v.toFixed(1) + "%"; }
+        }))
+      ]
+    }));
+  }
+  function buildBinPicker() {                            // rebuild chips when the dim changes; all on
+    var dim = A.dims[+sel.value];
+    selectedBins = {};
+    dim.bins.forEach(function (b) { selectedBins[b] = 1; });
+    binPick.innerHTML = dim.bins.map(function (b) { return '<button class="prchip on" data-bin="' + b + '">' + b + '</button>'; }).join('');
+  }
+  binPick.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.prchip');
+    if (!b) return;
+    var bin = b.getAttribute('data-bin');
+    if (selectedBins[bin]) { delete selectedBins[bin]; b.classList.remove('on'); }
+    else { selectedBins[bin] = 1; b.classList.add('on'); }
+    renderBars();
+  });
+  sel.addEventListener('change', function () { buildBinPicker(); renderBars(); });
+  msel.addEventListener('change', renderBars);
+  var rz; window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(renderBars, 180); });
+  var legEl = document.getElementById('anLegend');
+  legEl.insertAdjacentHTML('beforeend',
+    models.map(function (m) { return '<span class="lg" data-c="' + m.color + '"><i style="background:' + m.color + '"></i>' + m.label + '</span>'; }).join(''));
+  buildBinPicker();
+  renderBars();
+
+  // hover a bar OR a legend swatch → highlight that model, dim the rest.
+  // Bars are Plot <rect>s keyed by their fill (each model has a unique color).
+  var colorSet = {}; models.forEach(function (m) { colorSet[m.color] = 1; });
+  function setHi(c) {
+    barsEl.querySelectorAll('rect').forEach(function (r) {
+      var f = r.getAttribute('fill');
+      if (colorSet[f]) r.style.opacity = (c == null || f === c) ? 1 : 0.16;
+    });
+    legEl.querySelectorAll('.lg').forEach(function (l) {
+      l.style.opacity = (c == null || l.getAttribute('data-c') === c) ? 1 : 0.32;
+    });
+  }
+  // Highlight follows the tip so the two never disagree — both track the same
+  // bar via Plot's pointer. Read the tip's model name after Plot updates it.
+  var colorByLabel = {}; models.forEach(function (m) { colorByLabel[m.label] = m.color; });
+  function tipModelColor() {
+    var tip = barsEl.querySelector('[aria-label*="tip"]');
+    if (!tip) return null;
+    var t = (tip.textContent || '').replace(/​/g, '');
+    var best = null;
+    models.forEach(function (m) { if (t.indexOf(m.label) === 0 && (!best || m.label.length > best.length)) best = m.label; });
+    return best ? colorByLabel[best] : null;
+  }
+  barsEl.addEventListener('pointermove', function () { requestAnimationFrame(function () { setHi(tipModelColor()); }); });
+  barsEl.addEventListener('pointerleave', function () { setHi(null); });
+  legEl.addEventListener('mouseover', function (e) {
+    var l = e.target.closest && e.target.closest('.lg');
+    if (l) setHi(l.getAttribute('data-c'));
+  });
+  legEl.addEventListener('mouseleave', function () { setHi(null); });
+
+  // ---- P/R per model: rounded cards, no axes, horizontal lines mark y, drag to reorder ----
+  var NB = 10, W = 240, H = 150, PADL = 20, PADR = 6, PADT = 6, PADB = 6, IW = W - PADL - PADR, IH = H - PADT - PADB;
+  function xAt(k) { return PADL + IW * (k / NB); }
+  function yAt(v) { return PADT + IH * (1 - v / 100); }
+  function line(vals, c) {
+    var g = '<polyline points="' + vals.map(function (v, i) { return xAt(i + 1).toFixed(1) + ',' + yAt(v).toFixed(1); }).join(' ') + '" fill="none" stroke="' + c + '" stroke-width="2"/>';
+    vals.forEach(function (v, i) { g += '<circle cx="' + xAt(i + 1).toFixed(1) + '" cy="' + yAt(v).toFixed(1) + '" r="2.3" fill="' + c + '"/>'; });
+    return g;
+  }
+  var grid = document.getElementById('anPR');
+  var prModels = A.pr_models || models;
+  var prIndex = {};
+  prModels.forEach(function (m) { prIndex[m.id] = m; });
+  function grp(org) { return org === "Anthropic" ? 0 : org === "OpenAI" ? 1 : 2; }
+  function cmp(idA, idB) {                               // row1 Anthropic, row2 OpenAI, row3 others; each low→high
+    var a = prIndex[idA], b = prIndex[idB];
+    return (grp(a.org) - grp(b.org)) || (a.score - b.score);
+  }
+  // default: Anthropic row, OpenAI row, others row — each sorted low→high by score
+  var order = ((A.pr_default && A.pr_default.length)
+    ? A.pr_default.slice()
+    : prModels.filter(function (m) { return A.pr[m.id]; }).map(function (m) { return m.id; })).sort(cmp);
+  var selected = {};
+  order.forEach(function (id) { selected[id] = 1; });
+
+  function cardHTML(m) {
+    var pr = A.pr[m.id];
+    var g = '';
+    [0, 25, 50, 75, 100].forEach(function (t) {
+      var y = yAt(t);
+      if (t !== 0) g += '<line x1="' + PADL + '" y1="' + y.toFixed(1) + '" x2="' + (W - PADR) + '" y2="' + y.toFixed(1) + '" stroke="#262d37" stroke-width="1"/>';
+      g += '<text x="' + (PADL - 3) + '" y="' + (y + 2.5).toFixed(1) + '" font-size="7.5" fill="#5b6570" text-anchor="end">' + t + '</text>';
+    });
+    g += '<line x1="' + xAt(0) + '" y1="' + yAt(0) + '" x2="' + xAt(NB) + '" y2="' + yAt(100) + '" stroke="#586069" stroke-width="1" stroke-dasharray="3 3"/>';
+    g += line(pr.recall, '#D08770') + line(pr.precision, '#5E81AC');
+    return '<div class="prcell" draggable="true" data-id="' + m.id + '"><div class="nm" style="color:' + m.color + '">' + m.label + '</div><div class="sc">score ' + m.score.toFixed(1) + '</div><svg viewBox="0 0 ' + W + ' ' + H + '" style="display:block;width:100%;height:auto">' + g + '</svg></div>';
+  }
+  function renderPR() {
+    grid.innerHTML = order.map(function (id) { return cardHTML(prIndex[id]); }).join('');
+  }
+
+  // model picker chips (all models, score ascending); toggle to show/hide a card
+  var pick = document.getElementById('anPRpick');
+  var chipOrder = prModels.slice().sort(function (a, b) { return cmp(a.id, b.id); });
+  pick.innerHTML = chipOrder.map(function (m) {
+    return '<button class="prchip' + (selected[m.id] ? ' on' : '') + '" data-id="' + m.id + '"><i style="background:' + m.color + '"></i>' + m.label + '</button>';
+  }).join('');
+  pick.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.prchip');
+    if (!b) return;
+    var id = b.getAttribute('data-id');
+    if (selected[id]) {
+      delete selected[id];
+      order = order.filter(function (x) { return x !== id; });
+      b.classList.remove('on');
+    } else {
+      selected[id] = 1;
+      var pos = order.length;                           // insert keeping org-grouped order
+      for (var i = 0; i < order.length; i++) { if (cmp(order[i], id) > 0) { pos = i; break; } }
+      order.splice(pos, 0, id);
+      b.classList.add('on');
+    }
+    renderPR();
+  });
+  renderPR();
+
+  // drag a card to reorder (persist the new order so toggling doesn't reset it)
+  var dragEl = null;
+  grid.addEventListener('dragstart', function (e) {
+    var c = e.target.closest && e.target.closest('.prcell');
+    if (!c) return;
+    dragEl = c; e.dataTransfer.effectAllowed = 'move';
+    setTimeout(function () { c.classList.add('dragging'); }, 0);
+  });
+  grid.addEventListener('dragend', function () {
+    if (dragEl) { dragEl.classList.remove('dragging'); dragEl = null; }
+    order = [].map.call(grid.children, function (c) { return c.getAttribute('data-id'); });
+  });
+  grid.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    var c = e.target.closest && e.target.closest('.prcell');
+    if (!c || c === dragEl || !dragEl) return;
+    var r = c.getBoundingClientRect();
+    grid.insertBefore(dragEl, (e.clientX - r.left) > r.width / 2 ? c.nextSibling : c);
+  });
+})();
+</script>
+
+<!-- Hero logo: hover the tile to play the intro GIF in reverse, release to play
+     it forward again from wherever it stopped (reverse half-way then release ->
+     forward from that frame). Native <img> GIFs can't be seeked or reversed, so
+     we decode the GIF to frames (WebCodecs ImageDecoder) and drive a <canvas>
+     with a single {frame index, direction}. Browsers without ImageDecoder just
+     keep the plain, forward-only GIF. -->
+<script>
+(function () {
+  if (typeof window.ImageDecoder !== 'function') return;   // graceful fallback: plain GIF
+  var tile = document.querySelector('.hero-logo-tile');
+  var img = tile && tile.querySelector('.hero-logo');
+  if (!tile || !img) return;
+
+  var TARGET = 360;                  // canvas backing size (logo displays at 130px)
+  var SPEED = 1.5;                   // hover reverse/forward playback multiplier (1.5x -> ~2.3s a pass)
+  var INTRO_MS = 3600;               // let the plain GIF finish its one-shot forward intro before swapping
+  var frames = [], durs = [];        // ImageBitmap + ms, one per GIF frame
+  var idx = 0, dir = 0, raf = null, last = 0, acc = 0;
+  var canvas = null, ctx = null, ready = false;
+  var t0 = performance.now();
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(frames[idx], 0, 0, canvas.width, canvas.height);
+  }
+
+  function step(t) {
+    var dt = t - last; last = t;
+    if (dt > 100) dt = 100;                  // guard: a stale timestamp (tab switch) must not fast-forward the clip
+    acc += dt * SPEED;
+    // a slow tick can span several frames, so advance in a loop
+    while (acc >= durs[idx]) {
+      acc -= durs[idx];
+      var ni = idx + dir;
+      if (ni < 0) { idx = 0; dir = 0; break; }                 // reached the start
+      if (ni > frames.length - 1) { idx = frames.length - 1; dir = 0; break; }  // reached the end
+      idx = ni;
+    }
+    draw();
+    if (dir === 0) { raf = null; return; }   // settled at an end — stop the loop
+    raf = requestAnimationFrame(step);
+  }
+
+  function play(d) {
+    if (!ready) return;
+    dir = d;
+    if (!raf) { last = performance.now(); acc = 0; raf = requestAnimationFrame(step); }
+  }
+
+  function swap() {
+    canvas = document.createElement('canvas');
+    canvas.width = canvas.height = TARGET;
+    canvas.className = img.className;        // inherit .hero-logo sizing/layout
+    canvas.setAttribute('aria-hidden', 'true');
+    ctx = canvas.getContext('2d');
+    idx = frames.length - 1;                 // the one-shot GIF rests on its last frame
+    img.replaceWith(canvas);
+    ready = true;
+    draw();
+  }
+
+  async function decode() {
+    var buf = await (await fetch(img.src)).arrayBuffer();
+    var dec = new ImageDecoder({ data: buf, type: 'image/gif' });
+    await dec.tracks.ready;                   // full buffer -> frameCount is final here
+    var n = dec.tracks.selectedTrack.frameCount;
+    for (var i = 0; i < n; i++) {
+      var vf = (await dec.decode({ frameIndex: i })).image;
+      durs.push((vf.duration || 50000) / 1000);   // microseconds -> ms
+      frames.push(await createImageBitmap(vf, { resizeWidth: TARGET, resizeHeight: TARGET, resizeQuality: 'high' }));
+      vf.close();
+    }
+    if (!frames.length) return;
+    // Swap only after the plain GIF has had time to play its one-shot intro, so
+    // a fast decode can't cut the forward opening short (jump to the last frame).
+    setTimeout(swap, Math.max(0, INTRO_MS - (performance.now() - t0)));
+  }
+
+  tile.addEventListener('mouseenter', function () { play(-1); });   // hover  -> reverse
+  tile.addEventListener('mouseleave', function () { play(1); });    // release -> forward
+  decode().catch(function () { /* any decode error: keep the plain GIF */ });
 })();
 </script>
 
