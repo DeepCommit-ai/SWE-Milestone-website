@@ -1,8 +1,8 @@
 import dagre from 'dagre';
 import { Edge, Node, Position } from 'reactflow';
 
-const DEFAULT_NODE_WIDTH = 405; // Match MilestoneNode w-[405px]
-const DEFAULT_NODE_HEIGHT = 130; // Match MilestoneNode h-[130px]
+const DEFAULT_NODE_WIDTH = 480; // Match MilestoneNode width
+const DEFAULT_NODE_HEIGHT = 158; // Match MilestoneNode height
 
 // Padding for group containers
 const GROUP_PADDING_LEFT = 10;
@@ -10,8 +10,8 @@ const GROUP_PADDING_RIGHT = 10;
 const GROUP_PADDING_TOP = 36; // Extra space for group label
 const GROUP_PADDING_BOTTOM = 10;
 
-const TOPO_COL_WIDTH = DEFAULT_NODE_WIDTH + 150;
-const TOPO_ROW_HEIGHT = DEFAULT_NODE_HEIGHT + 72;
+const TOPO_COL_WIDTH = DEFAULT_NODE_WIDTH + 95;
+const TOPO_ROW_HEIGHT = DEFAULT_NODE_HEIGHT + 50;
 const TOPO_HEADER_HEIGHT = 56;
 const TOPO_NODE_START_Y = 108;
 const TOPO_COLUMN_STAGGER_PATTERN = [0, 108, 42, 156, 78, 132];
@@ -53,8 +53,8 @@ const runDagreLayout = (
 
   dagreGraph.setGraph({
     rankdir: direction,
-    ranksep: 145, // Horizontal separation between columns
-    nodesep: 78, // Vertical separation between nodes
+    ranksep: 95, // Horizontal separation between columns
+    nodesep: 50, // Vertical separation between nodes
     edgesep: 36, // Minimum separation between edges
     ranker: 'network-simplex',
     align: 'UL', // Align nodes to upper-left to keep rows aligned
@@ -215,8 +215,8 @@ const getGroupModeLayout = (nodes: Node[], edges: Edge[], direction: string): La
 
   const GRID_START_Y = maxY > 0 ? maxY + 300 : 100;
   const COLUMNS = 3;
-  const COL_WIDTH = DEFAULT_NODE_WIDTH + 100;
-  const ROW_HEIGHT = DEFAULT_NODE_HEIGHT + 60;
+  const COL_WIDTH = DEFAULT_NODE_WIDTH + 72;
+  const ROW_HEIGHT = DEFAULT_NODE_HEIGHT + 45;
 
   const finalNodes = [...layoutedConnected, ...processedChildNodes];
 
@@ -370,8 +370,8 @@ const getChildModeLayout = (nodes: Node[], edges: Edge[], direction: string): La
 
   const GRID_START_Y = maxY > 0 ? maxY + 300 : 100;
   const COLUMNS = 3;
-  const COL_WIDTH = DEFAULT_NODE_WIDTH + 100;
-  const ROW_HEIGHT = DEFAULT_NODE_HEIGHT + 60;
+  const COL_WIDTH = DEFAULT_NODE_WIDTH + 72;
+  const ROW_HEIGHT = DEFAULT_NODE_HEIGHT + 45;
 
   const isolatedTopLevel = isolatedMilestones.filter((n) => !childToParent.has(n.id));
 

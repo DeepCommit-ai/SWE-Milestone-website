@@ -1,5 +1,5 @@
 import './detailpanel.css';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, Link as LinkIcon, FileText, Hash, Calendar, Info, Code, FileCode, ChevronDown, ChevronRight, TestTube, BookOpen } from 'lucide-react';
 import { MilestoneData, DependencyData } from '../types';
 import { Node, Edge } from 'reactflow';
@@ -56,18 +56,10 @@ const normalizeCommit = (value?: string) => {
 };
 
 const DetailPanel: React.FC<DetailPanelProps> = ({ selectedNode, selectedEdge, onClose, allNodes, basePath }) => {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
   const [srsContent, setSrsContent] = useState<string | null>(null);
   const [srsLoading, setSrsLoading] = useState(false);
   const [srsError, setSrsError] = useState<string | null>(null);
   const [showSrsModal, setShowSrsModal] = useState(false);
-
-  useEffect(() => {
-    if (titleRef.current) {
-      setIsTruncated(titleRef.current.scrollWidth > titleRef.current.clientWidth);
-    }
-  }, [selectedNode?.id]);
 
   // Reset SRS state when node changes
   useEffect(() => {
@@ -174,23 +166,33 @@ const DetailPanel: React.FC<DetailPanelProps> = ({ selectedNode, selectedEdge, o
 
   return (
     <div className="dp-panel">
-      {/* Header */}
+      {/* Header — single id line; long ids just shrink the font (no extra chip). */}
       <div className="dp-header">
-        <div className={clsx('dp-header-top', isTruncated && 'dp-header-top-tight')}>
-          <h2 ref={titleRef} className="dp-title" title={selectedNode ? selectedNode.id : 'Edge Details'}>
+        <div className="dp-header-top">
+          <h2
+            className="dp-title"
+            title={selectedNode ? selectedNode.id : 'Edge Details'}
+            style={
+              selectedNode
+                ? {
+                    fontSize:
+                      selectedNode.id.length > 30
+                        ? '0.6rem'
+                        : selectedNode.id.length > 24
+                        ? '0.68rem'
+                        : selectedNode.id.length > 19
+                        ? '0.76rem'
+                        : '0.85rem',
+                  }
+                : undefined
+            }
+          >
             {selectedNode ? selectedNode.id : 'Edge Details'}
           </h2>
           <button onClick={onClose} className="dp-close-btn">
             <X size={18} />
           </button>
         </div>
-        {selectedNode && isTruncated && (
-          <div className="dp-id-wrap">
-            <div className="dp-id-chip">
-              {selectedNode.id}
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="dp-body">

@@ -4,10 +4,10 @@ import { FileCode, GitCommit, Calendar } from 'lucide-react';
 import { MilestoneData, Category } from '../types';
 import { T, CAT } from './theme';
 
-const truncateId = (id: string, max = 26): string =>
+const truncateId = (id: string, max = 30): string =>
   id.length <= max ? id : id.substring(0, max - 3) + '...';
 
-const handle: React.CSSProperties = { background: T.faint, width: 8, height: 8, border: 'none' };
+const handle: React.CSSProperties = { background: T.faint, width: 9, height: 9, border: 'none' };
 
 const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
   const cat = CAT[data.category] || CAT[Category.MAINTENANCE];
@@ -15,8 +15,8 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
   return (
     <div
       style={{
-        width: 405,
-        height: 130,
+        width: 480,
+        height: 158,
         borderRadius: 8,
         display: 'flex',
         flexDirection: 'column',
@@ -39,7 +39,7 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '7px 12px',
+          padding: '9px 15px',
           borderBottom: `1px solid ${T.borderSoft}`,
           background: T.band,
           borderRadius: '8px 8px 0 0',
@@ -47,18 +47,18 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
       >
         <span
           title={data.id}
-          style={{ fontWeight: 700, color: T.head, fontFamily: 'ui-monospace, monospace', fontSize: 13 }}
+          style={{ fontWeight: 700, color: T.head, fontFamily: 'ui-monospace, monospace', fontSize: 15.5 }}
         >
           {truncateId(data.id)}
         </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           {typeof data.topoLayer === 'number' && (
             <div
               title={`Unlock layer ${data.topoLayer}`}
               style={{
-                padding: '1px 6px',
+                padding: '2px 7px',
                 borderRadius: 6,
-                fontSize: 10,
+                fontSize: 11.5,
                 fontWeight: 700,
                 color: '#9fb4ff',
                 background: '#1c2540',
@@ -72,10 +72,10 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 4,
-              padding: '2px 8px',
+              gap: 5,
+              padding: '3px 10px',
               borderRadius: 999,
-              fontSize: 10,
+              fontSize: 11.5,
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '.03em',
@@ -90,12 +90,12 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
       </div>
 
       {/* Body */}
-      <div style={{ padding: '8px 16px', flex: 1, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <div style={{ padding: '11px 20px', flex: 1, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
         <h3
           style={{
             fontWeight: 600,
             color: T.head,
-            fontSize: 13.5,
+            fontSize: 16,
             lineHeight: 1.3,
             margin: 0,
             display: '-webkit-box',
@@ -111,27 +111,27 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
       {/* Footer / metrics */}
       <div
         style={{
-          padding: '7px 12px',
+          padding: '9px 15px',
           background: T.band,
           borderTop: `1px solid ${T.borderSoft}`,
           display: 'grid',
           gridTemplateColumns: 'repeat(3,1fr)',
-          gap: 8,
-          fontSize: 10,
+          gap: 10,
+          fontSize: 12,
           color: T.muted,
           borderRadius: '0 0 8px 8px',
         }}
       >
-        <span style={{ display: 'flex', alignItems: 'center', gap: 5 }} title="Commits">
-          <GitCommit size={12} style={{ color: '#d9a441' }} />
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }} title="Commits">
+          <GitCommit size={14} style={{ color: '#d9a441', flex: 'none' }} />
           {data.commits} commits
         </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 5 }} title="Source LoC">
-          <FileCode size={12} style={{ color: '#6a9ecf' }} />
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }} title="Source LoC">
+          <FileCode size={14} style={{ color: '#6a9ecf', flex: 'none' }} />
           src LoC: {data.srcLoc}
         </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 5 }} title="Date range">
-          <Calendar size={12} style={{ color: '#c96b50' }} />
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }} title="Date range">
+          <Calendar size={14} style={{ color: '#c96b50', flex: 'none' }} />
           {data.startDate}-{data.endDate}
         </span>
       </div>
