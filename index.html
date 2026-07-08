@@ -468,7 +468,7 @@ footer { padding: 44px 0 56px; }
   .bib { font-family: var(--mono); font-size: 12.5px; line-height: 1.8; color: var(--muted); }
   .bib .f { color: var(--text); }
   .bib .k { color: var(--accent); }
-  .cite-card pre { padding: 26px 28px; overflow-x: auto; }
+  .cite-card pre { padding: 26px 28px; white-space: pre-wrap; overflow-wrap: anywhere; }
 
   /* footer CSS lives in shared chrome (see /* Shared site chrome — header + footer. Injected into every page by build.py.
    Referenced design tokens (var(--…)) are defined in each page's :root. */
@@ -545,7 +545,7 @@ footer { padding: 44px 0 56px; }
   #analysis .an-card g[aria-label="tip"] text{fill:#cdd9e5}
   #analysis .an-legend .lg i{width:11px;height:11px;border-radius:2px;flex:none}
   #analysis .prgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  #analysis .prcell{background:#141920;border:1px solid #28303a;border-radius:3px;padding:10px 8px 6px;cursor:grab;transition:opacity .12s,box-shadow .13s ease,border-color .13s ease}
+  #analysis .prcell{background:var(--bg);border:1px solid #28303a;border-radius:3px;padding:10px 8px 6px;cursor:grab;transition:opacity .12s,box-shadow .13s ease,border-color .13s ease}
   #analysis .prcell.dragging{opacity:.35;cursor:grabbing}
   #analysis .prcell:hover{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--border-strong)}
   #analysis .prcell .nm{text-align:center;font-size:12px;font-weight:700;margin:0 0 1px}
