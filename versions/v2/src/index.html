@@ -1057,10 +1057,13 @@ __FOOTER__
   var barsEl = document.getElementById('anBars');
   var selectedModels = {};                              // which models' bars to show
   A.models.forEach(function (m) { selectedModels[m.id] = 1; });   // default on: top 12
+  var orgBest = {};                                     // bar order: cluster by org, score asc within
+  models.forEach(function (m) { orgBest[m.org] = Math.max(orgBest[m.org] || 0, m.score); });
+  function barCmp(a, b) { return (orgBest[b.org] - orgBest[a.org]) || (a.score - b.score); }
   function renderBars() {
     var dim = A.dims[+sel.value], metric = msel.value, mlabel = msel.options[msel.selectedIndex].text, data = [];
-    var shown = models.filter(function (m) { return selectedModels[m.id]; });
-    if (!shown.length) shown = models;                  // never render an empty chart
+    var shown = models.filter(function (m) { return selectedModels[m.id]; }).sort(barCmp);
+    if (!shown.length) shown = models.slice().sort(barCmp);   // never render an empty chart
     shown.forEach(function (m) {
       var md = dim.data[m.id] || {};
       dim.bins.forEach(function (b) { if (md[b] && md[b][metric] != null) data.push({ model: m.label, bin: b, v: md[b][metric] }); });
