@@ -538,7 +538,8 @@ footer { padding: 44px 0 56px; }
   #analysis .an-card svg [aria-label*="grid"] line{stroke:#232a33}
   #analysis .an-legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
   #analysis .an-cap{width:100%;text-align:center;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
-  #analysis .an-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:default;transition:opacity .12s}
+  #analysis .an-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;transition:opacity .12s}
+  #analysis .an-legend .lg.off{opacity:.28}
   #analysis .an-card rect{transition:opacity .12s}
   #analysis .an-card g[aria-label="tip"] text{fill:#cdd9e5}
   #analysis .an-legend .lg i{width:11px;height:11px;border-radius:2px;flex:none}
@@ -554,7 +555,6 @@ footer { padding: 44px 0 56px; }
   #analysis .prleg .pl i{width:15px;height:3px;display:inline-block}
   #analysis .prleg .pl.id i{height:0;border-top:1px dashed var(--faint)}
   #analysis .prpick{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
-  #analysis .anbins{margin:2px 0 14px}
   #analysis .prchip{display:inline-flex;align-items:center;gap:6px;background:#141920;border:1px solid #28303a;color:var(--faint);font-family:var(--sans);font-size:11px;line-height:1;padding:4px 8px;cursor:pointer;transition:border-color .12s,color .12s}
   #analysis .prchip i{width:8px;height:8px;border-radius:2px;display:inline-block;opacity:.35;transition:opacity .12s}
   #analysis .prchip:hover{border-color:var(--border-strong)}
@@ -843,10 +843,9 @@ footer { padding: 44px 0 56px; }
       <h3>Score vs Complexity</h3>
       <div class="an-ctrl"><label for="anMetric">Y</label><select id="anMetric"></select><label for="anDim" class="xlab">X</label><select id="anDim"></select></div>
     </div>
-    <div class="prpick anbins" id="anBinPick"></div>
     <div class="an-card">
       <div id="anBars"></div>
-      <div class="an-legend" id="anLegend"><span class="an-cap">Models &middot; shared across all bins</span></div>
+      <div class="an-legend" id="anLegend"><span class="an-cap">Models &middot; click to show/hide</span></div>
     </div>
 
     <div class="an-sub an-sub2">
@@ -1302,23 +1301,23 @@ footer { padding: 44px 0 56px; }
   var msel = document.getElementById('anMetric');
   (A.metrics || [{ key: "score", label: "Score" }]).forEach(function (mt) { msel.insertAdjacentHTML('beforeend', '<option value="' + mt.key + '">' + mt.label + '</option>'); });
   var barsEl = document.getElementById('anBars');
-  var binPick = document.getElementById('anBinPick');
-  var selectedBins = {};                                // which bins of the current dim to show
+  var selectedModels = {};                              // which models' bars to show
+  models.forEach(function (m) { selectedModels[m.id] = 1; });
   function renderBars() {
     var dim = A.dims[+sel.value], metric = msel.value, mlabel = msel.options[msel.selectedIndex].text, data = [];
-    var bins = dim.bins.filter(function (b) { return selectedBins[b]; });
-    if (!bins.length) bins = dim.bins;                  // never render an empty chart
-    models.forEach(function (m) {
+    var shown = models.filter(function (m) { return selectedModels[m.id]; });
+    if (!shown.length) shown = models;                  // never render an empty chart
+    shown.forEach(function (m) {
       var md = dim.data[m.id] || {};
-      bins.forEach(function (b) { if (md[b] && md[b][metric] != null) data.push({ model: m.label, bin: b, v: md[b][metric] }); });
+      dim.bins.forEach(function (b) { if (md[b] && md[b][metric] != null) data.push({ model: m.label, bin: b, v: md[b][metric] }); });
     });
     barsEl.innerHTML = '';
     var w = Math.max(560, barsEl.clientWidth || 900);
     barsEl.append(Plot.plot({
       width: w, height: 330, marginLeft: 44, marginRight: 10, marginBottom: 38, marginTop: 8,
       style: { background: "transparent", color: "#8b98a6", fontFamily: SANS, fontSize: "11px" },
-      fx: { domain: bins, label: null, padding: 0.16 },
-      x: { domain: models.map(function (m) { return m.label; }), axis: null, padding: 0.06 },
+      fx: { domain: dim.bins, label: null, padding: 0.16 },
+      x: { domain: shown.map(function (m) { return m.label; }), axis: null, padding: 0.06 },
       y: { grid: true, label: "Mean " + mlabel + " %", labelAnchor: "center", ticks: 6 },
       color: { domain: models.map(function (m) { return m.label; }), range: models.map(function (m) { return m.color; }), legend: false },
       marks: [
@@ -1331,27 +1330,21 @@ footer { padding: 44px 0 56px; }
       ]
     }));
   }
-  function buildBinPicker() {                            // rebuild chips when the dim changes; all on
-    var dim = A.dims[+sel.value];
-    selectedBins = {};
-    dim.bins.forEach(function (b) { selectedBins[b] = 1; });
-    binPick.innerHTML = dim.bins.map(function (b) { return '<button class="prchip on" data-bin="' + b + '">' + b + '</button>'; }).join('');
-  }
-  binPick.addEventListener('click', function (e) {
-    var b = e.target.closest && e.target.closest('.prchip');
-    if (!b) return;
-    var bin = b.getAttribute('data-bin');
-    if (selectedBins[bin]) { delete selectedBins[bin]; b.classList.remove('on'); }
-    else { selectedBins[bin] = 1; b.classList.add('on'); }
-    renderBars();
-  });
-  sel.addEventListener('change', function () { buildBinPicker(); renderBars(); });
+  sel.addEventListener('change', renderBars);
   msel.addEventListener('change', renderBars);
   var rz; window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(renderBars, 180); });
   var legEl = document.getElementById('anLegend');
   legEl.insertAdjacentHTML('beforeend',
-    models.map(function (m) { return '<span class="lg" data-c="' + m.color + '"><i style="background:' + m.color + '"></i>' + m.label + '</span>'; }).join(''));
-  buildBinPicker();
+    models.map(function (m) { return '<span class="lg" data-c="' + m.color + '" data-id="' + m.id + '"><i style="background:' + m.color + '"></i>' + m.label + '</span>'; }).join(''));
+  // click a legend swatch to toggle that model's bars on/off
+  legEl.addEventListener('click', function (e) {
+    var l = e.target.closest && e.target.closest('.lg');
+    if (!l) return;
+    var id = l.getAttribute('data-id');
+    if (selectedModels[id]) { delete selectedModels[id]; l.classList.add('off'); }
+    else { selectedModels[id] = 1; l.classList.remove('off'); }
+    renderBars();
+  });
   renderBars();
 
   // hover a bar OR a legend swatch → highlight that model, dim the rest.
@@ -1363,6 +1356,7 @@ footer { padding: 44px 0 56px; }
       if (colorSet[f]) r.style.opacity = (c == null || f === c) ? 1 : 0.16;
     });
     legEl.querySelectorAll('.lg').forEach(function (l) {
+      if (l.classList.contains('off')) { l.style.opacity = ''; return; }
       l.style.opacity = (c == null || l.getAttribute('data-c') === c) ? 1 : 0.32;
     });
   }
