@@ -570,19 +570,15 @@ __HEADER__
       <div class="qa">
         <details open>
           <summary>What does SWE-Milestone evaluate?<span class="q-ico"></span></summary>
-          <div class="a">End-to-end software evolution. Each task is a real repository and a range of consecutive releases; the agent must evolve the codebase through the full range in one continuous session, rather than solving isolated patches.</div>
-        </details>
-        <details>
-          <summary>How are task instances constructed?<span class="q-ico"></span></summary>
-          <div class="a">We reconstruct the development history between two releases into an executable milestone DAG. Each milestone corresponds to a coherent unit of development and carries its own verifiable checks, derived automatically from the repository's commit history.</div>
+          <div class="a">Continuous software evolution. The agent must carry a real codebase through a full range of releases in one unbroken session, not produce isolated patches.</div>
         </details>
         <details>
           <summary>How is a milestone scored?<span class="q-ico"></span></summary>
-          <div class="a">A milestone is resolved when its fail-to-pass tests (<code>F2P</code>) pass while previously-passing tests (<code>P2P</code>) are preserved — a precision–recall structure that penalizes both under-building and regressions.</div>
+          <div class="a">Each milestone is scored on a precision–recall structure over its own tests: recall credits the fail-to-pass tests (<code>F2P</code>) the agent gets passing, precision credits the previously-passing tests (<code>P2P</code>) it keeps intact. A milestone counts as fully resolved only when every <code>F2P</code> passes and no <code>P2P</code> regresses, penalizing both under-building and regressions.</div>
         </details>
         <details>
           <summary>How is this different from isolated-patch benchmarks?<span class="q-ico"></span></summary>
-          <div class="a">There is no reset between milestones. Earlier mistakes, context pollution and drifting instructions compound across the run, exactly as they do in real long-horizon engineering — which is precisely the failure mode isolated-patch settings cannot observe.</div>
+          <div class="a">There is no reset between milestones. Earlier mistakes, context pollution and drifting instructions compound across the run, exactly as they do in real long-horizon engineering. That is precisely the failure mode isolated-patch settings cannot observe.</div>
         </details>
       </div>
     </div>
