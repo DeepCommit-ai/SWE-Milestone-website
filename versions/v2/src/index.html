@@ -1043,7 +1043,10 @@ __FOOTER__
 (function () {
   var A = window.ANALYSIS_DATA;
   if (!A || !window.Plot) return;
-  var models = A.models;
+  // Score legend lists every model; the top-12 (A.models) are on by default,
+  // the rest are appended (score desc) and start off.
+  var topIds = {}; A.models.forEach(function (m) { topIds[m.id] = 1; });
+  var models = A.models.concat((A.pr_models || []).filter(function (m) { return !topIds[m.id]; }).reverse());
   var SANS = "ui-sans-serif, system-ui, Roboto, sans-serif";
 
   // ---- Score vs Complexity: grouped bars faceted by bin, shared external legend ----
@@ -1053,7 +1056,7 @@ __FOOTER__
   (A.metrics || [{ key: "score", label: "Score" }]).forEach(function (mt) { msel.insertAdjacentHTML('beforeend', '<option value="' + mt.key + '">' + mt.label + '</option>'); });
   var barsEl = document.getElementById('anBars');
   var selectedModels = {};                              // which models' bars to show
-  models.forEach(function (m) { selectedModels[m.id] = 1; });
+  A.models.forEach(function (m) { selectedModels[m.id] = 1; });   // default on: top 12
   function renderBars() {
     var dim = A.dims[+sel.value], metric = msel.value, mlabel = msel.options[msel.selectedIndex].text, data = [];
     var shown = models.filter(function (m) { return selectedModels[m.id]; });
@@ -1086,7 +1089,7 @@ __FOOTER__
   var rz; window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(renderBars, 180); });
   var legEl = document.getElementById('anLegend');
   legEl.insertAdjacentHTML('beforeend',
-    models.map(function (m) { return '<span class="lg" data-c="' + m.color + '" data-id="' + m.id + '"><i style="background:' + m.color + '"></i>' + m.label + '</span>'; }).join(''));
+    models.map(function (m) { return '<span class="lg' + (selectedModels[m.id] ? '' : ' off') + '" data-c="' + m.color + '" data-id="' + m.id + '"><i style="background:' + m.color + '"></i>' + m.label + '</span>'; }).join(''));
   // click a legend swatch to toggle that model's bars on/off
   legEl.addEventListener('click', function (e) {
     var l = e.target.closest && e.target.closest('.lg');

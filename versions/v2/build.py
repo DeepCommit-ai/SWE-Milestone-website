@@ -162,7 +162,7 @@ def render_task_cards(repos: list) -> str:
         <span class="t-repo">{_GH_MARK}<span class="org">{r["org"]}/</span>{r["repo"]}</span>
         <span class="right">
           <span class="star" data-star="{r["org"]}/{r["repo"]}">{_STAR_ICON}<b>&middot;&middot;&middot;</b></span>
-          <span class="t-lang"><i class="lang-{r["lc"]}"></i>{r["lang"]}</span>
+          <span class="t-lang">{r["lang"]}</span>
         </span>
       </div>
       <div class="rr">
