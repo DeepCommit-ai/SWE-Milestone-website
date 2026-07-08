@@ -555,7 +555,15 @@ footer { padding: 44px 0 56px; }
   #analysis .prleg .pl{display:inline-flex;align-items:center;gap:7px}
   #analysis .prleg .pl i{width:15px;height:3px;display:inline-block}
   #analysis .prleg .pl.id i{height:0;border-top:1px dashed var(--faint)}
-  #analysis .prpick{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  #analysis .prpick-box{margin:0 0 14px}
+  #analysis .prpick-box>summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;list-style:none;font-size:12px;color:var(--muted);padding:5px 10px;border:1px solid #28303a;border-radius:3px;user-select:none;transition:color .12s,border-color .12s}
+  #analysis .prpick-box>summary::-webkit-details-marker{display:none}
+  #analysis .prpick-box>summary::after{content:"▾";font-size:10px}
+  #analysis .prpick-box[open]>summary::after{content:"▴"}
+  #analysis .prpick-box[open]>summary{margin-bottom:10px}
+  #analysis .prpick-box>summary:hover{color:var(--text);border-color:var(--border-strong)}
+  #analysis .prpick{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+  #analysis .prpick-box:not([open]) .prpick{display:none}
   #analysis .prchip{display:inline-flex;align-items:center;gap:6px;background:#141920;border:1px solid #28303a;color:var(--faint);font-family:var(--sans);font-size:11px;line-height:1;padding:4px 8px;cursor:pointer;transition:border-color .12s,color .12s}
   #analysis .prchip i{width:8px;height:8px;border-radius:2px;display:inline-block;opacity:.35;transition:opacity .12s}
   #analysis .prchip:hover{border-color:var(--border-strong)}
@@ -852,8 +860,11 @@ footer { padding: 44px 0 56px; }
       <h3>Precision &amp; Recall over milestone execution progress</h3>
       <div class="prleg"><span class="pl"><i style="background:#D08770"></i>Recall</span><span class="pl"><i style="background:#5E81AC"></i>Precision</span><span class="pl id"><i></i>Ideal</span></div>
     </div>
-    <p class="an-note2">accumulated &middot; Ideal = y&#61;x &middot; toggle models to show/hide &middot; drag a card to reorder</p>
-    <div class="prpick" id="anPRpick"></div>
+    <p class="an-note2">accumulated &middot; Ideal = y&#61;x &middot; drag a card to reorder</p>
+    <details class="prpick-box">
+      <summary>Select models to compare</summary>
+      <div class="prpick" id="anPRpick"></div>
+    </details>
     <div class="prgrid" id="anPR"></div>
   </div>
 </section>
