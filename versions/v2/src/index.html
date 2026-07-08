@@ -452,7 +452,8 @@
   #analysis .an-card svg [aria-label*="grid"] line{stroke:#232a33}
   #analysis .an-legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
   #analysis .an-cap{width:100%;text-align:center;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
-  #analysis .an-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;transition:opacity .12s}
+  #analysis .an-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;transition:opacity .12s,color .12s}
+  #analysis .an-legend .lg:hover{color:var(--heading)}
   #analysis .an-legend .lg.off{opacity:.28}
   #analysis .an-card rect{transition:opacity .12s}
   #analysis .an-card g[aria-label="tip"] text{fill:#cdd9e5}
@@ -1107,14 +1108,10 @@ __FOOTER__
   // hover a bar OR a legend swatch → highlight that model, dim the rest.
   // Bars are Plot <rect>s keyed by their fill (each model has a unique color).
   var colorSet = {}; models.forEach(function (m) { colorSet[m.color] = 1; });
-  function setHi(c) {
+  function setHi(c) {                                    // highlight bars only; legend never dims (CSS :hover brightens the hovered one)
     barsEl.querySelectorAll('rect').forEach(function (r) {
       var f = r.getAttribute('fill');
       if (colorSet[f]) r.style.opacity = (c == null || f === c) ? 1 : 0.16;
-    });
-    legEl.querySelectorAll('.lg').forEach(function (l) {
-      if (l.classList.contains('off')) { l.style.opacity = ''; return; }
-      l.style.opacity = (c == null || l.getAttribute('data-c') === c) ? 1 : 0.32;
     });
   }
   // Highlight follows the tip so the two never disagree — both track the same
