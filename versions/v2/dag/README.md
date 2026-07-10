@@ -30,9 +30,9 @@ The task page fetches its inputs at runtime from `/data/dag/<ws>/`
 `selected_milestone_ids.txt`, plus `srs/<id>/SRS.md` for the detail panel's
 "View SRS" modal) — so all data still comes only from `data/`.
 
-## Sync data from EvoClaw-data
+## Sync data from SWE-Milestone-data
 
-That data is pulled from the upstream `EvoClaw-data` repo by `sync_dag_data.py`
+That data is pulled from the upstream `SWE-Milestone-data` repo by `sync_dag_data.py`
 — the ONE place the website reads upstream. Re-run after the upstream changes:
 
 ```sh

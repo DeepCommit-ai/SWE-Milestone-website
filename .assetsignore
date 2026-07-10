@@ -7,3 +7,4 @@ data/compute.py
 data/records.json
 __pycache__/
 README.md
+worker.mjs

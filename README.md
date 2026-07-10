@@ -1,6 +1,6 @@
-# EvoClaw Website
+# SWE-Milestone Website
 
-Data-driven static site for the **EvoClaw** leaderboard — AI coding agents
+Data-driven static site for the **SWE-Milestone** leaderboard — AI coding agents
 evaluated on continuous software evolution. Deployed on **Cloudflare Workers**
 (auto-built from this repo on every push; see `wrangler.jsonc`).
 
@@ -10,7 +10,7 @@ Data and presentation are separated so you can try different frontend styles
 on top of the **same** data.
 
 ```
-EvoClaw-website/
+SWE-Milestone-website/
 ├── index.html          # ★ LIVE SITE — build output of the active version (served at /)
 ├── wrangler.jsonc      # Cloudflare deploy config (assets.directory: ".")
 ├── data/               # shared data layer (identity + numbers only)
@@ -18,15 +18,16 @@ EvoClaw-website/
 │   ├── trial_results.csv       # trial-level totals, all agents (canonical, synced from analysis)
 │   └── compute.py              # load_e2e() + compute_records() → records
 ├── assets/             # shared images / brand assets (served at /assets/)
-│   ├── evoclaw_icon.png
+│   ├── swe-milestone_icon.png
+│   ├── banner.png
 │   ├── moonshot.png
 │   └── logos.json              # per-model logos (base64), inlined at build time
 └── versions/           # one folder per frontend style — all share data/
-    └── v1/                     # current design
-        ├── build.py            # presentation config + inline + inject → writes root index.html
-        ├── template.html       # HTML shell (has __STYLE__ / __APP_JS__ placeholders)
-        ├── style.css           # this version's CSS
-        └── app.js              # this version's JS (Plotly chart + table render)
+    └── v2/                     # current design
+        ├── build.py            # presentation config + inject → writes root pages
+        ├── src/                # source HTML for index.html and task.html
+        ├── partials/           # shared header, footer, and chrome CSS
+        └── dag/                # embedded milestone DAG source
 ```
 
 ### The data ↔ presentation contract
@@ -56,7 +57,7 @@ it consumes the same records.
 ## Build
 
 ```bash
-python versions/v1/build.py     # → writes ./index.html (the live site)
+python versions/v2/build.py     # → writes ./index.html and ./task.html
 ```
 
 Inspect the shared data snapshot on its own (optional; gitignored):
@@ -73,7 +74,7 @@ The numbers come from the **analysis** repo — the single source of truth. Full
 refresh, end to end:
 
 ```bash
-# 1. analysis: re-extract canonical CSVs from EvoClaw-log
+# 1. analysis: re-extract canonical CSVs from SWE-Milestone-log
 cd ../analysis && python refresh_data.py
 #    (or just the leaderboard CSVs: python -m analysis.extract.extract_e2e_csv --all --force)
 
@@ -81,16 +82,15 @@ cd ../analysis && python refresh_data.py
 python scripts/sync_leaderboard.py
 
 # 3. website: rebuild index.html with the new data + logos   <-- easy to forget!
-cd ../EvoClaw-website && python versions/v1/build.py
+cd ../SWE-Milestone-website && python versions/v2/build.py
 
 # 4. review, commit, push -> Cloudflare auto-deploys
 git add data/*.csv index.html && git commit -m "leaderboard: refresh data" && git push
 ```
 
 **Step 3 is mandatory:** syncing `data/*.csv` alone does NOT change the live
-page — only `build.py` inlines the records into `index.html`. `compute.py` /
-`records.json` are not on this path (the build calls `compute_records()`
-directly; `records.json` is just an optional debug snapshot, gitignored).
+page — only `build.py` regenerates `records.json` and inlines the records into
+the served HTML. `records.json` itself is a build artifact and is not deployed.
 
 **Local preview:** `python -m http.server 5005` from this directory serves the
 site at http://localhost:5005. It is a no-cache static server, so after

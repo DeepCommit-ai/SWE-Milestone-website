@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the EvoClaw leaderboard — website version v1.
+"""Build the SWE-Milestone leaderboard — website version v1.
 
 Pulls the shared data records from data/compute.py, decorates them with THIS
 version's presentation (colors, chart labels, label positions), inlines this

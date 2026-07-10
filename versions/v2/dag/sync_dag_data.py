@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Sync per-repo Milestone DAG data from EvoClaw-data into the website's data/dag/.
+"""Sync per-repo Milestone DAG data from SWE-Milestone-data into the website's data/dag/.
 
 The website only ever reads from data/, so this is the ONE place that pulls from
-the upstream data repo. For each `EvoClaw-data/<org>_<repo>_<start>_<end>/` dir it
+the upstream data repo. For each `SWE-Milestone-data/<org>_<repo>_<start>_<end>/` dir it
 copies the files the DAG + detail panel read at runtime into `data/dag/<ws>/`
 (ws = the repo name), namely:
 
@@ -30,13 +30,16 @@ time, SRS word count). It is NOT the render source and is intentionally not sync
 Re-run after the upstream data changes:  python versions/v2/dag/sync_dag_data.py
 """
 import csv
+import os
 import pathlib
 import shutil
 import sys
 
 HERE = pathlib.Path(__file__).resolve()
-WEBSITE = HERE.parents[3]                                          # .../EvoClaw-website
-ED = WEBSITE.parent / "EvoClaw-data"                              # sibling upstream data repo
+WEBSITE = HERE.parents[3]                                          # .../SWE-Milestone-website
+ED = pathlib.Path(os.environ.get(
+    "SWE_MILESTONE_DATA_ROOT", WEBSITE.parent / "SWE-Milestone-data"
+)).expanduser()
 DAG = WEBSITE / "data" / "dag"
 TITLES_SRC = WEBSITE.parent / "analysis" / "data" / "sources" / "milestone_titles.csv"
 
@@ -78,7 +81,7 @@ def apply_canonical_titles(ws: str, path: pathlib.Path, canon: dict) -> int:
 
 def main() -> None:
     if not ED.exists():
-        sys.exit(f"EvoClaw-data not found at {ED}")
+        sys.exit(f"SWE-Milestone-data not found at {ED}")
     canon = load_canonical_titles()
     if canon:
         DAG.mkdir(parents=True, exist_ok=True)

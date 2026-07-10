@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EvoClaw shared data layer.
+"""SWE-Milestone shared data layer.
 
 Reads the canonical CSVs + model_registry.json in this directory and computes
 the leaderboard records — the *data* half of the old build.py: numbers and

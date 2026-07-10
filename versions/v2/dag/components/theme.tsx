@@ -2,7 +2,7 @@ import React from 'react';
 import { Shield, Layers, Database, AlertTriangle, Activity, PenTool } from 'lucide-react';
 import { Category } from '../types';
 
-// Dark palette — matches the EvoClaw site (GitHub dark-dimmed). Cards use the
+// Dark palette — matches the SWE-Milestone site (GitHub dark-dimmed). Cards use the
 // site's box black; borders are gray-white so cards read on the dark canvas.
 export const T = {
   card: '#1c2128',       // milestone box — GitHub dark

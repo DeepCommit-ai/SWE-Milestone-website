@@ -19,7 +19,7 @@ function themeColors() {
 function setTheme(mode) {
   if (mode === 'light') document.documentElement.setAttribute('data-theme', 'light');
   else document.documentElement.removeAttribute('data-theme');
-  localStorage.setItem('evoclaw-theme', mode);
+  localStorage.setItem('swe-milestone-theme', mode);
   document.querySelectorAll('.theme-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.themeVal === mode);
   });
@@ -365,7 +365,7 @@ function renderChart() {
     },
     images: images,
     annotations: annotations.concat([{
-      text: '<a href="https://evo-claw.com/" style="color:#999">https://evo-claw.com</a>',
+      text: '<a href="https://swe-milestone.com/" style="color:#999">https://swe-milestone.com</a>',
       xref: 'paper', yref: 'paper', x: 1, y: 0,
       xanchor: 'right', yanchor: 'bottom',
       xshift: 0, yshift: -54,

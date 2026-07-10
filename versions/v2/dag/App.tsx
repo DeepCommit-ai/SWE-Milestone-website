@@ -215,7 +215,7 @@ const STORAGE_KEY_ROOT = 'mstone_dag_selected_root';
 const STORAGE_KEY_CUSTOM_PATHS = 'mstone_dag_custom_paths'; // stringified {id, name, path}[]
 
 const DEFAULT_ROOTS: DatasetRoot[] = [
-  { id: 'evoclaw-data', name: 'evoclaw-data' },
+  { id: 'swe-milestone-data', name: 'swe-milestone-data' },
   { id: 'result', name: 'result' },
   { id: 'harness_workspace', name: 'harness_workspace' },
 ];

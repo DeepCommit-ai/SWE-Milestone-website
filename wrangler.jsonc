@@ -1,15 +1,20 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "evo-claw",
-  "compatibility_date": "2025-09-27",
+  "name": "swe-milestone",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-07-10",
+  "workers_dev": false,
   "routes": [
-    { "pattern": "swe-milestone.com", "custom_domain": true }
+    { "pattern": "swe-milestone.com", "custom_domain": true },
+    { "pattern": "www.swe-milestone.com", "custom_domain": true }
   ],
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": true
   },
   "compatibility_flags": [
     "nodejs_compat"
