@@ -28,6 +28,7 @@ DATA_DIR = pathlib.Path(__file__).resolve().parent
 # Canonical files synced verbatim from analysis/data (single source of truth,
 # shared with the dashboard + monitor).
 MILESTONE_CSV = DATA_DIR / "milestone_results.csv"
+EXECUTION_CSV = DATA_DIR / "milestone_executions.csv"
 TRIAL_CSV = DATA_DIR / "trial_results.csv"
 REGISTRY_JSON = DATA_DIR / "model_registry.json"
 RECORDS_JSON = DATA_DIR / "records.json"
@@ -73,6 +74,12 @@ def load_e2e() -> pd.DataFrame:
     df = df[df["trial_type"] == "e2e"].copy()
     df["is_resolved"] = df["eval_status"] == "passed"
     return df
+
+
+def load_executions() -> pd.DataFrame:
+    """Load active per-trial execution facts, including non-graded rows."""
+    df = pd.read_csv(EXECUTION_CSV)
+    return df[df["trial_type"] == "e2e"].copy()
 
 
 def compute_records():
@@ -249,22 +256,47 @@ def compute_per_repo_milestones():
     Order columns can legitimately differ per trial.
     """
     e2e = load_e2e()
+    executions = load_executions()
     by_ws, order_ws = {}, {}
-    for ws, wsdf in e2e.groupby("workspace"):
+    workspaces = sorted(set(e2e["workspace"]) | set(executions["workspace"]))
+    for ws in workspaces:
+        wsdf = e2e[e2e["workspace"] == ws]
+        ws_exec = executions[executions["workspace"] == ws]
         trials = {}
-        for (agent, model), g in wsdf.groupby(["agent_name", "model"]):
+
+        # Execution facts establish the true order, including non-graded work.
+        for (agent, model), g in ws_exec.groupby(["agent_name", "model"]):
             bid = {}
+            for _, r in g.sort_values("milestone_order").iterrows():
+                bid[r["milestone_id"]] = {
+                    "order": int(r["milestone_order"]),
+                    "status": (
+                        "non-graded"
+                        if r["grading_status"] == "non_graded"
+                        else "executed"
+                    ),
+                }
+            trials[(agent, model)] = bid
+
+        # Graded evaluation rows add status and scores without replacing the
+        # actual order captured above.
+        for (agent, model), g in wsdf.groupby(["agent_name", "model"]):
+            bid = trials.setdefault((agent, model), {})
             for _, r in g.iterrows():
                 st = _STATUS.get(r["eval_status"], "not-run")
-                entry = {"order": int(r["milestone_order"]), "status": st}
+                entry = bid.setdefault(r["milestone_id"], {})
+                entry.setdefault("order", int(r["milestone_order"]))
+                entry["status"] = st
                 if r["eval_status"] != "not_run" and pd.notna(r["score_reliable"]):
                     entry["score"] = round(float(r["score_reliable"]) * 100)
                     entry["prec"] = round(float(r["score_precision"]) * 100)
                     entry["rec"] = round(float(r["score_recall"]) * 100)
-                bid[r["milestone_id"]] = entry
-            trials[(agent, model)] = bid
         by_ws[ws] = trials
-        order_ws[ws] = sorted(wsdf["milestone_id"].unique(), key=_ms_sort_key)
+        milestone_ids = list(wsdf["milestone_id"].unique())
+        for milestone_id in ws_exec["milestone_id"].unique():
+            if milestone_id not in milestone_ids:
+                milestone_ids.append(milestone_id)
+        order_ws[ws] = sorted(milestone_ids, key=_ms_sort_key)
     return by_ws, order_ws
 
 

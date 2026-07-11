@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { FileCode, GitCommit, Calendar } from 'lucide-react';
+import { CircleOff, FileCode, GitCommit, Calendar } from 'lucide-react';
 import { MilestoneData, Category } from '../types';
 import { T, CAT } from './theme';
 
@@ -8,6 +8,10 @@ const truncateId = (id: string, max = 30): string =>
   id.length <= max ? id : id.substring(0, max - 3) + '...';
 
 const handle: React.CSSProperties = { background: T.faint, width: 9, height: 9, border: 'none' };
+const compactCategory: Partial<Record<Category, string>> = {
+  [Category.PLATFORM_SUPPORT]: 'PLATFORM',
+  [Category.BREAKING_CHANGE]: 'BREAKING',
+};
 
 const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
   const cat = CAT[data.category] || CAT[Category.MAINTENANCE];
@@ -84,13 +88,18 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
             }}
           >
             {cat.icon}
-            <span>{data.category}</span>
+            <span title={data.category}>{compactCategory[data.category] || data.category}</span>
           </div>
         </div>
       </div>
 
       {/* Body */}
-      <div style={{ padding: '11px 20px', flex: 1, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <div
+        style={{
+          padding: '11px 20px', flex: 1, display: 'flex', alignItems: 'center',
+          justifyContent: 'space-between', gap: 12, overflow: 'hidden',
+        }}
+      >
         <h3
           style={{
             fontWeight: 700,
@@ -98,6 +107,8 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
             fontSize: 18,
             lineHeight: 1.3,
             margin: 0,
+            flex: 1,
+            minWidth: 0,
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
@@ -136,6 +147,56 @@ const MilestoneNode = ({ data, selected }: NodeProps<MilestoneData>) => {
           {data.startDate}-{data.endDate}
         </span>
       </div>
+
+      {data.isNonGraded && (
+        <>
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 8,
+              pointerEvents: 'none',
+              borderRadius: 8,
+              background: 'rgba(5, 8, 11, 0.72)',
+              border: `3px dashed ${selected ? T.accent : '#8b949e'}`,
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+            }}
+          />
+          <div
+            title="Implemented by the agent but excluded from benchmark scoring"
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              zIndex: 9,
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 7,
+              width: '66%',
+              minHeight: 42,
+              padding: '8px 14px',
+              borderRadius: 4,
+              border: '2px solid #9aa4af',
+              background: '#252c34',
+              color: '#f0f6fc',
+              boxShadow: '0 3px 12px rgba(0,0,0,0.55)',
+              fontFamily: 'ui-monospace, monospace',
+              fontSize: 20,
+              lineHeight: 1,
+              fontWeight: 800,
+              letterSpacing: 0,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <CircleOff size={21} aria-hidden="true" />
+            NON-GRADED
+          </div>
+        </>
+      )}
 
       <Handle type="source" position={Position.Right} style={handle} />
       <Handle type="source" position={Position.Bottom} id="bottom-source" style={{ ...handle, left: '65%' }} />

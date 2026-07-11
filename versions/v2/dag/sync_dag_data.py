@@ -3,13 +3,14 @@
 
 The website only ever reads from data/, so this is the ONE place that pulls from
 the upstream data repo. For each `SWE-Milestone-data/<org>_<repo>_<start>_<end>/` dir it
-copies the files the DAG + detail panel read at runtime into `data/dag/<ws>/`
-(ws = the repo name), namely:
+copies the topology and SRS inputs into `data/dag/<ws>/` (ws = the repo name).
+It also retains the upstream selected-ID source for auditability, although the
+task page derives active scope from analysis's canonical milestone contract:
 
   milestones.csv                 — node definitions (DAG render source)
   dependencies.csv               — edges
   additional_dependencies.csv    — extra edges (optional; some repos lack it)
-  selected_milestone_ids.txt     — which milestones to render (optional)
+  selected_milestone_ids.txt     — upstream scope input retained for traceability
   srs/<milestone_id>/SRS.md       — full Software Requirements Spec per milestone
                                     (the detail panel's "View SRS" modal)
 
@@ -23,9 +24,10 @@ so the site's node/panel titles read the same as the dashboard. All 89 rendered
 rows without one keep their original title. A copy of milestone_titles.csv is
 also written to data/dag/ for traceability.
 
-NOTE: milestone_info.csv (analysis/data/) is a SEPARATE, analysis-only summary
-table (cross-repo stats: multi-label categories, graph degrees, human dev/writing
-time, SRS word count). It is NOT the render source and is intentionally not synced.
+GRADING STATUS: this topology sync intentionally does not copy or derive a
+non-graded list. Analysis aggregates the canonical graded/non_graded/inactive
+classification into data/milestone_info.csv; sync_leaderboard.py publishes it
+to the website, and build.py injects it into the task-page render payload.
 
 Re-run after the upstream data changes:  python versions/v2/dag/sync_dag_data.py
 """

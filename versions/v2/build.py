@@ -23,6 +23,8 @@ here rather than fetched at runtime.
 Usage:  python versions/v2/build.py   (regenerates data/records.json first)
 """
 
+import csv
+import hashlib
 import json
 import pathlib
 import subprocess
@@ -180,30 +182,74 @@ def render_task_cards(repos: list) -> str:
     return "\n".join(out)
 
 
+def load_grading_status() -> dict[str, dict[str, str]]:
+    """Load analysis-owned milestone grading status from the synced contract."""
+    path = DATA / "milestone_info.csv"
+    allowed = {"graded", "non_graded", "inactive"}
+    by_workspace: dict[str, dict[str, str]] = {}
+
+    with path.open(newline="") as f:
+        for row in csv.DictReader(f):
+            workspace = row["workspace"]
+            milestone_id = row["milestone_id"]
+            status = row.get("grading_status", "")
+            if status not in allowed:
+                raise ValueError(
+                    f"Invalid grading_status {status!r} for {workspace}/{milestone_id}; "
+                    "sync analysis/data/milestone_info.csv before building the website"
+                )
+            statuses = by_workspace.setdefault(workspace, {})
+            if milestone_id in statuses:
+                raise ValueError(f"Duplicate milestone status: {workspace}/{milestone_id}")
+            statuses[milestone_id] = status
+
+    return by_workspace
+
+
 def load_task_data() -> str:
-    """`window.TASK_DATA = {tasks: {ws: {meta, records}}, logos}` for task.html.
+    """`window.TASK_DATA = {tasks: {ws: {meta, records, milestoneStatus}}, logos}`.
 
     Per-repo leaderboards come from compute.compute_per_repo_records() (reads
-    only data/); meta comes from data/repos.json; logos from assets/logos.json.
+    only data/); canonical grading status comes from analysis via the synced
+    data/milestone_info.csv; meta comes from data/repos.json; logos from assets.
     """
     sys.path.insert(0, str(DATA))
     import compute  # data/compute.py — reads only from data/
     per = compute.compute_per_repo_records()
     milestones, order_ws = compute.compute_per_repo_milestones()
+    grading_status = load_grading_status()
     repos_by_ws = {r["ws"]: r for r in load_repos()}
     all_logos = json.loads((ASSETS / "logos.json").read_text())
 
     used, tasks = set(), {}
     for ws, recs in per.items():
+        if ws not in grading_status:
+            raise ValueError(f"milestone_info.csv has no grading status for workspace {ws!r}")
         enrich(recs)  # add color / logo_key / label / id
         used.update(r["logo_key"] for r in recs if r.get("logo_key"))
         mz = milestones.get(ws, {})
         for r in recs:  # attach each run's per-milestone breakdown for Compare
             r["byId"] = mz.get((r["agent"], r["model"]), {})
+        canonical_active = [
+            milestone_id
+            for milestone_id, status in grading_status[ws].items()
+            if status != "inactive"
+        ]
+        milestone_order = [
+            milestone_id
+            for milestone_id in order_ws.get(ws, [])
+            if milestone_id in canonical_active
+        ]
+        milestone_order.extend(
+            milestone_id
+            for milestone_id in canonical_active
+            if milestone_id not in milestone_order
+        )
         tasks[ws] = {
             "meta": repos_by_ws.get(ws, {"ws": ws, "repo": ws}),
             "records": recs,
-            "milestoneOrder": order_ws.get(ws, []),
+            "milestoneOrder": milestone_order,
+            "milestoneStatus": grading_status[ws],
         }
     logos = {k: v for k, v in all_logos.items() if k in used}
     payload = {"tasks": tasks, "logos": logos}
@@ -246,6 +292,10 @@ def main():
     task_cards = render_task_cards(load_repos())
     task_data = load_task_data()
     analysis_data = load_analysis_data()
+    dag_asset_version = hashlib.sha256(
+        (ASSETS / "mstone-dag.js").read_bytes()
+        + (ASSETS / "mstone-dag.css").read_bytes()
+    ).hexdigest()[:12]
 
     for page in PAGES:
         html = (SRC / page).read_text()
@@ -256,6 +306,7 @@ def main():
         html = html.replace("__TASK_CARDS__", task_cards)
         html = html.replace("__TASK_DATA__", task_data)
         html = html.replace("__ANALYSIS_DATA__", analysis_data)
+        html = html.replace("__DAG_ASSET_VERSION__", dag_asset_version)
         (ROOT / page).write_text(html)
         print(f"  built {page} (repo root — live site)")
 
