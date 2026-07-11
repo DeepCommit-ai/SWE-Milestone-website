@@ -39,6 +39,7 @@ interface DagData {
   dependencies: string;
   additional?: string;
   selectedIds?: string[];
+  nonGradedIds?: string[];
   basePath?: string | null;
 }
 
@@ -81,6 +82,13 @@ function buildGraph(d: DagData, viewMode: ViewMode) {
     }
   }
 
+  const nonGraded = new Set(d.nonGradedIds || []);
+  nodes = nodes.map((n) =>
+    n.type === 'milestone' && nonGraded.has(n.id)
+      ? { ...n, data: { ...n.data, isNonGraded: true } }
+      : n
+  );
+
   const layout = getLayoutedElements(nodes, edges, 'LR', false, { viewMode, expandSubMilestones: true });
   let finalNodes: any[] = layout.nodes;
 
@@ -114,7 +122,11 @@ function litNodes(cur: Node[], keep: Set<string>, selId: string | null): Node[] 
   return cur.map((n) => ({
     ...n,
     selected: n.id === selId,
-    style: { ...n.style, opacity: keep.has(n.id) ? 1 : DIM_NODE, transition: 'opacity .2s' },
+    style: {
+      ...n.style,
+      opacity: keep.has(n.id) ? 1 : DIM_NODE,
+      transition: 'opacity .2s',
+    },
   }));
 }
 // Lit edges also surface their weak/strong strength as a small label — but only
@@ -151,7 +163,11 @@ function Dag({ data }: { data: DagData }) {
   const apply = useCallback((s: Sel) => {
     const be = baseRef.current.edges;
     if (!s) {
-      setNodes((cur) => cur.map((n) => ({ ...n, selected: false, style: { ...n.style, opacity: 1 } })));
+      setNodes((cur) => cur.map((n) => ({
+        ...n,
+        selected: false,
+        style: { ...n.style, opacity: 1, transition: 'opacity .2s' },
+      })));
       setEdges(be.map((e) => ({ ...e, label: '' })));
       return;
     }
@@ -174,7 +190,11 @@ function Dag({ data }: { data: DagData }) {
     const g = buildGraph(data, viewMode);
     baseRef.current = g;
     setSel(null);
-    setNodes(g.nodes.map((n) => ({ ...n, selected: false })));
+    setNodes(g.nodes.map((n) => ({
+      ...n,
+      selected: false,
+      style: { ...n.style, opacity: 1, transition: 'opacity .2s' },
+    })));
     setEdges(g.edges);
   }, [data, viewMode, setNodes, setEdges]);
 
@@ -218,6 +238,15 @@ function Dag({ data }: { data: DagData }) {
           Unlock
         </button>
       </div>
+      {Boolean(data.nonGradedIds?.length) && (
+        <div
+          className="mdag-status-key"
+          title="Implemented by the agent but excluded from benchmark scoring"
+        >
+          <span aria-hidden="true" />
+          <strong>{data.nonGradedIds!.length}</strong> non-graded
+        </div>
+      )}
       <ReactFlow
         nodes={nodes}
         edges={edges}

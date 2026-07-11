@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/mstone-dag.css">
+<link rel="stylesheet" href="/assets/mstone-dag.css?v=__DAG_ASSET_VERSION__">
 <style>
   :root{
     --bg:#0d1117; --box:#1a1f26; --lane:#12181e; --surface:#2d333b; --surface-hover:#323942;
@@ -158,12 +158,16 @@
   .mc{border-right:1px solid var(--border-strong)}
   .cmp thead .grp th.mc,.cmp thead .sub th.mc,.cmp tbody td.mc{background:var(--lane)}
   .grp-sep{border-left:1px solid var(--border-strong)}
-  .st{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+  .st{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);white-space:nowrap}
   .st .d{width:7px;height:7px;flex:none}
   .st.resolved{color:#7ee0a0}.st.resolved .d{background:var(--green)}
   .st.failed{color:#f0868d}.st.failed .d{background:var(--red)}
   .st.compile{color:#e6bd6a}.st.compile .d{background:var(--amber)}
   .st.not-run{color:var(--faint)}.st.not-run .d{background:var(--gray)}
+  .st.non-graded{color:#cdd9e5}.st.non-graded .d{background:#768390;border:1px dashed #cdd9e5}
+  .ms-scope{display:inline-block;margin-left:8px;padding:2px 5px;border:1px dashed #59636e;
+    color:#98a5b3;background:#161b22;font-size:9px;font-weight:700;line-height:1;letter-spacing:0;text-transform:uppercase}
+  .cmp tr.non-graded-row td{background:rgba(118,128,140,.035)}
   .sc{font-family:var(--mono);font-weight:500;font-size:13px}
   .metric{font-family:var(--mono);color:var(--muted);font-size:12.5px}
   td.win{background:rgba(87,171,90,.07)} td.win .sc{font-weight:700}
@@ -205,7 +209,7 @@ __HEADER__
       <span class="pick"><span class="pdot" id="dotB"></span><select id="selB"></select></span>
     </div>
     <div class="totals" id="totals"></div>
-    <p class="cmp-note">Order = the sequence in which each run executed the milestone. Click a run's <b>Order</b> to sort by that run's execution order (ascending); the highlighted one is the active sort.</p>
+    <p class="cmp-note">Order = the sequence in which each run executed the milestone. Non-graded milestones retain their execution order but have no score. Click a run's <b>Order</b> to sort ascending.</p>
     <div class="tbl-card"><div class="scroller"><table class="cmp" id="cmp"></table></div></div>
   </section>
 </div>
@@ -222,6 +226,13 @@ __FOOTER__
   const task = tasks[ws];
   if (!task) return;
   const meta = task.meta || {}, records = task.records || [];
+  const milestoneStatus = task.milestoneStatus || {};
+  const gradedCount = Object.values(milestoneStatus).filter(
+    (status) => status === "graded"
+  ).length;
+  const nonGradedCount = Object.values(milestoneStatus).filter(
+    (status) => status === "non_graded"
+  ).length;
   const repoFull = (meta.org ? meta.org + "/" : "") + (meta.repo || ws);
   document.title = (meta.repo || ws) + " · SWE-Milestone";
 
@@ -229,7 +240,8 @@ __FOOTER__
   document.getElementById("heroRepo").textContent = repoFull;
   const chips = [];
   if (meta.start && meta.end) chips.push('<span class="mchip"><b>' + meta.start + '</b> → <b>' + meta.end + '</b></span>');
-  if (meta.ms) chips.push('<span class="mchip"><b>' + meta.ms + '</b> milestones</span>');
+  chips.push('<span class="mchip"><b>' + gradedCount + '</b> graded milestones</span>');
+  if (nonGradedCount) chips.push('<span class="mchip"><b>' + nonGradedCount + '</b> non-graded</span>');
   chips.push('<span class="mchip"><b>' + records.length + '</b> models evaluated</span>');
   if (meta.lang) chips.push('<span class="mchip">' + meta.lang + '</span>');
   document.getElementById("heroMeta").innerHTML = chips.join("");
@@ -302,7 +314,7 @@ __FOOTER__
   const SLOT_A = "#D97757", SLOT_B = "#8b93a7";
   const trialsById = {}; records.forEach(r => { trialsById[r.id] = r; });
   const mOrder = task.milestoneOrder || [];
-  const STWORD = { resolved: "resolved", failed: "failed", compile: "compile", "not-run": "not run" };
+  const STWORD = { resolved: "resolved", failed: "failed", compile: "compile", "not-run": "not run", "non-graded": "non-graded" };
   function scoreCss(s) {
     if (s == null) return "var(--faint)";
     const mix = (c1, c2, t) => c1.map((v, i) => Math.round(v + (c2[i] - v) * t));
@@ -329,9 +341,12 @@ __FOOTER__
     const grp = (m, win, sep) => {
       const sepc = sep ? "grp-sep" : "";
       const ord = m.order != null ? m.order : "—";
-      const stat = '<span class="st ' + (m.status || "not-run") + '"><span class="d"></span>' + (STWORD[m.status] || "—") + '</span>';
-      if (m.score === undefined)
-        return '<td class="ordv ' + sepc + ' na">' + ord + '</td><td class="stc">' + stat + '</td><td class="na">·</td><td class="na">·</td><td class="na">·</td>';
+      const status = m.status || "not-run";
+      const stat = '<span class="st ' + status + '"><span class="d"></span>' + (STWORD[status] || status) + '</span>';
+      if (m.score === undefined) {
+        const empty = status === "non-graded" ? "n/a" : "·";
+        return '<td class="ordv ' + sepc + ' na">' + ord + '</td><td class="stc">' + stat + '</td><td class="na">' + empty + '</td><td class="na">' + empty + '</td><td class="na">' + empty + '</td>';
+      }
       return '<td class="ordv ' + sepc + '">' + ord + '</td><td class="stc">' + stat + '</td>' +
         '<td class="mR ' + (win ? "win" : "") + '"><span class="sc" style="color:' + scoreCss(m.score) + '">' + fmt(m.score) + '</span></td>' +
         '<td class="mR metric">' + fmt(m.prec) + '</td><td class="mR metric">' + fmt(m.rec) + '</td>';
@@ -352,7 +367,9 @@ __FOOTER__
         const a = (A.byId || {})[id] || {}, b = (B.byId || {})[id] || {};
         const aw = (a.score != null ? a.score : -1) > (b.score != null ? b.score : -1);
         const bw = (b.score != null ? b.score : -1) > (a.score != null ? a.score : -1);
-        h += '<tr><td class="ms mc">' + id + '</td>' + grp(a, aw, false) + grp(b, bw, true) + '</tr>';
+        const nonGraded = milestoneStatus[id] === "non_graded";
+        const scope = nonGraded ? '<span class="ms-scope">non-graded</span>' : '';
+        h += '<tr class="' + (nonGraded ? 'non-graded-row' : '') + '"><td class="ms mc">' + id + scope + '</td>' + grp(a, aw, false) + grp(b, bw, true) + '</tr>';
       });
       document.getElementById("cmp").innerHTML = h + "</tbody>";
     };
@@ -362,7 +379,7 @@ __FOOTER__
 </script>
 
 <!-- Milestone DAG (vendored react-flow bundle) -->
-<script src="/assets/mstone-dag.js"></script>
+<script src="/assets/mstone-dag.js?v=__DAG_ASSET_VERSION__"></script>
 <script>
 (function () {
   const ws = new URLSearchParams(location.search).get("task");
@@ -374,19 +391,29 @@ __FOOTER__
     get("milestones.csv"),
     get("dependencies.csv"),
     get("additional_dependencies.csv"),
-    get("selected_milestone_ids.txt"),
   ])
-    .then(([milestones, dependencies, additional, selectedTxt]) => {
+    .then(([milestones, dependencies, additional]) => {
       if (!milestones || !dependencies) throw new Error("missing DAG data");
-      const selectedIds = selectedTxt
-        ? selectedTxt.split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
-        : [];
+      const taskData = window.TASK_DATA && window.TASK_DATA.tasks
+        ? window.TASK_DATA.tasks[ws]
+        : null;
+      const milestoneStatus = taskData ? taskData.milestoneStatus || {} : {};
+      if (!Object.keys(milestoneStatus).length) {
+        throw new Error("missing canonical milestone status");
+      }
+      const activeIds = Object.keys(milestoneStatus).filter(
+        (id) => milestoneStatus[id] !== "inactive"
+      );
+      const nonGradedIds = Object.keys(milestoneStatus).filter(
+        (id) => milestoneStatus[id] === "non_graded"
+      );
       mount.innerHTML = "";
       window.MstoneDAG.mount(mount, {
         milestones: milestones,
         dependencies: dependencies,
         additional: additional || undefined,
-        selectedIds: selectedIds,
+        selectedIds: activeIds,
+        nonGradedIds: nonGradedIds,
         basePath: "/data/dag/" + ws,
       });
     })

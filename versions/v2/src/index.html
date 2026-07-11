@@ -199,69 +199,90 @@
   .ps-metric .x { display: block; font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 1px; }
 
   /* ---------- leaderboard ---------- */
-  table { width: 100%; border-collapse: collapse; }
-  thead th {
-    font-family: var(--mono); font-size: 11px; font-weight: 700;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--faint); text-align: left;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border-strong);
+  #leaderboard .wrap { max-width: 1080px; padding-left: 32px; padding-right: 32px; }
+  .lb-table-scroll { width: 100%; overflow-x: auto; }
+  #lb-table { width: 100%; min-width: 1016px; border-collapse: collapse; table-layout: fixed; }
+  #lb-table thead th {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
+    text-align: left; padding: 12px; border-bottom: 1px solid var(--border-strong);
+    white-space: nowrap;
   }
   #lb-table th.ctr, #lb-table td.ctr { text-align: center; }
-  tbody td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 15px;
-    vertical-align: middle;
+  #lb-table tbody td {
+    padding: 9px 12px; border-bottom: 1px solid var(--border);
+    font-size: 13.5px; vertical-align: middle;
   }
-  tbody tr { transition: background 0.12s ease; }
-  tbody tr:hover { background: rgba(177, 186, 196, 0.06); }
-  td.rank { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--faint); }
-  tr.top td.rank { color: var(--accent); font-weight: 700; }
-  .rank-medal { font-size: 18px; line-height: 1; }
-  td.model .m-name { font-weight: 700; font-size: 15px; color: var(--heading); letter-spacing: -0.01em; }
-  td.model .m-scaffold {
-    display: block; font-family: var(--mono); font-size: 11.5px;
-    color: var(--faint); margin-top: 3px;
+  #lb-table tbody tr { transition: background 0.12s ease; }
+  #lb-table tbody tr:hover { background: rgba(177, 186, 196, 0.06); }
+
+  #lb-table td.rank { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--faint); }
+  #lb-table tr.top td.rank { color: var(--accent); font-weight: 700; }
+  #lb-table .rank-medal { font-size: 16px; line-height: 1; }
+
+  #lb-table td.model { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #lb-table td.model .m-name { font-weight: 700; font-size: 13.5px; color: var(--heading); letter-spacing: -0.01em; }
+  #lb-table td.model .m-scaffold { font-family: var(--mono); font-size: 10.5px; color: var(--faint); margin-left: 8px; }
+  #lb-table td.model .m-logo { width: 16px; height: 16px; object-fit: contain; margin-right: 8px; vertical-align: -3px; }
+  #lb-table td.model .m-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; }
+  #lb-table td.model[data-tip] { cursor: help; }
+
+  #lb-table td.num { font-size: 13.5px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+  #lb-table th.keycol, #lb-table td.keycol { background: rgba(177, 186, 196, 0.07); }
+  #lb-table tbody tr:hover td.keycol { background: rgba(177, 186, 196, 0.10); }
+  #lb-table td.num.keycol { color: var(--heading); }
+  #lb-table td.num.t1 { color: #57ab5a; }
+  #lb-table td.num.t2 { color: #83c586; }
+  #lb-table td.num.t3 { color: #b3ddb5; }
+
+  #lb-table td.score-cell { padding: 7px 12px; }
+  #lb-table .scorebar {
+    position: relative; display: block; height: 28px;
+    background: rgba(177, 186, 196, 0.12); overflow: hidden;
   }
-  /* values — v1-style: sans, larger, bolder, tabular figures for alignment */
-  td.num { font-size: 15px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
-  /* hero metrics (Score + Resolve): grouped band + larger/bolder to anchor the eye */
-  th.keycol, td.keycol { background: rgba(177, 186, 196, 0.05); }
-  tbody tr:hover td.keycol { background: rgba(177, 186, 196, 0.10); }
-  /* key metrics get the band (below) + brighter ink only — same size/weight as
-     every other value so the whole table reads uniform. */
-  td.num.keycol { color: var(--heading); }
-  /* per-column top-3 (directional best): distinguished by green ink alone
-     (1st strongest → 3rd lightest), NOT by weight, to keep values even. */
-  td.num.t1 { color: #57ab5a; }
-  td.num.t2 { color: #83c586; }
-  td.num.t3 { color: #b3ddb5; }
-  /* magnitude bar under the key metrics (Score / Resolve) */
-  .bar { display: block; width: 72px; height: 3px; margin: 7px auto 0; background: var(--border); position: relative; overflow: hidden; }
-  .bar i { position: absolute; inset: 0; right: auto; background: var(--accent); opacity: 0.85; }
+  #lb-table .scorebar > i {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: rgba(87, 171, 90, 0.38);
+  }
+  #lb-table tr.top .scorebar > i { background: rgba(87, 171, 90, 0.55); }
+  #lb-table .scoreval {
+    position: relative; z-index: 2; display: inline-block;
+    padding-left: 10px; line-height: 28px;
+    font-weight: 700; font-size: 13.5px; color: var(--heading);
+    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  }
+
+  #lb-table th[data-key="rank"], #lb-table td.rank { width: 42px; }
+  #lb-table th[data-key="model"], #lb-table td.model { width: 280px; }
+  #lb-table th[data-key="score"], #lb-table td.score-cell { width: 150px; }
+  #lb-table th[data-key="resolve"],
+  #lb-table th[data-key="precision"],
+  #lb-table th[data-key="recall"] { width: 88px; }
+  #lb-table th[data-key="cost"],
+  #lb-table th[data-key="out_tok_k"],
+  #lb-table th[data-key="time_h"],
+  #lb-table th[data-key="turns"] { width: 70px; }
+  #lb-table th[data-key="cost"],
+  #lb-table th[data-key="out_tok_k"],
+  #lb-table th[data-key="time_h"],
+  #lb-table th[data-key="turns"] {
+    padding-left: 4px; padding-right: 4px;
+    font-size: 10px; letter-spacing: 0;
+  }
+
   .lb-foot {
     margin-top: 18px;
     font-family: var(--mono); font-size: 11.5px; color: var(--faint);
   }
-  /* sortable headers + data-driven rows */
-  thead th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
-  thead th.sortable:hover { color: var(--muted); }
-  thead th.active { color: var(--text); }
-  thead th.ctr { position: relative; }
-  /* Sort arrow: inline for the left-aligned Model header; absolutely positioned
-     (zero layout width) for centered headers so the label stays perfectly
-     centered whether or not the arrow is showing. */
-  thead th .sarrow { color: var(--accent); }
-  thead th .sarrow:not(:empty) { margin-left: 3px; }
-  thead th.ctr .sarrow { position: absolute; top: 50%; right: 3px; transform: translateY(-50%); margin: 0; }
-  td.model .m-logo { width: 17px; height: 17px; object-fit: contain; margin-right: 9px; vertical-align: -3px; }
-  td.model .m-dot { display: inline-block; width: 8px; height: 8px; margin-right: 9px; vertical-align: baseline; }
-  /* column sizing: give Model room so names stay on one line, tighten numerics */
-  #lb-table { table-layout: fixed; }
-  #lb-table th:first-child, #lb-table td.rank { width: 44px; }
-  #lb-table th:nth-child(2), #lb-table td.model { width: 236px; }
-  #lb-table th.num, #lb-table td.num { padding-left: 6px; padding-right: 6px; }
+  #lb-table thead th.sortable { cursor: pointer; user-select: none; }
+  #lb-table thead th.sortable:hover { color: var(--heading); }
+  #lb-table thead th.active { color: var(--heading); }
+  #lb-table thead th.ctr { position: relative; }
+  #lb-table thead th .sarrow {
+    color: var(--accent); font-size: 14px; font-weight: 700; line-height: 1;
+  }
+  #lb-table thead th .sarrow:not(:empty) { margin-left: 3px; }
+  #lb-table thead th.ctr .sarrow { position: absolute; top: 50%; right: 3px; transform: translateY(-50%); margin: 0; }
   /* leaderboard notes / caveats */
   .lb-notes { margin-top: 22px; border-top: 1px solid var(--border); padding-top: 18px; }
   .lb-notes .n-title {
@@ -562,10 +583,12 @@ __HEADER__
   <div class="wrap">
     <div class="sec-head"><h2>Leaderboard</h2></div>
 
-    <table class="lb" id="lb-table">
-      <thead><tr id="lb-head"></tr></thead>
-      <tbody id="lb-body"></tbody>
-    </table>
+    <div class="lb-table-scroll">
+      <table class="lb" id="lb-table">
+        <thead><tr id="lb-head"></tr></thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+    </div>
     <div class="lb-expand"><button type="button" id="lb-toggle"></button></div>
     <div class="lb-notes">
       <p class="n-title">Notes</p>
@@ -710,7 +733,7 @@ __FOOTER__
     { key: 'turns',     label: 'Turns',       num: true, dir: 'min', tip: 'Average agent turns per evolution range', fmt: r => r.turns ? String(Math.round(r.turns)) : '—' },
   ];
   const LB_COLLAPSED = 15;
-  let lbKey = 'rank', lbDesc = false, lbExpanded = false;
+  let lbKey = 'score', lbDesc = true, lbExpanded = false;
 
   // Per-column top-3 (directional best): record.id -> medal position (1..3).
   // Only ranks records with a valid (> 0) value so missing metrics ("—") never
@@ -724,6 +747,16 @@ __FOOTER__
     valid.slice(0, 3).forEach((r, i) => { m[r.id] = i + 1; });
     LB_TOP3[c.key] = m;
   });
+
+  function lbSyncModelTips() {
+    document.querySelectorAll('#lb-body td.model').forEach(cell => {
+      if (cell.scrollWidth > cell.clientWidth) {
+        cell.setAttribute('data-tip', cell.dataset.fullTip);
+      } else {
+        cell.removeAttribute('data-tip');
+      }
+    });
+  }
 
   function lbRender() {
     const head = document.getElementById('lb-head');
@@ -764,16 +797,22 @@ __FOOTER__
             '</span><span class="m-scaffold">' + r.agent_display + '</span></td>';
         }
         const pos = LB_TOP3[c.key] && LB_TOP3[c.key][r.id];
-        const cls = 'num ctr' + (c.hero ? ' keycol' : '') + (pos ? ' t' + pos : '');
         if (c.key === 'score') {
-          // Bar is scaled to a full scale of 100 (a perfect score fills it).
           const w = Math.max(2, Math.min(100, Math.round(r.score)));
-          return '<td class="' + cls + '">' + c.fmt(r) + '<span class="bar"><i style="width:' + w + '%"></i></span></td>';
+          return '<td class="score-cell keycol"><span class="scorebar"><i style="width:' + w + '%"></i>' +
+            '<span class="scoreval">' + c.fmt(r) + '</span></span></td>';
         }
+        const cls = 'num ctr' + (c.hero ? ' keycol' : '') + (pos ? ' t' + pos : '');
         return '<td class="' + cls + '">' + c.fmt(r) + '</td>';
       }).join('');
       return '<tr' + top + '>' + cells + '</tr>';
     }).join('');
+
+    body.querySelectorAll('td.model').forEach((cell, i) => {
+      const r = rows[i];
+      cell.dataset.fullTip = r.model_display + ' · ' + r.agent_display;
+    });
+    lbSyncModelTips();
 
     const toggle = document.getElementById('lb-toggle');
     if (toggle) {
@@ -791,6 +830,8 @@ __FOOTER__
     });
   }
   lbRender();
+  window.addEventListener('resize', lbSyncModelTips);
+  if (document.fonts) document.fonts.ready.then(lbSyncModelTips);
 
   // Expand / collapse the leaderboard (default shows top 15).
   (function () {

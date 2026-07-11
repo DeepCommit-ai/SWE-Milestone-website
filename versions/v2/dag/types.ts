@@ -36,6 +36,9 @@ export interface MilestoneData {
   inDegree?: number;
   outDegree?: number;
   isIsolated?: boolean;
+
+  // Benchmark scope metadata supplied by analysis/data/milestone_info.csv.
+  isNonGraded?: boolean;
 }
 
 export interface DependencyData {

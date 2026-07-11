@@ -72,12 +72,12 @@
   thead th {
     font-family: var(--mono); font-size: 10.5px; font-weight: 700;
     letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
-    text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border-strong);
+    text-align: left; padding: 12px; border-bottom: 1px solid var(--border-strong);
     white-space: nowrap;
   }
   #lb-table th.ctr, #lb-table td.ctr { text-align: center; }
   tbody td {
-    padding: 6px 10px; border-bottom: 1px solid var(--border);
+    padding: 9px 12px; border-bottom: 1px solid var(--border);
     font-size: 13.5px; vertical-align: middle;
   }
   tbody tr { transition: background 0.12s ease; }
@@ -94,10 +94,11 @@
   td.model .m-scaffold { font-family: var(--mono); font-size: 10.5px; color: var(--faint); margin-left: 8px; }
   td.model .m-logo { width: 16px; height: 16px; object-fit: contain; margin-right: 8px; vertical-align: -3px; }
   td.model .m-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; }
+  td.model[data-tip] { cursor: help; }
 
   /* numeric values */
   td.num { font-size: 13.5px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
-  th.keycol, td.keycol { background: rgba(177, 186, 196, 0.05); }
+  th.keycol, td.keycol { background: rgba(177, 186, 196, 0.07); }
   tbody tr:hover td.keycol { background: rgba(177, 186, 196, 0.10); }
   td.num.keycol { color: var(--heading); }
   td.num.t1 { color: #57ab5a; }
@@ -105,10 +106,10 @@
   td.num.t3 { color: #b3ddb5; }
 
   /* score column — long bar that wraps the number */
-  td.score-cell { padding: 4px 12px; }
+  td.score-cell { padding: 7px 12px; }
   .scorebar {
-    position: relative; display: block; height: 24px;
-    background: var(--border); overflow: hidden;
+    position: relative; display: block; height: 28px;
+    background: rgba(177, 186, 196, 0.12); overflow: hidden;
   }
   .scorebar > i {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -117,22 +118,38 @@
   tr.top .scorebar > i { background: rgba(87, 171, 90, 0.55); }
   .scoreval {
     position: relative; z-index: 2; display: inline-block;
-    padding-left: 10px; line-height: 24px;
+    padding-left: 10px; line-height: 28px;
     font-weight: 700; font-size: 13.5px; color: var(--heading);
     font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
   }
 
   /* column widths */
   #lb-table th[data-key="rank"], #lb-table td.rank { width: 42px; }
-  #lb-table th[data-key="model"], #lb-table td.model { width: 320px; }
-  #lb-table th[data-key="score"], #lb-table td.score-cell { width: 210px; }
+  #lb-table th[data-key="model"], #lb-table td.model { width: 280px; }
+  #lb-table th[data-key="score"], #lb-table td.score-cell { width: 150px; }
+  #lb-table th[data-key="resolve"],
+  #lb-table th[data-key="precision"],
+  #lb-table th[data-key="recall"] { width: 88px; }
+  #lb-table th[data-key="cost"] { width: 64px; }
+  #lb-table th[data-key="out_tok_k"],
+  #lb-table th[data-key="time_h"],
+  #lb-table th[data-key="turns"] { width: 70px; }
+  #lb-table th[data-key="cost"],
+  #lb-table th[data-key="out_tok_k"],
+  #lb-table th[data-key="time_h"],
+  #lb-table th[data-key="turns"] {
+    padding-left: 4px; padding-right: 4px;
+    font-size: 10px; letter-spacing: 0;
+  }
 
   /* sortable headers */
   thead th.sortable { cursor: pointer; user-select: none; }
   thead th.sortable:hover { color: var(--heading); }
   thead th.active { color: var(--heading); }
   thead th.ctr { position: relative; }
-  thead th .sarrow { color: var(--accent); }
+  thead th .sarrow {
+    color: var(--accent); font-size: 14px; font-weight: 700; line-height: 1;
+  }
   thead th .sarrow:not(:empty) { margin-left: 3px; }
   thead th.ctr .sarrow { position: absolute; top: 50%; right: 3px; transform: translateY(-50%); margin: 0; }
 
@@ -199,6 +216,16 @@
 
   let lbKey = 'score', lbDesc = true;
 
+  function lbSyncModelTips() {
+    document.querySelectorAll('#lb-body td.model').forEach(cell => {
+      if (cell.scrollWidth > cell.clientWidth) {
+        cell.setAttribute('data-tip', cell.dataset.fullTip);
+      } else {
+        cell.removeAttribute('data-tip');
+      }
+    });
+  }
+
   function lbRender() {
     const head = document.getElementById('lb-head');
     const body = document.getElementById('lb-body');
@@ -239,7 +266,7 @@
         const pos = LB_TOP3[c.key] && LB_TOP3[c.key][r.id];
         if (c.key === 'score') {
           const w = Math.max(2, Math.min(100, Math.round(r.score)));
-          return '<td class="score-cell"><span class="scorebar"><i style="width:' + w + '%"></i>' +
+          return '<td class="score-cell keycol"><span class="scorebar"><i style="width:' + w + '%"></i>' +
             '<span class="scoreval">' + c.fmt(r) + '</span></span></td>';
         }
         const cls = 'num ctr' + (c.hero ? ' keycol' : '') + (pos ? ' t' + pos : '');
@@ -247,6 +274,12 @@
       }).join('');
       return '<tr' + top + '>' + cells + '</tr>';
     }).join('');
+
+    body.querySelectorAll('td.model').forEach((cell, i) => {
+      const r = sorted[i];
+      cell.dataset.fullTip = r.model_display + ' · ' + r.agent_display;
+    });
+    lbSyncModelTips();
 
     head.querySelectorAll('th').forEach(th => {
       th.addEventListener('click', () => {
@@ -258,6 +291,7 @@
     });
   }
   lbRender();
+  window.addEventListener('resize', lbSyncModelTips);
 
   // header hover explanations — delegated so it survives header re-renders
   (function () {

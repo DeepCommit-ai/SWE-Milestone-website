@@ -20,28 +20,36 @@ and the node/edge components, but:
 `embed.tsx` exposes the global mount API used by the task page:
 
 ```js
-window.MstoneDAG.mount(el, { milestones, dependencies, additional, selectedIds })
+window.MstoneDAG.mount(el, {
+  milestones, dependencies, additional, selectedIds, nonGradedIds
+})
 // milestones / dependencies / additional : raw CSV strings (additional optional)
-// selectedIds : string[] (empty -> show all milestones)
+// selectedIds : string[] (analysis-derived active IDs; empty -> show all)
+// nonGradedIds : string[] (active nodes rendered persistently dimmed + labelled)
 ```
 
-The task page fetches its inputs at runtime from `/data/dag/<ws>/`
+The task page fetches graph topology at runtime from `/data/dag/<ws>/`
 (`milestones.csv`, `dependencies.csv`, `additional_dependencies.csv`,
-`selected_milestone_ids.txt`, plus `srs/<id>/SRS.md` for the detail panel's
-"View SRS" modal) — so all data still comes only from `data/`.
+plus `srs/<id>/SRS.md` for the detail panel's
+"View SRS" modal). It gets canonical `graded` / `non_graded` / `inactive`
+status from `window.TASK_DATA`, generated from the synced
+`data/milestone_info.csv`. Both active IDs (`status != inactive`) and
+non-graded IDs are projections of that contract. The DAG bundle only renders
+them; the task page never reads or re-derives raw scope files.
 
 ## Sync data from SWE-Milestone-data
 
-That data is pulled from the upstream `SWE-Milestone-data` repo by `sync_dag_data.py`
-— the ONE place the website reads upstream. Re-run after the upstream changes:
+Topology and SRS data are pulled from the upstream `SWE-Milestone-data` repo by
+`sync_dag_data.py`. Re-run after those inputs change:
 
 ```sh
 python versions/v2/dag/sync_dag_data.py
 ```
 
-(Note: `analysis/data/milestone_info.csv` is a separate cross-repo *analysis*
-summary — multi-label categories, graph degrees, human dev/writing time, SRS
-word count — NOT the render source, so it is intentionally not synced.)
+Benchmark scope is owned by `analysis`: its normal refresh writes
+`analysis/data/milestone_info.csv`, and `analysis/scripts/sync_leaderboard.py`
+copies that contract into website `data/`. Do not add a second website-side
+non-graded list; it would create two sources of truth.
 
 ## Rebuild the bundle
 

@@ -13,9 +13,12 @@ on top of the **same** data.
 SWE-Milestone-website/
 ├── index.html          # ★ LIVE SITE — build output of the active version (served at /)
 ├── wrangler.jsonc      # Cloudflare deploy config (assets.directory: ".")
-├── data/               # shared data layer (identity + numbers only)
+├── data/               # shared canonical data snapshots
 │   ├── milestone_results.csv   # per-milestone results (canonical, synced from analysis)
+│   ├── milestone_executions.csv # active per-trial execution order, including non-graded
 │   ├── trial_results.csv       # trial-level totals, all agents (canonical, synced from analysis)
+│   ├── milestone_info.csv      # per-milestone metadata + canonical grading_status
+│   ├── model_registry.json     # canonical model identity metadata
 │   └── compute.py              # load_e2e() + compute_records() → records
 ├── assets/             # shared images / brand assets (served at /assets/)
 │   ├── swe-milestone_icon.png
@@ -32,12 +35,17 @@ SWE-Milestone-website/
 
 ### The data ↔ presentation contract
 
-The two CSVs under `data/` are **synced verbatim** from the analysis repo's
-canonical `analysis/data/{milestone_results,trial_results}.csv` — the single
-source of truth shared with the dashboard + monitor — via
-`analysis/scripts/sync_leaderboard.py`. They are committed here so the site
-builds standalone. `compute.py` filters `trial_type == 'e2e'` and splits
-native / openhands by `agent_name`.
+The result/execution CSVs, model registry, and `milestone_info.csv` under `data/` are
+**synced verbatim** from the analysis repo via
+`analysis/scripts/sync_leaderboard.py`. Analysis is the single source of truth;
+the copies are committed here so the static site builds standalone. `compute.py`
+filters `trial_type == 'e2e'` and splits native / openhands by `agent_name`.
+`milestone_info.csv.grading_status` is the canonical scope classification used
+by the task page: `graded`, `non_graded`, or `inactive`. The website never
+reads or maintains a separate non-graded list.
+`milestone_executions.csv` contains no score fields; it lets Compare render
+the true order of executed non-graded milestones while all leaderboard metrics
+continue to come exclusively from graded results.
 
 - **`data/compute.py`** owns everything that is the same regardless of look:
   reading the CSVs, aggregating scores, and the identity maps (which
@@ -85,12 +93,12 @@ python scripts/sync_leaderboard.py
 cd ../SWE-Milestone-website && python versions/v2/build.py
 
 # 4. review, commit, push -> Cloudflare auto-deploys
-git add data/*.csv index.html && git commit -m "leaderboard: refresh data" && git push
+git add data/ index.html task.html && git commit -m "leaderboard: refresh data" && git push
 ```
 
-**Step 3 is mandatory:** syncing `data/*.csv` alone does NOT change the live
-page — only `build.py` regenerates `records.json` and inlines the records into
-the served HTML. `records.json` itself is a build artifact and is not deployed.
+**Step 3 is mandatory:** syncing `data/` alone does NOT change the live pages —
+only `build.py` inlines the records and milestone status into `index.html` and
+`task.html`. `records.json` itself is a build artifact and is not deployed.
 
 **Local preview:** `python -m http.server 5005` from this directory serves the
 site at http://localhost:5005. It is a no-cache static server, so after
