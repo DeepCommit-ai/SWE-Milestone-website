@@ -378,7 +378,7 @@ def _cat(r):
 _DIMS = [
     (
         "progress",
-        "Execution Progress",
+        "Milestone Execution Progress",
         _PROGRESS_BINS,
         lambda r: _bin_progress(
             r.get("milestone_order"), r.get("_repo_milestones")
@@ -400,7 +400,7 @@ def compute_analysis_data(top_n: int = 12):
       dims:   [{key, label, bins, data:{model_id: {bin: metrics}}}]  — per
               dimension metrics plus milestone/repo coverage per (model, bin)
       pr:     {model_id: {recall:[10], precision:[10]}}  — accumulated P/R across
-              milestone-execution progress (10 bins, macro-averaged over repos)
+              milestone execution progress (10 bins, macro-averaged over repos)
     """
     all_rows = [r for r in compute_records() if r["agent"] != "openhands"]
     top = all_rows[:top_n]
@@ -482,7 +482,7 @@ def compute_analysis_data(top_n: int = 12):
             data[mid] = per_bin
         dims_out.append({"key": key, "label": label, "bins": order, "data": data})
 
-    # Full P/R per Model: accumulated Recall/Precision across execution progress.
+    # Full P/R per Model: accumulated Recall/Precision across milestone execution progress.
     # Computed for every model (not just the top-N bar set) so the P/R picker can
     # toggle any of them on/off.
     NB = 10

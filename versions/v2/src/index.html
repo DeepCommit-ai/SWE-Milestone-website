@@ -717,10 +717,10 @@ __TASK_CARDS__
 <section id="analysis">
   <div class="wrap">
     <div class="sec-head"><h2>Analysis</h2></div>
-    <p class="sec-sub">How the top-15 models' scores change across normalized execution progress and milestone complexity, and how Precision and Recall accumulate through each run. Progress bins weight every repository equally.</p>
+    <p class="sec-sub">How the top-15 models' scores change across normalized milestone execution progress and milestone complexity, and how Precision and Recall accumulate through each run. Milestone execution progress bins weight every repository equally.</p>
 
     <div class="an-sub">
-      <h3>Score across Execution Progress &amp; Complexity</h3>
+      <h3 id="anBarsTitle" aria-live="polite">Score over Milestone Execution Progress</h3>
       <div class="an-ctrl"><label for="anMetric">Y</label><select id="anMetric"></select><label for="anDim" class="xlab">X</label><select id="anDim"></select></div>
     </div>
     <div class="an-card">
@@ -729,8 +729,8 @@ __TASK_CARDS__
     </div>
 
     <div class="an-sub an-sub2">
-      <h3>Accumulated Recall &amp; Precision over milestone execution progress</h3>
-      <div class="prleg"><span class="pl" data-tip="Ratio of required test cases successfully fixed. Higher means the agent addresses more of the required changes."><i style="background:#D08770"></i>Recall</span><span class="pl" data-tip="Ratio of bugs fixed without breaking existing tests. Higher means cleaner changes."><i style="background:#5E81AC"></i>Precision</span><span class="pl id" data-tip="The y&#61;x diagonal: a perfect run whose accumulated recall and precision climb straight to 100% by the end of execution."><i></i>Ideal</span></div>
+      <h3>Accumulated Recall &amp; Precision over Milestone Execution Progress</h3>
+      <div class="prleg"><span class="pl" data-tip="Ratio of required test cases successfully fixed. Higher means the agent addresses more of the required changes."><i style="background:#D08770"></i>Recall</span><span class="pl" data-tip="Ratio of bugs fixed without breaking existing tests. Higher means cleaner changes."><i style="background:#5E81AC"></i>Precision</span><span class="pl id" data-tip="The y&#61;x diagonal: a perfect run whose accumulated recall and precision climb straight to 100% by the end of milestone execution."><i></i>Ideal</span></div>
     </div>
     <details class="prpick-box">
       <summary>Select models to compare</summary>
@@ -1205,6 +1205,8 @@ __FOOTER__
   function barCmp(a, b) { return (orgBest[b.org] - orgBest[a.org]) || (a.score - b.score); }
   function renderBars() {
     var dim = A.dims[+sel.value], metric = msel.value, mlabel = msel.options[msel.selectedIndex].text, data = [];
+    var title = document.getElementById('anBarsTitle');
+    if (title) title.textContent = mlabel + " over " + dim.label;
     var shown = models.filter(function (m) { return selectedModels[m.id]; }).sort(barCmp);
     if (!shown.length) shown = models.slice().sort(barCmp);   // never render an empty chart
     shown.forEach(function (m) {
