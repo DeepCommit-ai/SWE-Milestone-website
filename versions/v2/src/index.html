@@ -199,9 +199,9 @@
   .ps-metric .x { display: block; font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 1px; }
 
   /* ---------- leaderboard ---------- */
-  #leaderboard .wrap { max-width: 1080px; padding-left: 32px; padding-right: 32px; }
+  #leaderboard .wrap { max-width: 1120px; padding-left: 32px; padding-right: 32px; }
   .lb-table-scroll { width: 100%; overflow-x: auto; }
-  #lb-table { width: 100%; min-width: 1016px; border-collapse: collapse; table-layout: fixed; }
+  #lb-table { width: 100%; min-width: 1056px; border-collapse: collapse; table-layout: fixed; }
   #lb-table thead th {
     font-family: var(--mono); font-size: 10.5px; font-weight: 700;
     letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
@@ -235,7 +235,7 @@
   #lb-table td.num.t2 { color: #83c586; }
   #lb-table td.num.t3 { color: #b3ddb5; }
 
-  #lb-table td.score-cell { padding: 7px 12px; }
+  #lb-table td.score-cell { padding: 7px 6px; }
   #lb-table .scorebar {
     position: relative; display: block; height: 28px;
     background: rgba(177, 186, 196, 0.12); overflow: hidden;
@@ -254,7 +254,7 @@
 
   #lb-table th[data-key="rank"], #lb-table td.rank { width: 42px; }
   #lb-table th[data-key="model"], #lb-table td.model { width: 280px; }
-  #lb-table th[data-key="score"], #lb-table td.score-cell { width: 150px; }
+  #lb-table th[data-key="score"], #lb-table td.score-cell { width: 190px; }
   #lb-table th[data-key="resolve"],
   #lb-table th[data-key="precision"],
   #lb-table th[data-key="recall"] { width: 88px; }
@@ -668,8 +668,8 @@ __TASK_CARDS__
     <div class="sec-head"><h2>Citation</h2></div>
     <div class="cite-card">
       <button class="copy-btn js-copy">copy</button>
-      <pre class="bib js-bib">@misc<span class="f">{deng2026evoclawevaluatingaiagents,</span>
-      <span class="k">title</span>={<span class="f">EvoClaw: Evaluating AI Agents on Continuous Software Evolution</span>},
+      <pre class="bib js-bib">@misc<span class="f">{deng2026swemilestoneevaluatingaiagents,</span>
+      <span class="k">title</span>={<span class="f">SWE-Milestone: Evaluating AI Agents on Continuous Software Evolution</span>},
       <span class="k">author</span>={<span class="f">Gangda Deng and Zhaoling Chen and Zhongming Yu and Haoyang Fan and Yuhong Liu and Yuxin Yang and Dhruv Parikh and Rajgopal Kannan and Le Cong and Mengdi Wang and Qian Zhang and Viktor Prasanna and Xiangru Tang and Xingyao Wang</span>},
       <span class="k">year</span>={<span class="f">2026</span>},
       <span class="k">eprint</span>={<span class="f">2603.13428</span>},

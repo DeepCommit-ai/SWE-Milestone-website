@@ -38,6 +38,10 @@ RECORDS_JSON = DATA_DIR / "records.json"
 # decides what NOT to show. Add a trial_id here to hide it.
 EXCLUDE_TRIALS = {
     "_claude-code_fable-5-with-leak_run_002",  # confirmed cheat/leak run
+    "_openhands_gemini-3-flash_run_002",
+    "_openhands_glm-5_run_002",
+    "_openhands_gpt-5.3-codex_run_002",
+    "_openhands_kimi-k2.6_run_002",
 }
 
 # Agent-level display names (agent is a small closed set, not model metadata).
