@@ -7,6 +7,10 @@ every page and writes the served HTML into versions/v2/ — so the header/footer
 and the data are defined ONCE and every page gets the same markup, no per-page
 duplication.
 
+Section links in the shared header/footer use ``__HOME_PREFIX__``. It becomes
+an empty string on the homepage (native same-document hash navigation) and
+``index.html`` on secondary pages (navigate back to the homepage first).
+
 Placeholders in each src/ page:
   __CHROME_CSS__  → partials/chrome.css   (sits inside the page <style>)
   __HEADER__      → partials/header.html
@@ -301,11 +305,14 @@ def main():
 
     for page in PAGES:
         html = (SRC / page).read_text()
+        home_prefix = "" if page == "index.html" else "index.html"
+        page_header = header.replace("__HOME_PREFIX__", home_prefix)
+        page_footer = footer.replace("__HOME_PREFIX__", home_prefix)
         # Replace only the actual style slot. A mention of the token in an HTML
         # comment must not inject a second stylesheet and corrupt the next rule.
         html = html.replace("__CHROME_CSS__", chrome_css, 1)
-        html = html.replace("__HEADER__", header)
-        html = html.replace("__FOOTER__", footer)
+        html = html.replace("__HEADER__", page_header)
+        html = html.replace("__FOOTER__", page_footer)
         html = html.replace("__SITE_DATA__", site_data)
         html = html.replace("__TASK_CARDS__", task_cards)
         html = html.replace("__TASK_DATA__", task_data)
