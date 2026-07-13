@@ -639,10 +639,10 @@ __TASK_CARDS__
 <section id="analysis">
   <div class="wrap">
     <div class="sec-head"><h2>Analysis</h2></div>
-    <p class="sec-sub">How the top-15 models' scores break down by milestone complexity, and how Precision and Recall accumulate as each run works through its milestones.</p>
+    <p class="sec-sub">How the top-15 models' scores change across normalized execution progress and milestone complexity, and how Precision and Recall accumulate through each run. Progress bins weight every repository equally.</p>
 
     <div class="an-sub">
-      <h3>Score vs Complexity</h3>
+      <h3>Score across Execution Progress &amp; Complexity</h3>
       <div class="an-ctrl"><label for="anMetric">Y</label><select id="anMetric"></select><label for="anDim" class="xlab">X</label><select id="anDim"></select></div>
     </div>
     <div class="an-card">
@@ -1114,7 +1114,7 @@ __FOOTER__
   var models = A.models.concat((A.pr_models || []).filter(function (m) { return !topIds[m.id]; }).reverse());
   var SANS = "ui-sans-serif, system-ui, Roboto, sans-serif";
 
-  // ---- Score vs Complexity: grouped bars faceted by bin, shared external legend ----
+  // ---- Score vs Progress/Complexity: grouped bars, shared external legend ----
   var sel = document.getElementById('anDim');
   A.dims.forEach(function (d, i) { sel.insertAdjacentHTML('beforeend', '<option value="' + i + '">' + d.label + '</option>'); });
   var msel = document.getElementById('anMetric');
@@ -1131,7 +1131,12 @@ __FOOTER__
     if (!shown.length) shown = models.slice().sort(barCmp);   // never render an empty chart
     shown.forEach(function (m) {
       var md = dim.data[m.id] || {};
-      dim.bins.forEach(function (b) { if (md[b] && md[b][metric] != null) data.push({ model: m.label, bin: b, v: md[b][metric] }); });
+      dim.bins.forEach(function (b) {
+        if (md[b] && md[b][metric] != null) data.push({
+          model: m.label, bin: b, v: md[b][metric],
+          nMilestones: md[b].n_milestones || 0, nRepos: md[b].n_repos || 0
+        });
+      });
     });
     barsEl.innerHTML = '';
     var w = Math.max(560, barsEl.clientWidth || 900);
@@ -1147,7 +1152,10 @@ __FOOTER__
         Plot.ruleY([0], { stroke: "#444c56" }),
         Plot.tip(data, Plot.pointerX({
           fx: "bin", x: "model", y: "v", fill: "#1a1f26", stroke: "#444c56",
-          title: function (d) { return d.model + "\n" + d.v.toFixed(1) + "%"; }
+          title: function (d) {
+            return d.model + "\n" + mlabel + ": " + d.v.toFixed(1) + "%\n" +
+              d.nRepos + " repos · " + d.nMilestones + " milestones";
+          }
         }))
       ]
     }));

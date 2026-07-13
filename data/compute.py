@@ -322,11 +322,25 @@ def _bin_layer(v):
     return "0 (root)" if v == 0 else "1" if v == 1 else "2-3" if v <= 3 else "4+"
 
 
-def _bin_order(v):
-    if pd.isna(v):
+_PROGRESS_BINS = ["0-20%", "20-40%", "40-60%", "60-80%", "80-100%"]
+
+
+def _progress_bin_index(order, total, n_bins):
+    """Map a 1-based execution order into equal relative-progress bins."""
+    if pd.isna(order) or pd.isna(total):
         return None
-    v = int(v)
-    return "1-3" if v < 4 else "4-6" if v < 7 else "7-9" if v < 10 else "10-14" if v < 15 else "15+"
+    order, total = int(order), int(total)
+    if n_bins < 1 or total < 1 or order < 1 or order > total:
+        return None
+    # Equivalent to ceil(order / total * n_bins) - 1, without floating-point
+    # boundary drift. This is the same endpoint convention used by the P/R
+    # progress chart: the final milestone always lands in the final bin.
+    return min(n_bins - 1, (order * n_bins - 1) // total)
+
+
+def _bin_progress(order, total):
+    idx = _progress_bin_index(order, total, len(_PROGRESS_BINS))
+    return None if idx is None else _PROGRESS_BINS[idx]
 
 
 def _bin_loc(v):
@@ -362,7 +376,14 @@ def _cat(r):
 
 # (key, label, canonical bin order, per-row binner)
 _DIMS = [
-    ("order", "Milestone Order", ["1-3", "4-6", "7-9", "10-14", "15+"], lambda r: _bin_order(r.get("milestone_order"))),
+    (
+        "progress",
+        "Execution Progress",
+        _PROGRESS_BINS,
+        lambda r: _bin_progress(
+            r.get("milestone_order"), r.get("_repo_milestones")
+        ),
+    ),
     ("layer", "DAG Layer", ["0 (root)", "1", "2-3", "4+"], lambda r: _bin_layer(r.get("layer"))),
     ("loc", "Source LOC", ["<150", "150-300", "300-500", "500+"], lambda r: _bin_loc(r.get("src_loc"))),
     ("srs", "SRS Words", ["<1k", "1k-1.3k", "1.3k-1.8k", "1.8k+"], lambda r: _bin_srs(r.get("srs_word_count"))),
@@ -376,8 +397,8 @@ def compute_analysis_data(top_n: int = 12):
 
     Returns {models, dims, pr}:
       models: [{id, agent, model, label, score}]  — leaderboard order, top N
-      dims:   [{key, label, bins, data:{model_id: {bin: mean_score}}}]  — per
-              complexity dimension, mean Score% per (model, bin)
+      dims:   [{key, label, bins, data:{model_id: {bin: metrics}}}]  — per
+              dimension metrics plus milestone/repo coverage per (model, bin)
       pr:     {model_id: {recall:[10], precision:[10]}}  — accumulated P/R across
               milestone-execution progress (10 bins, macro-averaged over repos)
     """
@@ -392,16 +413,41 @@ def compute_analysis_data(top_n: int = 12):
     top.sort(key=lambda r: (-org_best[r["org"]], r["org"], r["score"]))
     e2e = load_e2e()
     info = pd.read_csv(MS_INFO_CSV)
+    if "grading_status" not in info.columns:
+        raise ValueError("milestone_info.csv has no grading_status column")
+    # The denominator is the canonical active milestone count for the repo,
+    # not max(order) from scored rows. The latter makes truncated/incomplete
+    # result tables look 100% complete and is missing tail execution facts for
+    # some historical trials. Non-graded milestones count toward progress;
+    # inactive milestones do not.
+    repo_milestones = (
+        info[info["grading_status"] != "inactive"]
+        .groupby("workspace")["milestone_id"]
+        .nunique()
+    )
     keep = ["workspace", "milestone_id", "layer", "in_degree", "src_loc", "srs_word_count",
             "cat_feature", "cat_enhance", "cat_bugfix", "cat_refactor"]
     info = info[[c for c in keep if c in info.columns]]
     df = e2e.merge(info, on=["workspace", "milestone_id"], how="inner")
+    df["_repo_milestones"] = df["workspace"].map(repo_milestones)
+    progress_rows = df[df["score_reliable"].notna()]
+    bad_progress = progress_rows[
+        progress_rows["_repo_milestones"].isna()
+        | (progress_rows["milestone_order"] < 1)
+        | (progress_rows["milestone_order"] > progress_rows["_repo_milestones"])
+    ]
+    if len(bad_progress):
+        raise ValueError(
+            f"invalid execution-progress denominator/order for {len(bad_progress)} scored rows"
+        )
 
     mid_of = {(r["agent"], r["model"]): f'{r["agent"]}__{r["model"]}' for r in all_rows}
     models = [{"id": mid_of[(r["agent"], r["model"])], "agent": r["agent"], "model": r["model"],
                "org": r["org"], "label": r["model_display"], "score": r["score"]} for r in top]
 
-    # Score vs Complexity: mean of each metric per (model, bin), per dimension.
+    # Score vs Progress/Complexity. Normalized progress is macro-averaged over
+    # repos so every repository has equal weight even though their milestone
+    # counts differ. Other complexity dimensions retain their row-level mean.
     metric_cols = {"score": "score_reliable", "precision": "score_precision",
                    "recall": "score_recall", "resolve": "is_resolved"}
     dims_out = []
@@ -417,7 +463,22 @@ def compute_analysis_data(top_n: int = 12):
             per_bin = {}
             for b, gb in g.groupby("_bin"):
                 if b in order:
-                    per_bin[b] = {mk: round(float(gb[c].mean()) * 100, 1) for mk, c in metric_cols.items()}
+                    if key == "progress":
+                        repo_means = gb.groupby("workspace")[
+                            list(metric_cols.values())
+                        ].mean()
+                        values = {
+                            mk: round(float(repo_means[c].mean()) * 100, 1)
+                            for mk, c in metric_cols.items()
+                        }
+                    else:
+                        values = {
+                            mk: round(float(gb[c].mean()) * 100, 1)
+                            for mk, c in metric_cols.items()
+                        }
+                    values["n_milestones"] = int(len(gb))
+                    values["n_repos"] = int(gb["workspace"].nunique())
+                    per_bin[b] = values
             data[mid] = per_bin
         dims_out.append({"key": key, "label": label, "bins": order, "data": data})
 
@@ -432,8 +493,13 @@ def compute_analysis_data(top_n: int = 12):
         sub = sub[sub["score_reliable"].notna()]
         if len(sub) == 0:
             continue
-        maxo = sub.groupby(["workspace", "trial_name"])["milestone_order"].transform("max").clip(lower=1)
-        sub["_b"] = ((sub["milestone_order"] / maxo) * NB - 1e-9).clip(lower=0, upper=NB - 1).astype(int)
+        sub["_repo_milestones"] = sub["workspace"].map(repo_milestones)
+        sub["_b"] = sub.apply(
+            lambda row: _progress_bin_index(
+                row["milestone_order"], row["_repo_milestones"], NB
+            ),
+            axis=1,
+        )
         binR, binP = [0.0] * NB, [0.0] * NB
         for b in range(NB):
             rows = sub[sub["_b"] == b]
