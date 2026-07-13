@@ -9,7 +9,7 @@ duplication.
 
 Section links in the shared header/footer use ``__HOME_PREFIX__``. It becomes
 an empty string on the homepage (native same-document hash navigation) and
-``index.html`` on secondary pages (navigate back to the homepage first).
+``/`` on secondary pages (navigate back to the homepage first).
 
 Placeholders in each src/ page:
   __CHROME_CSS__  → partials/chrome.css   (sits inside the page <style>)
@@ -163,7 +163,7 @@ def render_task_cards(repos: list) -> str:
     """Build the Tasks-section card grid from real per-repo metadata."""
     out = []
     for r in repos:
-        out.append(f'''    <a class="task-card" href="task.html?task={r["ws"]}">
+        out.append(f'''    <a class="task-card" href="/task?task={r["ws"]}">
       <div class="tc-top">
         <span class="t-repo">{_GH_MARK}<span class="org">{r["org"]}/</span>{r["repo"]}</span>
         <span class="right">
@@ -305,7 +305,7 @@ def main():
 
     for page in PAGES:
         html = (SRC / page).read_text()
-        home_prefix = "" if page == "index.html" else "index.html"
+        home_prefix = "" if page == "index.html" else "/"
         page_header = header.replace("__HOME_PREFIX__", home_prefix)
         page_footer = footer.replace("__HOME_PREFIX__", home_prefix)
         # Replace only the actual style slot. A mention of the token in an HTML
