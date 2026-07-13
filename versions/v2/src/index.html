@@ -355,7 +355,7 @@
   }
 
   /* ---------- tasks ---------- */
-  .task-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .task-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .task-card {
     position: relative; display: block;
     border: 1px solid var(--border);
@@ -371,22 +371,28 @@
   .t-repo {
     display: inline-flex; align-items: center; gap: 9px; min-width: 0;
     font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--heading);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .t-repo .gh-mark { flex: none; fill: var(--muted); }
   .t-repo .org { color: var(--faint); font-weight: 400; }
-  .tc-top .right { flex: none; display: inline-flex; align-items: center; gap: 14px; }
+  .tc-top .right { flex: none; display: inline-flex; align-items: center; gap: 8px; }
   .star {
     display: inline-flex; align-items: center; gap: 5px;
     font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted);
   }
   .star .oct { fill: #bf9f56; }
   .star b { color: var(--text); font-weight: 700; }
+  .t-loc {
+    flex: none; font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+  }
+  .t-loc b { color: var(--text); font-weight: 700; }
+  .t-sep { flex: none; font-family: var(--mono); color: var(--faint); }
   .t-lang {
     flex: none; display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--mono); font-size: 11.5px; color: var(--muted);
   }
   .t-lang i { width: 8px; height: 8px; display: inline-block; }
-  .rr { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+  .rr { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .rr .tc-range + .chip { margin-left: 8px; }
   .tc-range { flex: none; font-family: var(--mono); font-size: 16px; font-weight: 500; color: var(--text); }
   .tc-range .to { color: var(--faint); padding: 0 8px; }
@@ -406,8 +412,6 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .tc-stats { margin-top: 12px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
-  .tc-stats b { color: var(--text); font-weight: 700; }
   .tc-foot {
     display: flex; align-items: center; justify-content: space-between;
     gap: 14px; flex-wrap: wrap;
@@ -462,13 +466,16 @@
   .bib .k { color: var(--accent); }
   .cite-card pre { padding: 26px 28px; white-space: pre-wrap; overflow-wrap: anywhere; }
 
-  /* footer CSS lives in shared chrome (see __CHROME_CSS__ above) */
+  /* Footer CSS is included with the shared chrome above. */
 
   /* ---------- responsive ---------- */
 
   @media (max-width: 720px) {
-    section { padding: 64px 0; }
-    .hero { padding: 84px 0 68px; }
+    .wrap { padding-left: 16px; padding-right: 16px; }
+    section { padding: 56px 0; }
+    .hero { padding: 76px 0 64px; }
+    .sec-head { margin-bottom: 30px; }
+    .sec-sub { margin-top: -18px; margin-bottom: 30px; }
     .task-grid { grid-template-columns: 1fr; }
   }
   /* ---------- Analysis section ---------- */
@@ -519,7 +526,81 @@
   #analysis .prchip:hover{border-color:var(--border-strong)}
   #analysis .prchip.on{color:var(--text);border-color:var(--border-strong)}
   #analysis .prchip.on i{opacity:1}
-  @media(max-width:760px){#analysis .prgrid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:900px){
+    .pareto-body{display:block}
+    .pareto-chart{height:480px}
+    .pareto-side{width:100%;max-height:none;border-left:0;border-top:1px solid var(--border)}
+    .ps-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:260px}
+  }
+  @media(max-width:860px){.task-grid{grid-template-columns:1fr}}
+  @media(max-width:760px){
+    #analysis .prgrid{grid-template-columns:repeat(2,1fr)}
+    #analysis .an-sub{align-items:stretch;flex-direction:column;gap:10px}
+    #analysis .an-ctrl{display:grid;grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr);margin-left:0}
+    #analysis select{width:100%;min-width:0}
+    #analysis .prleg{margin-left:0;flex-wrap:wrap;gap:8px 16px}
+  }
+  @media(max-width:720px){
+    .pareto-controls{padding:11px 12px;gap:8px}
+    .pc-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:6px}
+    .pc-btn{min-height:34px;padding:6px 8px}
+    .pc-div{display:none}
+    #pareto-zoom{width:100%}
+    .pareto-chart{height:430px}
+    .ps-list{grid-template-columns:1fr;max-height:300px;padding:0 10px 10px}
+
+    #leaderboard .wrap{padding-left:16px;padding-right:16px}
+    .lb-table-scroll{
+      width:calc(100% + 32px);margin-left:-16px;
+      overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain;
+      scrollbar-width:thin;
+    }
+    #lb-table{min-width:830px}
+    #lb-table thead th{padding:10px 8px}
+    #lb-table tbody td{padding:8px}
+    #lb-table th[data-key="rank"],#lb-table td.rank{width:36px;position:sticky;left:0;z-index:3;background:var(--bg)}
+    #lb-table th[data-key="model"],#lb-table td.model{width:158px;position:sticky;left:36px;z-index:3;background:var(--bg);box-shadow:1px 0 0 var(--border-strong)}
+    #lb-table thead th[data-key="rank"],#lb-table thead th[data-key="model"]{z-index:4;background:#11161d}
+    #lb-table tbody tr:hover td.rank,#lb-table tbody tr:hover td.model{background:#151b22}
+    #lb-table th[data-key="score"],#lb-table td.score-cell{width:150px}
+    #lb-table th[data-key="resolve"],#lb-table th[data-key="precision"],#lb-table th[data-key="recall"]{width:76px}
+    #lb-table th[data-key="cost"],#lb-table th[data-key="out_tok_k"],#lb-table th[data-key="time_h"],#lb-table th[data-key="turns"]{width:64px}
+    #lb-table td.model .m-name,#lb-table td.model .m-scaffold{display:block;overflow:hidden;text-overflow:ellipsis}
+    #lb-table td.model .m-scaffold{margin:1px 0 0 24px;font-size:9.5px}
+    #lb-table td.score-cell{padding-left:4px;padding-right:4px}
+
+    .task-card{padding:19px 18px 18px}
+    .tc-top{align-items:flex-start;flex-wrap:wrap;gap:8px}
+    .tc-top .right{width:100%;justify-content:flex-start;gap:8px}
+    .t-repo{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rr{flex-wrap:wrap;gap:8px}
+    .rr .tc-range + .chip{margin-left:0}
+    .tc-range{font-size:14px}
+    .tc-range .to{padding:0 5px}
+
+    #analysis .an-card{
+      padding:12px 12px 9px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+      overscroll-behavior-inline:contain;scrollbar-width:thin;
+    }
+    #analysis #anBars,#analysis .an-card .an-legend{min-width:560px}
+    #analysis .an-card svg{max-width:none}
+    #analysis .an-legend{justify-content:flex-start}
+
+    .cite-card pre{padding:58px 16px 20px;font-size:11px;line-height:1.65}
+    .copy-btn{top:12px;right:12px}
+  }
+  @media(max-width:520px){
+    .hero h1{font-size:34px}
+    .hero-logo{width:88px}
+    .hero .tagline{font-size:15.5px}
+    .links-row{margin-top:30px;gap:8px}
+    .pill{padding:7px 12px;font-size:12px}
+    .sec-head{display:block}
+    .sec-head h2{font-size:23px}
+    #analysis .prgrid{grid-template-columns:1fr}
+    #analysis .an-ctrl{grid-template-columns:auto minmax(0,1fr)}
+    #analysis .an-ctrl .xlab{grid-column:1}
+  }
 </style>
 </head>
 <body>
@@ -639,10 +720,10 @@ __TASK_CARDS__
 <section id="analysis">
   <div class="wrap">
     <div class="sec-head"><h2>Analysis</h2></div>
-    <p class="sec-sub">How the top-15 models' scores break down by milestone complexity, and how Precision and Recall accumulate as each run works through its milestones.</p>
+    <p class="sec-sub">How the top-15 models' scores change across normalized milestone execution progress and milestone complexity, and how Precision and Recall accumulate through each run. Milestone execution progress bins weight every repository equally.</p>
 
     <div class="an-sub">
-      <h3>Score vs Complexity</h3>
+      <h3 id="anBarsTitle" aria-live="polite">Score over Milestone Execution Progress</h3>
       <div class="an-ctrl"><label for="anMetric">Y</label><select id="anMetric"></select><label for="anDim" class="xlab">X</label><select id="anDim"></select></div>
     </div>
     <div class="an-card">
@@ -651,8 +732,8 @@ __TASK_CARDS__
     </div>
 
     <div class="an-sub an-sub2">
-      <h3>Accumulated Recall &amp; Precision over milestone execution progress</h3>
-      <div class="prleg"><span class="pl" data-tip="Ratio of required test cases successfully fixed. Higher means the agent addresses more of the required changes."><i style="background:#D08770"></i>Recall</span><span class="pl" data-tip="Ratio of bugs fixed without breaking existing tests. Higher means cleaner changes."><i style="background:#5E81AC"></i>Precision</span><span class="pl id" data-tip="The y&#61;x diagonal: a perfect run whose accumulated recall and precision climb straight to 100% by the end of execution."><i></i>Ideal</span></div>
+      <h3>Accumulated Recall &amp; Precision over Milestone Execution Progress</h3>
+      <div class="prleg"><span class="pl" data-tip="Ratio of required test cases successfully fixed. Higher means the agent addresses more of the required changes."><i style="background:#D08770"></i>Recall</span><span class="pl" data-tip="Ratio of bugs fixed without breaking existing tests. Higher means cleaner changes."><i style="background:#5E81AC"></i>Precision</span><span class="pl id" data-tip="The y&#61;x diagonal: a perfect run whose accumulated recall and precision climb straight to 100% by the end of milestone execution."><i></i>Ideal</span></div>
     </div>
     <details class="prpick-box">
       <summary>Select models to compare</summary>
@@ -1114,7 +1195,7 @@ __FOOTER__
   var models = A.models.concat((A.pr_models || []).filter(function (m) { return !topIds[m.id]; }).reverse());
   var SANS = "ui-sans-serif, system-ui, Roboto, sans-serif";
 
-  // ---- Score vs Complexity: grouped bars faceted by bin, shared external legend ----
+  // ---- Score vs Progress/Complexity: grouped bars, shared external legend ----
   var sel = document.getElementById('anDim');
   A.dims.forEach(function (d, i) { sel.insertAdjacentHTML('beforeend', '<option value="' + i + '">' + d.label + '</option>'); });
   var msel = document.getElementById('anMetric');
@@ -1127,11 +1208,18 @@ __FOOTER__
   function barCmp(a, b) { return (orgBest[b.org] - orgBest[a.org]) || (a.score - b.score); }
   function renderBars() {
     var dim = A.dims[+sel.value], metric = msel.value, mlabel = msel.options[msel.selectedIndex].text, data = [];
+    var title = document.getElementById('anBarsTitle');
+    if (title) title.textContent = mlabel + " over " + dim.label;
     var shown = models.filter(function (m) { return selectedModels[m.id]; }).sort(barCmp);
     if (!shown.length) shown = models.slice().sort(barCmp);   // never render an empty chart
     shown.forEach(function (m) {
       var md = dim.data[m.id] || {};
-      dim.bins.forEach(function (b) { if (md[b] && md[b][metric] != null) data.push({ model: m.label, bin: b, v: md[b][metric] }); });
+      dim.bins.forEach(function (b) {
+        if (md[b] && md[b][metric] != null) data.push({
+          model: m.label, bin: b, v: md[b][metric],
+          nMilestones: md[b].n_milestones || 0, nRepos: md[b].n_repos || 0
+        });
+      });
     });
     barsEl.innerHTML = '';
     var w = Math.max(560, barsEl.clientWidth || 900);
@@ -1147,7 +1235,10 @@ __FOOTER__
         Plot.ruleY([0], { stroke: "#444c56" }),
         Plot.tip(data, Plot.pointerX({
           fx: "bin", x: "model", y: "v", fill: "#1a1f26", stroke: "#444c56",
-          title: function (d) { return d.model + "\n" + d.v.toFixed(1) + "%"; }
+          title: function (d) {
+            return d.model + "\n" + mlabel + ": " + d.v.toFixed(1) + "%\n" +
+              d.nRepos + " repos · " + d.nMilestones + " milestones";
+          }
         }))
       ]
     }));
