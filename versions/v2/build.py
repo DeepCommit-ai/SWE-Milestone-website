@@ -299,7 +299,9 @@ def main():
 
     for page in PAGES:
         html = (SRC / page).read_text()
-        html = html.replace("__CHROME_CSS__", chrome_css)
+        # Replace only the actual style slot. A mention of the token in an HTML
+        # comment must not inject a second stylesheet and corrupt the next rule.
+        html = html.replace("__CHROME_CSS__", chrome_css, 1)
         html = html.replace("__HEADER__", header)
         html = html.replace("__FOOTER__", footer)
         html = html.replace("__SITE_DATA__", site_data)

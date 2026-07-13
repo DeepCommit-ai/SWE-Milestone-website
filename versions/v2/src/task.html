@@ -37,7 +37,7 @@
     --maxw:1064px;
   }
   *{margin:0;padding:0;box-sizing:border-box;border-radius:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;scroll-padding-top:72px}
   body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
@@ -90,6 +90,7 @@
   .lb td.num{text-align:center;font-size:13.5px;font-weight:600;color:var(--text)}
   .lb td.num.keycol{color:var(--heading)}
   .lb td.num.t1{color:#57ab5a}.lb td.num.t2{color:#83c586}.lb td.num.t3{color:#b3ddb5}
+  .lb-table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain}
   /* leaderboard expand button */
   .lb-expand{text-align:center;margin-top:20px}
   #lbToggle{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--muted);background:transparent;
@@ -172,6 +173,70 @@
   .metric{font-family:var(--mono);color:var(--muted);font-size:12.5px}
   td.win{background:rgba(87,171,90,.07)} td.win .sc{font-weight:700}
   .na{color:var(--faint)}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:720px){
+    .wrap{padding-left:16px;padding-right:16px}
+    section{padding:46px 0}
+    .hero{padding:34px 0 32px}
+    .htitle{align-items:flex-start;font-size:23px;line-height:1.25}
+    .htitle svg{flex:none;margin-top:1px}
+    .htitle .repo,.crumb{overflow-wrap:anywhere}
+    .sec-head{margin-bottom:20px}
+
+    .dag-section{--dagw:calc(100% + 32px);margin-left:-16px}
+    .dag-section>.sec-head,.dag-hint{margin-left:16px;margin-right:16px}
+    .dag-wrap{height:520px;border-left:0;border-right:0}
+    .mdag-status-key{top:54px;right:12px;min-height:30px;padding:0 9px;font-size:10px}
+    .dp-panel,.mdag-root.is-fs .dp-panel{
+      top:auto;right:8px;bottom:8px;left:8px;width:auto;max-height:min(68%,460px)
+    }
+    .dp-modal-overlay{padding:10px}
+    .dp-modal{width:100%;max-width:100%;max-height:calc(100dvh - 20px)}
+
+    .lb-table-scroll{
+      width:calc(100% + 32px);margin-left:-16px;scrollbar-width:thin
+    }
+    .lb{min-width:780px}
+    .lb thead th{padding:9px 8px}
+    .lb tbody td{padding:9px 8px}
+    .lb th:first-child,.lb td.rank{width:36px;position:sticky;left:0;z-index:3;background:var(--bg)}
+    .lb th:nth-child(2),.lb td.model{width:170px;position:sticky;left:36px;z-index:3;background:var(--bg);box-shadow:1px 0 0 var(--border-strong)}
+    .lb thead th:first-child,.lb thead th:nth-child(2){z-index:4;background:#11161d}
+    .lb tbody tr:hover td.rank,.lb tbody tr:hover td.model{background:#151b22}
+    .lb td.model{overflow:hidden}
+    .lb td.model .m-name,.lb td.model .m-scaffold{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .lb td.model .m-scaffold{font-size:10px}
+
+    .picker{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:24px}
+    .pick{width:100%;min-width:0}
+    .pick select{width:100%;min-width:0}
+    .picker .vs{text-align:center}
+    .tcol .thd{align-items:flex-start}
+    .tcol .thd .nm{min-width:0;overflow-wrap:anywhere}
+    .tcol .thd .rk{text-align:right}
+
+    .tbl-card{width:calc(100% + 32px);margin-left:-16px;border-left:0;border-right:0}
+    .scroller{-webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain;scrollbar-width:thin}
+    .cmp{min-width:900px}
+    .cmp .mc{position:sticky;left:0;z-index:3}
+    .cmp thead .mc{z-index:4}
+  }
+  @media(max-width:520px){
+    .sec-head{display:block}
+    .sec-head h2{font-size:18px}
+    .sec-head .sub{display:block;margin-top:4px;line-height:1.45}
+    .hmeta{gap:7px}
+    .mchip{padding:4px 8px;font-size:11px}
+    .tboxes{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .tbox{min-height:62px;border-bottom:1px solid var(--border)}
+    .tbox:nth-child(2n){border-right:none}
+    .tbox:last-child{grid-column:1/-1;border-right:0;border-bottom:0}
+    .dag-wrap{height:480px}
+    .dag-hint{font-size:11px;line-height:1.5}
+    .dp-modal-header{padding:12px 14px}
+    .dp-modal-body{padding:12px 14px}
+  }
 </style>
 </head>
 <body>
@@ -186,21 +251,21 @@ __HEADER__
   </div>
 
   <!-- milestone DAG (a bit wider than the page content, but not full-bleed) -->
-  <section class="dag-section">
+  <section class="dag-section" id="task-dag">
     <div class="sec-head"><h2>Milestone DAG</h2><span class="sub">execution dependencies between milestones</span></div>
     <div id="dagMount" class="dag-wrap"><div class="dag-load">Loading milestone graph&hellip;</div></div>
     <p class="dag-hint">Toggle <b>Structure</b> (dependency layout) and <b>Unlock</b> (topological batches). Drag to pan, scroll to zoom.</p>
   </section>
 
   <!-- leaderboard -->
-  <section>
+  <section id="task-leaderboard">
     <div class="sec-head"><h2>Leaderboard</h2><span class="sub">every model's score on this task</span></div>
-    <table class="lb" id="lb"><thead><tr id="lbHead"></tr></thead><tbody id="lbBody"></tbody></table>
+    <div class="lb-table-scroll"><table class="lb" id="lb"><thead><tr id="lbHead"></tr></thead><tbody id="lbBody"></tbody></table></div>
     <div class="lb-expand"><button type="button" id="lbToggle"></button></div>
   </section>
 
   <!-- compare trials -->
-  <section>
+  <section id="task-compare">
     <div class="sec-head"><h2>Compare trials</h2><span class="sub">two runs, milestone by milestone</span></div>
     <div class="picker">
       <span class="lbl">Compare</span>

@@ -41,4 +41,18 @@ footer { padding: 44px 0 56px; }
 .foot a:hover { color: var(--heading); }
 .foot .team { display: inline-flex; align-items: center; gap: 8px; }
 .foot .team i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
-@media (max-width: 720px) { .nav-links a:not(.gh) { display: none; } }
+@media (max-width: 720px) {
+  .nav { height: 54px; padding: 0 16px; }
+  .brand { min-width: 0; gap: 8px; font-size: 14px; white-space: nowrap; }
+  .brand-logo { width: 20px; height: 20px; }
+  .nav-links { flex: none; gap: 0; }
+  .nav-links a:not(.gh) { display: none; }
+  .nav-links a.gh { padding: 4px 9px; font-size: 11.5px; }
+  footer { padding: 34px 0 40px; }
+  .foot { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+@media (max-width: 360px) {
+  .nav { padding: 0 12px; }
+  .brand { font-size: 13.5px; }
+  .nav-links a.gh { padding: 4px 7px; }
+}
