@@ -164,6 +164,7 @@ def render_task_cards(repos: list) -> str:
         <span class="t-repo">{_GH_MARK}<span class="org">{r["org"]}/</span>{r["repo"]}</span>
         <span class="right">
           <span class="star" data-star="{r["org"]}/{r["repo"]}">{_STAR_ICON}<b>&middot;&middot;&middot;</b></span>
+          <span class="t-loc"><b>{r["loc"]}</b> LoC</span>
           <span class="t-lang">{r["lang"]}</span>
         </span>
       </div>
@@ -172,7 +173,6 @@ def render_task_cards(repos: list) -> str:
         <span class="chip"><b>{r["releases"]}</b> {"release" if r["releases"] == 1 else "releases"}</span>
         <span class="chip"><b>{r["commits"]:,}</b> commits</span>
       </div>
-      <p class="tc-stats"><b>{r["loc"]}</b> LoC&nbsp;&nbsp;·&nbsp;&nbsp;<b>{r["files"]:,}</b> files</p>
       <p class="tc-summary">{r["summary"]}</p>
       <div class="tc-foot">
         <span class="tc-diff"><span class="add">+{r["add"]:,}</span><span class="del">&minus;{r["del"]:,}</span>{_diffstat(r["add"], r["del"])}</span>
