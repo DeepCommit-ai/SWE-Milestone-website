@@ -38,9 +38,11 @@ RECORDS_JSON = DATA_DIR / "records.json"
 # decides what NOT to show. Add a trial_id here to hide it.
 EXCLUDE_TRIALS = {
     "_claude-code_fable-5-with-leak_run_002",  # confirmed cheat/leak run
+    "_claude-code_glm-5_refine_run_002",       # GLM-5 curated off (2026-07-16)
     "_openhands_gemini-3-flash_run_002",
     "_openhands_glm-5_run_002",
     "_openhands_gpt-5.3-codex_run_002",
+    "_openhands_kimi-k2.5_run_002",            # Kimi K2.5 curated off (2026-07-16)
     "_openhands_kimi-k2.6_run_002",
 }
 

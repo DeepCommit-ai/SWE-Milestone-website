@@ -1,32 +1,32 @@
 workspace,milestone_id,title,grading_status,is_evaluated,cat_feature,cat_enhance,cat_bugfix,cat_chore,cat_refactor,additions,deletions,src_loc,touched_files,num_commits,srs_word_count,layer,in_weak_degree,in_strong_degree,in_degree,out_weak_degree,out_strong_degree,out_degree,degree,human_dev_time,human_writing_time
-dubbo,M001.1,Spring Security OAuth2 Serialization Support,graded,True,True,False,False,False,False,496.0,4.0,500.0,12.0,2.0,1608.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
-dubbo,M001.2,Spring 6 Security Module Split and UTF-8 Standardization,graded,True,True,True,False,False,False,337.0,48.0,385.0,28.0,2.0,517.0,2.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,1-3d,30m-1h
+dubbo,M001.1,Spring Security OAuth2 Serialization Support,graded,True,True,False,False,False,False,496.0,4.0,500.0,12.0,2.0,1660.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
+dubbo,M001.2,Spring 6 Security Module Split and UTF-8 Standardization,graded,True,True,True,False,False,False,337.0,48.0,385.0,28.0,2.0,600.0,2.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,1-3d,30m-1h
 dubbo,M002,HTTP/2 Connection Preface Protocol Implementation,inactive,False,,,,,,,,,,,,,,,,,,,,1-3d,30m-1h
-dubbo,M003.1,Mutiny Module Configuration and Code Generation Templates,graded,True,True,False,False,False,False,337.0,21.0,358.0,7.0,1.0,351.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,4h-1d,<30m
-dubbo,M003.2,Mutiny Core Abstractions and Publisher/Subscriber,non_graded,False,True,False,False,False,False,455.0,0.0,455.0,6.0,1.0,1169.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,30m-1h
-dubbo,M003.3,Mutiny Reactive Streaming Support,graded,True,True,True,False,False,False,543.0,0.0,543.0,7.0,2.0,1568.0,2.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,1-3d,1-2h
-dubbo,M004,REST Streaming and SSE Infrastructure Enhancements,graded,True,True,False,True,False,False,452.0,45.0,497.0,13.0,3.0,860.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1-3d,1-2h
+dubbo,M003.1,Mutiny Module Configuration and Code Generation Templates,graded,True,True,False,False,False,False,337.0,21.0,358.0,7.0,1.0,403.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,4h-1d,<30m
+dubbo,M003.2,Mutiny Core Abstractions and Publisher/Subscriber,non_graded,False,True,False,False,False,False,455.0,0.0,455.0,6.0,1.0,1221.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,30m-1h
+dubbo,M003.3,Mutiny Reactive Streaming Support,graded,True,True,True,False,False,False,543.0,0.0,543.0,7.0,2.0,1620.0,2.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,1-3d,1-2h
+dubbo,M004,REST Streaming and SSE Infrastructure Enhancements,graded,True,True,False,True,False,False,452.0,45.0,497.0,13.0,3.0,912.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1-3d,1-2h
 dubbo,M005.1,Affinity Router Core Infrastructure and Model,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M005.2,Affinity Router Config-Based Implementations,inactive,False,,,,,,,,,,,,,,,,,,,,,
-dubbo,M006,RadixTree Multi-Method REST Path Routing Fix,graded,True,False,False,True,False,False,171.0,4.0,175.0,6.0,2.0,802.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4h-1d,<30m
+dubbo,M006,RadixTree Multi-Method REST Path Routing Fix,graded,True,False,False,True,False,False,171.0,4.0,175.0,6.0,2.0,854.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4h-1d,<30m
 dubbo,M007,Method-Level TPS Rate Limiting,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M010,Bouncy Castle JDK18 Security Upgrade,inactive,False,,,,,,,,,,,,,,,,,,,,,
-dubbo,M011,Logging FQCN Infrastructure Enhancement,graded,True,True,False,False,False,False,193.0,78.0,271.0,9.0,1.0,1504.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1-3d,30m-1h
+dubbo,M011,Logging FQCN Infrastructure Enhancement,graded,True,True,False,False,False,False,193.0,78.0,271.0,9.0,1.0,1556.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1-3d,30m-1h
 dubbo,M012,Tracing and Metrics Infrastructure Improvements,inactive,False,,,,,,,,,,,,,,,,,,,,4h-1d,30m-1h
 dubbo,M013,Environment Variable Key Resolution Enhancement,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M014,Java 21 Virtual Thread Pool Auto-Configuration,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M015,Third-Party Dependency Version Updates,inactive,False,,,,,,,,,,,,,,,,,,,,,
-dubbo,M016.1,REST Bean Argument Resolution and Protocol Fixes,graded,True,False,False,True,False,False,337.0,159.0,496.0,40.0,10.0,967.0,0.0,0.0,0.0,0.0,2.0,0.0,2.0,2.0,1-3d,2-4h
-dubbo,M017,Remoting Module Stability and Triple Protocol Enhancements,graded,True,True,False,True,False,False,193.0,46.0,239.0,23.0,6.0,1539.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3-5d,30m-1h
-dubbo,M018,Performance Optimizations for Hot Code Paths,graded,True,False,True,False,False,False,61.0,49.0,110.0,5.0,3.0,707.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,4h-1d,30m-1h
-dubbo,M019,Minor Feature Enhancements and Additions,graded,True,True,False,False,False,False,282.0,163.0,445.0,27.0,8.0,758.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1-3d,30m-1h
+dubbo,M016.1,REST Bean Argument Resolution and Protocol Fixes,graded,True,False,False,True,False,False,337.0,159.0,496.0,40.0,10.0,1019.0,0.0,0.0,0.0,0.0,2.0,0.0,2.0,2.0,1-3d,2-4h
+dubbo,M017,Remoting Module Stability and Triple Protocol Enhancements,graded,True,True,False,True,False,False,193.0,46.0,239.0,23.0,6.0,1591.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3-5d,30m-1h
+dubbo,M018,Performance Optimizations for Hot Code Paths,graded,True,False,True,False,False,False,61.0,49.0,110.0,5.0,3.0,759.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,4h-1d,30m-1h
+dubbo,M019,Minor Feature Enhancements and Additions,graded,True,True,False,False,False,False,282.0,163.0,445.0,27.0,8.0,810.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1-3d,30m-1h
 dubbo,M020,Test Infrastructure Dependency Cleanup,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M021,Code Cleanup and Refactoring,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M022,Triple Protocol Reliability and Stability Improvements,inactive,False,,,,,,,,,,,,,,,,,,,,,
 dubbo,M024,Registration and Thread Safety Configuration Improvements,inactive,False,,,,,,,,,,,,,,,,,,,,4h-1d,30m-1h
-dubbo,M025,Miscellaneous Fixes and Improvements,graded,True,False,True,True,False,False,27.0,108.0,135.0,24.0,10.0,1302.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,4h-1d,1-2h
+dubbo,M025,Miscellaneous Fixes and Improvements,graded,True,False,True,True,False,False,27.0,108.0,135.0,24.0,10.0,1354.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,4h-1d,1-2h
 ripgrep,milestone_seed_119407d_1_sub-01,Windows Hyperlink Path Performance Optimization,non_graded,False,False,True,True,False,False,27.0,26.0,53.0,1.0,1.0,522.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,4h-1d,30m-1h
-ripgrep,milestone_seed_119407d_1_sub-02,Hyperlink Alias Modular Architecture Restructuring,graded,True,True,False,False,False,True,219.0,57.0,276.0,6.0,2.0,1240.0,2.0,0.0,6.0,6.0,1.0,0.0,1.0,7.0,4h-1d,30m-1h
+ripgrep,milestone_seed_119407d_1_sub-02,Hyperlink Alias Modular Architecture Restructuring,graded,True,True,False,False,False,True,219.0,57.0,276.0,6.0,2.0,1317.0,2.0,0.0,6.0,6.0,1.0,0.0,1.0,7.0,4h-1d,30m-1h
 ripgrep,milestone_seed_292bc54_1,Replacement Text Support in JSON Output Mode,graded,True,True,False,False,False,False,109.0,8.0,117.0,3.0,1.0,485.0,0.0,0.0,0.0,0.0,1.0,1.0,2.0,2.0,4h-1d,30m-1h
 ripgrep,milestone_seed_5f5da48_1_sub-01,Nested Alternation Groups Support in Glob Patterns,graded,True,True,False,False,False,False,37.0,28.0,65.0,2.0,1.0,853.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,4h-1d,30m-1h
 ripgrep,milestone_seed_5f5da48_1_sub-02,Unclosed Character Class Toggle for Glob Parsing,graded,True,True,False,False,False,False,108.0,11.0,119.0,3.0,1.0,980.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
@@ -119,7 +119,7 @@ go-zero,M001,Go-Redis v9 Upgrade with API Modernization,graded,True,False,False,
 go-zero,M002,Redis Hook-Based Architecture with Breaker Migration,inactive,False,,,,,,,,,,,,,,,,,,,,,
 go-zero,M003,Circuit Breaker Algorithm Evolution and Recovery Optimization,graded,True,True,True,False,False,True,319.0,92.0,411.0,8.0,8.0,1743.0,3.0,1.0,0.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
 go-zero,M004,CPU Monitoring and Adaptive Load Shedding,graded,True,True,True,False,False,False,247.0,155.0,402.0,35.0,7.0,1573.0,2.0,1.0,0.0,1.0,2.0,1.0,3.0,4.0,3-5d,1-2h
-go-zero,M005,SQL Statement-Level Circuit Breaker Support,graded,True,True,False,False,False,False,166.0,114.0,280.0,6.0,5.0,869.0,0.0,0.0,0.0,0.0,1.0,1.0,2.0,2.0,4h-1d,2-4h
+go-zero,M005,SQL Statement-Level Circuit Breaker Support,graded,True,True,False,False,False,False,166.0,114.0,280.0,6.0,5.0,921.0,0.0,0.0,0.0,0.0,1.0,1.0,2.0,2.0,4h-1d,2-4h
 go-zero,M006,SQL Read/Write Separation with Replica Routing,inactive,False,,,,,,,,,,,,,,,,,,,,,
 go-zero,M007.1,Etcd Config Center Infrastructure,graded,True,True,False,False,False,False,421.0,39.0,460.0,7.0,8.0,1801.0,0.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,4h-1d,4h+
 go-zero,M007.2,Etcd Discovery Mechanism Reliability Fixes,graded,True,False,True,True,False,False,352.0,185.0,537.0,16.0,11.0,1330.0,5.0,1.0,1.0,2.0,1.0,0.0,1.0,3.0,4h-1d,4h+
