@@ -46,6 +46,12 @@ EXCLUDE_TRIALS = {
     "_openhands_kimi-k2.6_run_002",
 }
 
+# Historical results stay in the canonical analysis CSVs so the internal
+# dashboard can inspect them, but they must never contribute to public website
+# aggregates.  Treat ``legacy`` as a complete underscore-delimited name token
+# so both ``*_legacy`` and a future ``*_legacy_<date>`` convention are covered.
+LEGACY_TRIAL_PATTERN = r"(?:^|_)legacy(?:_|$)"
+
 # Agent-level display names (agent is a small closed set, not model metadata).
 AGENT_DISPLAY = {
     "claude-code": "Claude Code",
@@ -70,6 +76,17 @@ def _display_name(entry: dict) -> str:
     return s
 
 
+def _public_trials(df: pd.DataFrame) -> pd.DataFrame:
+    """Return website-visible rows, excluding retained legacy trials."""
+    legacy = (
+        df["trial_name"]
+        .fillna("")
+        .astype(str)
+        .str.contains(LEGACY_TRIAL_PATTERN, regex=True)
+    )
+    return df.loc[~legacy].copy()
+
+
 def load_e2e() -> pd.DataFrame:
     """Load per-milestone e2e results from canonical milestone_results.csv.
 
@@ -77,7 +94,7 @@ def load_e2e() -> pd.DataFrame:
     column is left blank for e2e rows).
     """
     df = pd.read_csv(MILESTONE_CSV)
-    df = df[df["trial_type"] == "e2e"].copy()
+    df = _public_trials(df[df["trial_type"] == "e2e"])
     df["is_resolved"] = df["eval_status"] == "passed"
     return df
 
@@ -85,7 +102,13 @@ def load_e2e() -> pd.DataFrame:
 def load_executions() -> pd.DataFrame:
     """Load active per-trial execution facts, including non-graded rows."""
     df = pd.read_csv(EXECUTION_CSV)
-    return df[df["trial_type"] == "e2e"].copy()
+    return _public_trials(df[df["trial_type"] == "e2e"])
+
+
+def load_trial_results() -> pd.DataFrame:
+    """Load website-visible e2e trial aggregates."""
+    df = pd.read_csv(TRIAL_CSV)
+    return _public_trials(df[df["trial_type"] == "e2e"])
 
 
 def compute_records():
@@ -99,8 +122,7 @@ def compute_records():
 
     # Trial-level metrics from canonical trial_results.csv (all agents); split
     # native vs openhands by agent_name.
-    trial_all = pd.read_csv(TRIAL_CSV)
-    trial_all = trial_all[trial_all["trial_type"] == "e2e"]
+    trial_all = load_trial_results()
     trial_df = trial_all[trial_all["agent_name"] != "openhands"].copy()
     oh_df = trial_all[trial_all["agent_name"] == "openhands"].copy()
 
@@ -200,8 +222,7 @@ def compute_per_repo_records():
             "org": entry["org"],
         }
 
-    trial = pd.read_csv(TRIAL_CSV)
-    trial = trial[trial["trial_type"] == "e2e"]
+    trial = load_trial_results()
 
     per = {}
     for ws in sorted(trial["workspace"].unique()):
