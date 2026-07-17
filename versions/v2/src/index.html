@@ -73,6 +73,18 @@
     font-weight: 700; letter-spacing: -0.03em; line-height: 1.04;
     margin: 0; white-space: nowrap;
   }
+  /* benchmark version badge — sits superscript-right of the wordmark */
+  .ver-badge {
+    display: inline-block; vertical-align: 0.95em; margin-left: 12px;
+    font-family: var(--mono); font-size: 14px; font-weight: 500;
+    letter-spacing: .03em; line-height: 1; white-space: nowrap;
+    color: var(--heading);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    padding: 5px 11px;
+  }
+  @media (max-width: 620px) { .ver-badge { vertical-align: 0.55em; font-size: 12px; padding: 4px 9px; margin-left: 8px; } }
+
   /* logo + title lockup (logo sits to the left of the wordmark) */
   /* logo + title/subtitle side lockup: logo left, title over tagline right */
   .hero-lockup { display: inline-flex; align-items: center; gap: 24px; text-align: left; margin-bottom: 12px; }
@@ -614,7 +626,7 @@ __HEADER__
       <div class="hero-lockup">
         <div class="hero-logo-tile"><img class="hero-logo" src="/assets/swe-milestone-logo2-once.gif" alt=""></div>
         <div class="hero-text">
-          <h1>SWE-Milestone</h1>
+          <h1>SWE-Milestone <span class="ver-badge" title="Benchmark data version — the score-comparability contract">v1.0</span></h1>
           <p class="tagline">Evaluating AI agents on continuous software evolution, structured as a <span class="tag-hl">milestone DAG</span>, across real release histories.</p>
         </div>
       </div>
