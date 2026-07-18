@@ -11,10 +11,19 @@ function canonicalRedirect(url) {
   return Response.redirect(url.toString(), 301);
 }
 
+// The standalone leaderboard page was retired in favor of the home-page
+// section; old external links and search-engine entries must keep resolving.
+const RETIRED_LEADERBOARD_PATHS = new Set(["/leaderboard", "/leaderboard/", "/leaderboard.html"]);
+
 export default {
   async fetch(request, env) {
-    const redirect = canonicalRedirect(new URL(request.url));
+    const url = new URL(request.url);
+    const redirect = canonicalRedirect(url);
     if (redirect) return redirect;
+
+    if (RETIRED_LEADERBOARD_PATHS.has(url.pathname)) {
+      return Response.redirect(`https://${CANONICAL_HOST}/#leaderboard`, 301);
+    }
 
     const response = await env.ASSETS.fetch(request);
     const headers = new Headers(response.headers);
