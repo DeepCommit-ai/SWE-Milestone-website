@@ -1223,7 +1223,7 @@ footer { padding: 44px 0 56px; }
     pts.push([xMax, getY(s[s.length - 1])]);
     return pts;
   }
-  const NEAR_DISTANCE = 0.10, NEAR_LIMIT = 5;
+  const NEAR_DISTANCE = 0.12, NEAR_LIMIT = 9;
   function segmentDistance(p, a, b, xMax, yMin, yMax) {
     const xSpan = Math.max(xMax, Number.EPSILON);
     const ySpan = Math.max(yMax - yMin, Number.EPSILON);
