@@ -733,7 +733,7 @@ footer { padding: 44px 0 56px; }
             <h3>Frontier Models</h3>
             <div class="ps-legend">
               <span><i class="dot strict"></i>on staircase</span>
-              <span><i class="dot near"></i>near (<span id="ps-tol">±2.0pp</span>)</span>
+              <span><i class="dot near"></i>near frontier</span>
             </div>
           </div>
           <div class="ps-list" id="pareto-side-list"></div>
@@ -1205,11 +1205,6 @@ footer { padding: 44px 0 56px; }
   const getX = r => xKind === 'cost' ? r.cost : xKind === 'time' ? r.time_h * 60 : xKind === 'turns' ? r.turns : r.out_tok_k;
   const getY = r => yKind === 'score' ? r.score : yKind === 'resolve_rate' ? r.resolve : yKind === 'precision' ? r.precision : r.recall;
 
-  const NEAR_FRAC = 0.15, NEAR_MIN = 2;
-  function yTol(ys) {
-    if (ys.length < 2) return NEAR_MIN;
-    return Math.max((Math.max.apply(null, ys) - Math.min.apply(null, ys)) * NEAR_FRAC, NEAR_MIN);
-  }
   function computePareto(pts, tol) {
     tol = tol || 0;
     const sorted = pts.slice().sort((a, b) => getX(a) - getX(b));
@@ -1227,6 +1222,44 @@ footer { padding: 44px 0 56px; }
     }
     pts.push([xMax, getY(s[s.length - 1])]);
     return pts;
+  }
+  const NEAR_DISTANCE = 0.10, NEAR_LIMIT = 5;
+  function segmentDistance(p, a, b, xMax, yMin, yMax) {
+    const xSpan = Math.max(xMax, Number.EPSILON);
+    const ySpan = Math.max(yMax - yMin, Number.EPSILON);
+    const px = p[0] / xSpan, py = (p[1] - yMin) / ySpan;
+    const ax = a[0] / xSpan, ay = (a[1] - yMin) / ySpan;
+    const bx = b[0] / xSpan, by = (b[1] - yMin) / ySpan;
+    const dx = bx - ax, dy = by - ay;
+    const lenSq = dx * dx + dy * dy;
+    const t = lenSq ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lenSq)) : 0;
+    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+  }
+  function computeNear(pts, strictSet, stair, xMax, yMin, yMax) {
+    if (stair.length < 2) return new Set();
+    const candidates = pts.filter(r => !strictSet.has(r.id)).map(r => {
+      const p = [getX(r), getY(r)];
+      let distance = Infinity;
+      for (let i = 1; i < stair.length; i++) {
+        distance = Math.min(distance, segmentDistance(p, stair[i - 1], stair[i], xMax, yMin, yMax));
+      }
+      return { id: r.id, distance };
+    });
+    candidates.sort((a, b) => a.distance - b.distance || a.id.localeCompare(b.id));
+    return new Set(candidates.filter(r => r.distance <= NEAR_DISTANCE).slice(0, NEAR_LIMIT).map(r => r.id));
+  }
+  function paretoState() {
+    const agg = RECORDS;
+    const ys = agg.map(getY), xs = agg.map(getX);
+    const strict = computePareto(agg, 0);
+    const strictSet = new Set(strict.map(r => r.id));
+    const yMax = Math.min(100, Math.ceil((Math.max.apply(null, ys.concat([10])) + 5) / 5) * 5);
+    const yMin = Math.max(0, Math.floor((Math.min.apply(null, ys.concat([0])) - 3) / 5) * 5);
+    const rawXMax = Math.max.apply(null, xs.concat([0]));
+    const xMax = rawXMax + (rawXMax > 20 ? rawXMax * 0.05 : 1);
+    const stair = staircase(strict, xMax);
+    const nearSet = computeNear(agg, strictSet, stair, xMax, yMin, yMax);
+    return { agg, strictSet, nearSet, yMax, yMin, xMax, stair };
   }
   function frontierSymbol(r, strict) {
     const uri = LOGOS[r.logo_key];
@@ -1247,20 +1280,10 @@ footer { padding: 44px 0 56px; }
   }
 
   function buildOption() {
-    const agg = RECORDS;
-    const ys = agg.map(getY), xs = agg.map(getX);
-    const strict = computePareto(agg, 0);
-    const relaxed = computePareto(agg, yTol(ys));
-    const strictSet = new Set(strict.map(r => r.id));
-    const frontSet = new Set(relaxed.map(r => r.id));
-    const yMax = Math.min(100, Math.ceil((Math.max.apply(null, ys.concat([10])) + 5) / 5) * 5);
-    const yMin = Math.max(0, Math.floor((Math.min.apply(null, ys.concat([0])) - 3) / 5) * 5);
-    const rawXMax = Math.max.apply(null, xs.concat([0]));
-    const xMax = rawXMax + (rawXMax > 20 ? rawXMax * 0.05 : 1);
-    const stair = staircase(strict, xMax);
+    const { agg, strictSet, nearSet, yMax, yMin, xMax, stair } = paretoState();
 
     const scatter = agg.map(r => {
-      const st = strictSet.has(r.id), on = frontSet.has(r.id), near = on && !st;
+      const st = strictSet.has(r.id), near = nearSet.has(r.id), on = st || near;
       return {
         name: r.id, type: 'scatter',
         data: [[getX(r), getY(r), r.cost, r.time_h * 60, r.turns, r.out_tok_k, r.score, r.resolve, r.precision, r.recall, r.label, r.agent_display]],
@@ -1333,17 +1356,12 @@ footer { padding: 44px 0 56px; }
 
   function sideRender() {
     const list = document.getElementById('pareto-side-list');
-    const tolEl = document.getElementById('ps-tol');
     if (!list) return;
-    const agg = RECORDS;
-    const tol = yTol(agg.map(getY));
-    if (tolEl) tolEl.textContent = '±' + tol.toFixed(1) + 'pp';
-    const strict = new Set(computePareto(agg, 0).map(r => r.id));
-    const front = new Set(computePareto(agg, tol).map(r => r.id));
+    const { agg, strictSet, nearSet } = paretoState();
     const sorted = agg.slice().sort((a, b) => getY(b) - getY(a));
 
     list.innerHTML = sorted.map(r => {
-      const st = strict.has(r.id), on = front.has(r.id), near = on && !st;
+      const st = strictSet.has(r.id), near = nearSet.has(r.id);
       const tierColor = st ? GH.success : near ? GH.attention : GH.borderMuted;
       const tierBg = st ? GH.success : 'transparent';
       const uri = LOGOS[r.logo_key];
