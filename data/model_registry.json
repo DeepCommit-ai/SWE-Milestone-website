@@ -70,6 +70,16 @@
     "logo_key": "moonshot"
   },
   {
+    "trial_id": "_claude-code_kimi-k3_run_002",
+    "agent": "claude-code",
+    "model": "kimi-k3",
+    "org": "Moonshot AI",
+    "name": "Kimi K3",
+    "thinking": null,
+    "context": null,
+    "logo_key": "moonshot"
+  },
+  {
     "trial_id": "_claude-code_opus-4.5_run_002",
     "agent": "claude-code",
     "model": "claude-opus-4-5-20251101",
