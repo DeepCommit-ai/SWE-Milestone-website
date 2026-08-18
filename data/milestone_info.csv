@@ -88,7 +88,7 @@ nushell,milestone_G02_0f505d0,Type Detection Command Redesign,inactive,False,,,,
 nushell,milestone_G04_1ddae02,Query XML Multiple Output Types and Enhanced Nodeset Formatting,graded,True,True,True,False,False,False,396.0,55.0,451.0,1.0,4.0,1042.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,1-2h
 nushell,milestone_G04_ca0e961,Overlay List Active Status and Scoped Module Registration,graded,True,False,True,False,False,False,75.0,21.0,96.0,3.0,1.0,639.0,2.0,0.0,1.0,1.0,0.0,2.0,2.0,3.0,4h-1d,<30m
 nushell,milestone_G05_ac3f93f,Format Bits Endianness Default and Flag Control,inactive,False,,,,,,,,,,,,,,,,,,,,1-4h,<30m
-nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils,graded,True,True,False,False,True,True,816.0,186.0,1002.0,10.0,3.0,1065.0,2.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,4h-1d,<30m
+nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils,graded,True,True,False,False,True,True,816.0,186.0,1002.0,10.0,3.0,1198.0,2.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,4h-1d,<30m
 nushell,milestone_G05_08822b5,Introduction of MCP Server Support,inactive,False,,,,,,,,,,,,,,,,,,,,,
 nushell,milestone_G05_be6e868,LSP Testing Refactoring and Goto Definition Fix,graded,True,False,False,False,False,True,1044.0,1992.0,3036.0,12.0,4.0,658.0,4.0,0.0,2.0,2.0,1.0,0.0,1.0,3.0,1-3d,30m-1h
 nushell,milestone_M01_deps,Dependency Version Bumps,inactive,False,,,,,,,,,,,,,,,,,,,,,
