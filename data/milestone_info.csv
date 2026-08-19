@@ -85,10 +85,10 @@ nushell,milestone_G01_d96dbbd,Command-wide Completions System,inactive,False,,,,
 nushell,milestone_G02_da9615f,Parse-time Pipeline Type Checking for Multiple Output Types,graded,True,False,False,True,False,False,104.0,82.0,186.0,6.0,1.0,857.0,2.0,0.0,1.0,1.0,1.0,2.0,3.0,4.0,1-3d,1-2h
 nushell,milestone_G02_a647707,Runtime Enforcement of Type Annotations on Variables,graded,True,True,True,False,False,False,52.0,2.0,54.0,5.0,1.0,830.0,8.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,4h-1d,<30m
 nushell,milestone_G02_0f505d0,Type Detection Command Redesign,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_G04_1ddae02,Query XML Multiple Output Types and Enhanced Nodeset Formatting,graded,True,True,True,False,False,False,396.0,55.0,451.0,1.0,4.0,1042.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,1-2h
+nushell,milestone_G04_1ddae02,Query XML Multiple Output Types and Enhanced Nodeset Formatting,graded,True,True,True,False,False,False,396.0,55.0,451.0,1.0,4.0,1081.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,1-2h
 nushell,milestone_G04_ca0e961,Overlay List Active Status and Scoped Module Registration,graded,True,False,True,False,False,False,75.0,21.0,96.0,3.0,1.0,639.0,2.0,0.0,1.0,1.0,0.0,2.0,2.0,3.0,4h-1d,<30m
 nushell,milestone_G05_ac3f93f,Format Bits Endianness Default and Flag Control,inactive,False,,,,,,,,,,,,,,,,,,,,1-4h,<30m
-nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils,graded,True,True,False,False,True,True,816.0,186.0,1002.0,10.0,3.0,1198.0,2.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,4h-1d,<30m
+nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils,graded,True,True,False,False,True,True,816.0,186.0,1002.0,10.0,3.0,1169.0,2.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,4h-1d,<30m
 nushell,milestone_G05_08822b5,Introduction of MCP Server Support,inactive,False,,,,,,,,,,,,,,,,,,,,,
 nushell,milestone_G05_be6e868,LSP Testing Refactoring and Goto Definition Fix,graded,True,False,False,False,False,True,1044.0,1992.0,3036.0,12.0,4.0,658.0,4.0,0.0,2.0,2.0,1.0,0.0,1.0,3.0,1-3d,30m-1h
 nushell,milestone_M01_deps,Dependency Version Bumps,inactive,False,,,,,,,,,,,,,,,,,,,,,
@@ -99,8 +99,8 @@ nushell,milestone_M07_refactor,Code Refactoring and Cleanup,inactive,False,,,,,,
 nushell,milestone_M08_docs,Documentation and Help Improvements with LSP Integration,graded,True,True,False,True,False,True,126.0,80.0,206.0,10.0,6.0,745.0,5.0,2.0,0.0,2.0,1.0,1.0,2.0,4.0,4h-1d,30m-1h
 nushell,milestone_M09_datetime,Date Time and Format Specifiers,inactive,False,,,,,,,,,,,,,,,,,,,,,
 nushell,milestone_core_development.1,Core Shell Language and Type System Fixes,graded,True,True,True,True,False,False,1344.0,855.0,2199.0,73.0,27.0,2167.0,6.0,0.0,7.0,7.0,0.0,1.0,1.0,8.0,5d+,2-4h
-nushell,milestone_core_development.2,Operators and Completions and REPL Improvements,graded,True,False,False,True,False,True,1448.0,690.0,2138.0,208.0,28.0,2067.0,1.0,0.0,2.0,2.0,1.0,5.0,6.0,8.0,3-5d,1-2h
-nushell,milestone_core_development.3,Commands and Parser and Error Handling Improvements,graded,True,True,True,True,False,False,1347.0,431.0,1778.0,60.0,27.0,1637.0,3.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,3-5d,1-2h
+nushell,milestone_core_development.2,Operators and Completions and REPL Improvements,graded,True,False,False,True,False,True,1448.0,690.0,2138.0,208.0,28.0,2225.0,1.0,0.0,2.0,2.0,1.0,5.0,6.0,8.0,3-5d,1-2h
+nushell,milestone_core_development.3,Commands and Parser and Error Handling Improvements,graded,True,True,True,True,False,False,1347.0,431.0,1778.0,60.0,27.0,1739.0,3.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,3-5d,1-2h
 nushell,milestone_core_development.4,Case-Insensitive Get and Flatten Each Completions,graded,True,True,False,True,False,False,2629.0,1146.0,3775.0,164.0,28.0,2278.0,7.0,3.0,2.0,5.0,0.0,1.0,1.0,6.0,5d+,1-2h
 nushell,milestone_core_development.5,Advanced Features and Refinements,inactive,False,,,,,,,,,,,,,,,,,,,,,
 scikit-learn,M01,Metadata Routing for RFE and RFECV Feature Selection,graded,True,True,False,True,False,False,232.0,30.0,262.0,2.0,2.0,1215.0,2.0,0.0,1.0,1.0,1.0,0.0,1.0,2.0,1-3d,30m-1h
