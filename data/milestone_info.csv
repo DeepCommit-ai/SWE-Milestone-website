@@ -48,7 +48,7 @@ ripgrep,maintenance_deps_1,Dependency Updates,inactive,False,,,,,,,,,,,,,,,,,,,,
 ripgrep,maintenance_types_1,File Type Definition Additions,inactive,False,,,,,,,,,,,,,,,,,,,,,
 ripgrep,maintenance_docs_1,Documentation Updates,inactive,False,,,,,,,,,,,,,,,,,,,,,
 ripgrep,maintenance_style_1,Code Style Refactoring to Modern Rust Idioms,non_graded,False,False,True,True,False,True,71.0,125.0,196.0,38.0,6.0,846.0,3.0,3.0,0.0,3.0,1.0,0.0,1.0,4.0,1-4h,<30m
-ripgrep,maintenance_fixes_1_sub-01,Exit Code and Search Worker Initialization Bug Fixes,graded,True,True,True,True,False,False,122.0,36.0,158.0,7.0,6.0,1173.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,4h-1d,30m-1h
+ripgrep,maintenance_fixes_1_sub-01,Exit Code and Search Worker Initialization Bug Fixes,graded,True,True,True,True,False,False,122.0,36.0,158.0,7.0,6.0,1258.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,4h-1d,30m-1h
 ripgrep,maintenance_fixes_1_sub-02,Maintenance Fixes and Minor Enhancements,graded,True,True,False,True,False,False,112.0,29.0,141.0,17.0,16.0,2053.0,1.0,1.0,0.0,1.0,1.0,1.0,2.0,3.0,1-3d,1-2h
 element-web,milestone_seed_7ff1fd2_1,RoomListStoreV3 Filter Infrastructure,graded,True,True,False,False,False,False,427.0,59.0,486.0,19.0,9.0,2245.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,5d+,4h+
 element-web,milestone_seed_e9a3625_1_sub-01,Room List V3 ViewModel Foundation,graded,True,True,False,False,False,True,412.0,3.0,415.0,6.0,7.0,1275.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,4h-1d,1-2h
