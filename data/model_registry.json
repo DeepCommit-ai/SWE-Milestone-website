@@ -4,8 +4,8 @@
     "agent": "claude-code",
     "model": "deepseek-v4-pro",
     "org": "DeepSeek",
-    "name": "DeepSeek V4 Pro",
-    "thinking": null,
+    "name": "DeepSeek V4 Pro (preview)",
+    "thinking": "max",
     "context": null,
     "logo_key": "deepseek"
   },
