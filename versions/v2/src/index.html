@@ -696,7 +696,7 @@ __HEADER__
       <p class="n-title">Notes</p>
       <ul>
         <li><b>Time</b> is wall-clock, so it varies with each agent's system prompt and with API response latency. Treat it as a rough indicator rather than an exact efficiency measure.</li>
-        <li>Unless otherwise noted, Claude Code runs use a 200K <b>context</b> window.</li>
+        <li>Unless otherwise noted, Claude Code runs use a 200K <b>context</b> window (its auto-compaction default); entries marked <b>1M</b> run the model's full 1M window. Codex runs use GPT-5.x's native 400K window (272K max input). Other agents run at their CLI defaults.</li>
       </ul>
     </div>
   </div>
