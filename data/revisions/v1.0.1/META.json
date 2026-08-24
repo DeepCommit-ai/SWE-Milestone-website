@@ -1,0 +1,8 @@
+{
+  "revision": "v1.0.1",
+  "label": "v1.0.1 \u00b7 archived 2026-08-24",
+  "frozen": "2026-08-24",
+  "frozen_from_git": "",
+  "note": "Snapshot of the leaderboard as displayed while v1.0.1 was current (website CSVs of 2026-08-22). Superseded by v1.0.2: grading corrections only (issues #25/#26 waivers, dubbo evaluation-era re-evaluation) plus the new GLM 5.3 entry; same tasks, images, and scoring formula. Six trial rows differ from the final v1.0.1 log by 0.1-5.0 points (stale sync rows, disclosed in the v1.0.2 release notes).",
+  "data_tag": "SWE-Milestone-data v1.0.1 (72bac10)"
+}

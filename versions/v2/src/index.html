@@ -312,6 +312,10 @@
   .lb-notes .n-foot { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin: 0; }
   /* expand / collapse button */
   .lb-expand { text-align: center; margin-top: 20px; }
+  .rev-switch { float: right; font-size: 13px; color: var(--fg-muted, #98a5b3); }
+  .rev-switch select { margin-left: 6px; background: #12181e; color: #cdd9e5; border: 1px solid #444c56; border-radius: 6px; padding: 3px 6px; font-size: 13px; }
+  .rev-banner { margin: 10px 0 14px; padding: 9px 12px; border: 1px solid #c69026; border-radius: 8px; background: rgba(198,144,38,.08); color: #cdd9e5; font-size: 13.5px; }
+  .ver-badge.archived { border-color: #c69026; color: #c69026; }
   #lb-toggle {
     font-family: var(--mono); font-size: 12px; font-weight: 500;
     color: var(--muted); background: transparent;
@@ -626,7 +630,7 @@ __HEADER__
       <div class="hero-lockup">
         <div class="hero-logo-tile"><img class="hero-logo" src="/assets/swe-milestone-logo2-once.gif" alt=""></div>
         <div class="hero-text">
-          <h1>SWE-Milestone <span class="ver-badge" title="Benchmark data version — the score-comparability contract">v1.0</span></h1>
+          <h1>SWE-Milestone <span class="ver-badge" id="ver-badge" title="Benchmark data version and score revision — see the leaderboard revision switcher">v1.0.2</span></h1>
           <p class="tagline">Evaluating AI agents on continuous software evolution, structured as a <span class="tag-hl">milestone DAG</span>, across real release histories.</p>
         </div>
       </div>
@@ -674,7 +678,12 @@ __HEADER__
 <!-- ============ 02 LEADERBOARD ============ -->
 <section id="leaderboard">
   <div class="wrap">
-    <div class="sec-head"><h2>Leaderboard</h2></div>
+    <div class="sec-head"><h2>Leaderboard</h2>
+      <label class="rev-switch" id="rev-switch" hidden>Score revision
+        <select id="rev-select" title="Switch between the current score revision and archived snapshots"></select>
+      </label>
+    </div>
+    <div class="rev-banner" id="rev-banner" hidden></div>
 
     <div class="lb-table-scroll">
       <table class="lb" id="lb-table">
@@ -798,8 +807,40 @@ __FOOTER__
 <script>
 (function () {
   const DATA = window.SITE_DATA || { records: [], logos: {} };
-  const RECORDS = DATA.records || [];
+  /* ---- score-revision switch (?rev=v1.0.1). The selected revision's frozen
+     records replace DATA.records before anything renders; everything below
+     (leaderboard, medals, Pareto) follows automatically. ---- */
+  const CURRENT_REV = DATA.current_rev || 'v1.0.2';
+  const REVISIONS = DATA.revisions || {};
+  let REV = new URLSearchParams(location.search).get('rev') || CURRENT_REV;
+  if (REV !== CURRENT_REV && !REVISIONS[REV]) REV = CURRENT_REV;
+  const ARCHIVED = REV !== CURRENT_REV;
+  const RECORDS = ARCHIVED ? (REVISIONS[REV].records || []) : (DATA.records || []);
   const LOGOS = DATA.logos || {};
+  (function revUi() {
+    const badge = document.getElementById('ver-badge');
+    if (badge) { badge.textContent = REV; if (ARCHIVED) badge.classList.add('archived'); }
+    const sw = document.getElementById('rev-switch'), sel = document.getElementById('rev-select');
+    if (sel && Object.keys(REVISIONS).length) {
+      const opts = [[CURRENT_REV, CURRENT_REV + ' · current']].concat(
+        Object.keys(REVISIONS).map(k => [k, REVISIONS[k].label || k]));
+      sel.innerHTML = opts.map(o => '<option value="' + o[0] + '"' + (o[0] === REV ? ' selected' : '') + '>' + o[1] + '</option>').join('');
+      sel.addEventListener('change', () => {
+        const u = new URL(location.href);
+        if (sel.value === CURRENT_REV) u.searchParams.delete('rev'); else u.searchParams.set('rev', sel.value);
+        u.hash = 'leaderboard';
+        location.href = u.toString();
+      });
+      sw.hidden = false;
+    }
+    const banner = document.getElementById('rev-banner');
+    if (banner && ARCHIVED) {
+      const info = REVISIONS[REV];
+      banner.textContent = 'Archived score revision ' + REV + (info.frozen ? ' (frozen ' + info.frozen + ')' : '') +
+        ' — superseded by ' + CURRENT_REV + '. ' + (info.note || 'Grading corrections only; same tasks, images and formula.');
+      banner.hidden = false;
+    }
+  })();
   if (!RECORDS.length) return;
 
   // GitHub dark-dimmed tokens mapped to the v2 palette (see :root above).

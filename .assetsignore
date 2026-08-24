@@ -8,3 +8,4 @@ data/records.json
 __pycache__/
 README.md
 worker.mjs
+data/revisions/*/records.json

@@ -127,12 +127,34 @@ def enrich(records: list) -> list:
 
 
 def load_site_data() -> str:
-    """Return the `window.SITE_DATA = {...}` script body (records + used logos)."""
+    """Return the `window.SITE_DATA = {...}` script body (records + used logos +
+    archived score revisions). The current revision's records sit in `records`;
+    every directory under data/revisions/<rev>/ with a records.json becomes an
+    archived, switchable revision (frozen snapshot of what the board showed when
+    that revision was current). `current_rev` names the live revision
+    (data/CURRENT_REV, maintained by the release procedure)."""
     records = enrich(json.loads((DATA / "records.json").read_text()))
     all_logos = json.loads((ASSETS / "logos.json").read_text())
     used = {r["logo_key"] for r in records if r.get("logo_key")}
+    current_rev = (DATA / "CURRENT_REV").read_text().strip() if (DATA / "CURRENT_REV").is_file() else "v1.0.2"
+    revisions = {}
+    revdir = DATA / "revisions"
+    if revdir.is_dir():
+        for d in sorted(revdir.iterdir(), reverse=True):
+            rj = d / "records.json"
+            if not d.is_dir() or not rj.is_file():
+                continue
+            meta = json.loads((d / "META.json").read_text()) if (d / "META.json").is_file() else {}
+            rev_records = enrich(json.loads(rj.read_text()))
+            used |= {r["logo_key"] for r in rev_records if r.get("logo_key")}
+            revisions[d.name] = {
+                "label": meta.get("label", d.name),
+                "frozen": meta.get("frozen", ""),
+                "note": meta.get("note", ""),
+                "records": rev_records,
+            }
     logos = {k: v for k, v in all_logos.items() if k in used}
-    payload = {"records": records, "logos": logos}
+    payload = {"records": records, "logos": logos, "current_rev": current_rev, "revisions": revisions}
     return "window.SITE_DATA=" + json.dumps(payload, separators=(",", ":")) + ";"
 
 

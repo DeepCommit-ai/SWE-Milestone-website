@@ -3,7 +3,7 @@ dubbo,M001.1,Spring Security OAuth2 Serialization Support,graded,True,True,False
 dubbo,M001.2,Spring 6 Security Module Split and UTF-8 Standardization,graded,True,True,True,False,False,False,337.0,48.0,385.0,28.0,2.0,600.0,2.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,1-3d,30m-1h
 dubbo,M002,HTTP/2 Connection Preface Protocol Implementation,inactive,False,,,,,,,,,,,,,,,,,,,,1-3d,30m-1h
 dubbo,M003.1,Mutiny Module Configuration and Code Generation Templates,graded,True,True,False,False,False,False,337.0,21.0,358.0,7.0,1.0,403.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,4h-1d,<30m
-dubbo,M003.2,Mutiny Core Abstractions and Publisher/Subscriber,non_graded,False,True,False,False,False,False,455.0,0.0,455.0,6.0,1.0,1525.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,30m-1h
+dubbo,M003.2,Mutiny Core Abstractions and Publisher/Subscriber,non_graded,False,True,False,False,False,False,455.0,0.0,455.0,6.0,1.0,1221.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,30m-1h
 dubbo,M003.3,Mutiny Reactive Streaming Support,graded,True,True,True,False,False,False,543.0,0.0,543.0,7.0,2.0,1620.0,2.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,1-3d,1-2h
 dubbo,M004,REST Streaming and SSE Infrastructure Enhancements,graded,True,True,False,True,False,False,452.0,45.0,497.0,13.0,3.0,912.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1-3d,1-2h
 dubbo,M005.1,Affinity Router Core Infrastructure and Model,inactive,False,,,,,,,,,,,,,,,,,,,,,
@@ -37,7 +37,7 @@ ripgrep,milestone_seed_94ea38d_1,Add Jujutsu VCS (.jj) directory support,inactiv
 ripgrep,milestone_seed_2924d0c_1,Add Minimum Depth Option for Directory Traversal,graded,True,True,False,False,False,False,47.0,4.0,51.0,1.0,1.0,703.0,0.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,4h-1d,30m-1h
 ripgrep,milestone_seed_75970fd_1,Fix parallel argument processing order,inactive,False,,,,,,,,,,,,,,,,,,,,,
 ripgrep,milestone_seed_8c6595c_1,Fix Performance with Large After-Context Flag Values,graded,True,False,True,True,False,False,18.0,9.0,27.0,3.0,2.0,790.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,2.0,4h-1d,30m-1h
-ripgrep,milestone_seed_a6e0be3_1_sub-01,Migrate Max Matches Limit from Printer to Searcher,graded,True,False,False,True,False,True,142.0,98.0,240.0,6.0,2.0,1066.0,0.0,0.0,0.0,0.0,1.0,1.0,2.0,2.0,1-3d,1-2h
+ripgrep,milestone_seed_a6e0be3_1_sub-01,Migrate Max Matches Limit from Printer to Searcher,graded,True,False,False,True,False,True,142.0,98.0,240.0,6.0,2.0,954.0,0.0,0.0,0.0,0.0,1.0,1.0,2.0,2.0,1-3d,1-2h
 ripgrep,milestone_seed_a6e0be3_1_sub-02,Simplify Printer max_matches After Searcher Migration,graded,True,True,False,False,False,False,5.0,103.0,108.0,3.0,1.0,557.0,1.0,0.0,2.0,2.0,0.0,1.0,1.0,3.0,1-4h,<30m
 ripgrep,milestone_seed_a60e62d_1,Rust 2024 Edition Migration,inactive,False,,,,,,,,,,,,,,,,,,,,,
 ripgrep,milestone_seed_53279db_1,Switch to tikv-jemallocator Dependency,inactive,False,,,,,,,,,,,,,,,,,,,,,
@@ -56,7 +56,7 @@ element-web,milestone_seed_e9a3625_1_sub-02,Room List V3 UI Components,graded,Tr
 element-web,milestone_seed_e9a3625_1_sub-03,Room List V3 Room Behavior and Display,graded,True,True,False,False,False,True,558.0,29.0,587.0,15.0,5.0,2413.0,3.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,4h-1d,2-4h
 element-web,milestone_seed_05df321_1,React 19 JSX Import Migration,graded,True,False,False,False,False,True,238.0,218.0,456.0,269.0,2.0,970.0,4.0,2.0,0.0,2.0,0.0,0.0,0.0,2.0,1-4h,30m-1h
 element-web,milestone_seed_3f47487_1,React DOM Rendering Modernization for Message Content,graded,True,False,False,False,False,True,716.0,712.0,1428.0,63.0,4.0,2473.0,2.0,1.0,0.0,1.0,1.0,0.0,1.0,2.0,5d+,4h+
-element-web,milestone_seed_be3778b_1,Key Storage Toggle for Encryption Settings,graded,True,True,False,False,False,True,351.0,21.0,372.0,10.0,3.0,2022.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1-3d,2-4h
+element-web,milestone_seed_be3778b_1,Key Storage Toggle for Encryption Settings,graded,True,True,False,False,False,True,351.0,21.0,372.0,10.0,3.0,1901.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1-3d,2-4h
 element-web,milestone_seed_56c7fc1_1,Identity Reset Protection UX Enhancement,graded,True,False,True,False,False,False,51.0,11.0,62.0,5.0,3.0,761.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,4h-1d,30m-1h
 element-web,milestone_seed_fba5938_1,SSO Pickle Key Generation and Session Handling,graded,True,False,False,True,False,False,67.0,25.0,92.0,2.0,3.0,805.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4h-1d,1-2h
 element-web,milestone_seed_aa99601_1,Group Call Error Screen Display,graded,True,True,True,False,False,True,151.0,142.0,293.0,11.0,1.0,1298.0,0.0,0.0,0.0,0.0,2.0,0.0,2.0,2.0,3-5d,1-2h
@@ -80,39 +80,39 @@ navidrome,milestone_005,Metadata and File Handling Fixes,inactive,False,,,,,,,,,
 navidrome,milestone_006,UI Quality Improvements,graded,True,False,False,True,False,False,70.0,27.0,97.0,5.0,6.0,1021.0,0.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,1-4h,<30m
 navidrome,milestone_007,Agent Logic Streamlining,graded,True,False,False,False,False,True,51.0,101.0,152.0,1.0,1.0,1123.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4h-1d,<30m
 navidrome,milestone_008,Code Quality and API Fixes,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_G01_48bca0a,Custom Completion Refactoring for Flag Name vs Value,graded,True,False,False,True,False,True,159.0,144.0,303.0,10.0,3.0,535.0,4.0,0.0,6.0,6.0,1.0,0.0,1.0,7.0,4h-1d,<30m
+nushell,milestone_G01_48bca0a,Custom Completion Refactoring for Flag Name vs Value,graded,True,False,False,True,False,True,159.0,144.0,303.0,10.0,3.0,440.0,4.0,0.0,6.0,6.0,1.0,0.0,1.0,7.0,4h-1d,<30m
 nushell,milestone_G01_d96dbbd,Command-wide Completions System,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_G02_da9615f,Parse-time Pipeline Type Checking for Multiple Output Types,graded,True,False,False,True,False,False,104.0,82.0,186.0,6.0,1.0,952.0,2.0,0.0,1.0,1.0,1.0,2.0,3.0,4.0,1-3d,1-2h
-nushell,milestone_G02_a647707,Runtime Enforcement of Type Annotations on Variables,graded,True,True,True,False,False,False,52.0,2.0,54.0,5.0,1.0,925.0,8.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,4h-1d,<30m
+nushell,milestone_G02_da9615f,Parse-time Pipeline Type Checking for Multiple Output Types,graded,True,False,False,True,False,False,104.0,82.0,186.0,6.0,1.0,857.0,2.0,0.0,1.0,1.0,1.0,2.0,3.0,4.0,1-3d,1-2h
+nushell,milestone_G02_a647707,Runtime Enforcement of Type Annotations on Variables,graded,True,True,True,False,False,False,52.0,2.0,54.0,5.0,1.0,830.0,8.0,0.0,1.0,1.0,0.0,0.0,0.0,1.0,4h-1d,<30m
 nushell,milestone_G02_0f505d0,Type Detection Command Redesign,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_G04_1ddae02,Query XML Multiple Output Types and Enhanced Nodeset Formatting,graded,True,True,True,False,False,False,396.0,55.0,451.0,1.0,4.0,1176.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,1-2h
-nushell,milestone_G04_ca0e961,Overlay List Active Status and Scoped Module Registration,graded,True,False,True,False,False,False,75.0,21.0,96.0,3.0,1.0,734.0,2.0,0.0,1.0,1.0,0.0,2.0,2.0,3.0,4h-1d,<30m
+nushell,milestone_G04_1ddae02,Query XML Multiple Output Types and Enhanced Nodeset Formatting,graded,True,True,True,False,False,False,396.0,55.0,451.0,1.0,4.0,1081.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,1-2h
+nushell,milestone_G04_ca0e961,Overlay List Active Status and Scoped Module Registration,graded,True,False,True,False,False,False,75.0,21.0,96.0,3.0,1.0,639.0,2.0,0.0,1.0,1.0,0.0,2.0,2.0,3.0,4h-1d,<30m
 nushell,milestone_G05_ac3f93f,Format Bits Endianness Default and Flag Control,inactive,False,,,,,,,,,,,,,,,,,,,,1-4h,<30m
-nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils,graded,True,True,False,False,True,True,816.0,186.0,1002.0,10.0,3.0,1264.0,2.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,4h-1d,<30m
+nushell,milestone_G05_0b8531e,Optimized String Types Infrastructure for nu-utils,graded,True,True,False,False,True,True,816.0,186.0,1002.0,10.0,3.0,1169.0,2.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,4h-1d,<30m
 nushell,milestone_G05_08822b5,Introduction of MCP Server Support,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_G05_be6e868,LSP Testing Refactoring and Goto Definition Fix,graded,True,False,False,False,False,True,1044.0,1992.0,3036.0,12.0,4.0,753.0,4.0,0.0,2.0,2.0,1.0,0.0,1.0,3.0,1-3d,30m-1h
+nushell,milestone_G05_be6e868,LSP Testing Refactoring and Goto Definition Fix,graded,True,False,False,False,False,True,1044.0,1992.0,3036.0,12.0,4.0,658.0,4.0,0.0,2.0,2.0,1.0,0.0,1.0,3.0,1-3d,30m-1h
 nushell,milestone_M01_deps,Dependency Version Bumps,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_M02_parser,Parser Fixes for Expressions and Scoping and Error Reporting,graded,True,False,False,True,False,False,177.0,119.0,296.0,3.0,7.0,1790.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,30m-1h
+nushell,milestone_M02_parser,Parser Fixes for Expressions and Scoping and Error Reporting,graded,True,False,False,True,False,False,177.0,119.0,296.0,3.0,7.0,1624.0,0.0,0.0,0.0,0.0,0.0,3.0,3.0,3.0,1-3d,30m-1h
 nushell,milestone_M03_polars,Polars Plugin Updates and Dependency Upgrades,inactive,False,,,,,,,,,,,,,,,,,,,,3-5d,1-2h
 nushell,milestone_M04_std,Standard Library Enhancements for Random and Alignment,inactive,False,,,,,,,,,,,,,,,,,,,,1-3d,1-2h
 nushell,milestone_M07_refactor,Code Refactoring and Cleanup,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_M08_docs,Documentation and Help Improvements with LSP Integration,graded,True,True,False,True,False,True,126.0,80.0,206.0,10.0,6.0,840.0,5.0,2.0,0.0,2.0,1.0,1.0,2.0,4.0,4h-1d,30m-1h
+nushell,milestone_M08_docs,Documentation and Help Improvements with LSP Integration,graded,True,True,False,True,False,True,126.0,80.0,206.0,10.0,6.0,745.0,5.0,2.0,0.0,2.0,1.0,1.0,2.0,4.0,4h-1d,30m-1h
 nushell,milestone_M09_datetime,Date Time and Format Specifiers,inactive,False,,,,,,,,,,,,,,,,,,,,,
-nushell,milestone_core_development.1,Core Shell Language and Type System Fixes,graded,True,True,True,True,False,False,1344.0,855.0,2199.0,73.0,27.0,2333.0,6.0,0.0,7.0,7.0,0.0,1.0,1.0,8.0,5d+,2-4h
+nushell,milestone_core_development.1,Core Shell Language and Type System Fixes,graded,True,True,True,True,False,False,1344.0,855.0,2199.0,73.0,27.0,2167.0,6.0,0.0,7.0,7.0,0.0,1.0,1.0,8.0,5d+,2-4h
 nushell,milestone_core_development.2,Operators and Completions and REPL Improvements,graded,True,False,False,True,False,True,1448.0,690.0,2138.0,208.0,28.0,2225.0,1.0,0.0,2.0,2.0,1.0,5.0,6.0,8.0,3-5d,1-2h
-nushell,milestone_core_development.3,Commands and Parser and Error Handling Improvements,graded,True,True,True,True,False,False,1347.0,431.0,1778.0,60.0,27.0,1905.0,3.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,3-5d,1-2h
-nushell,milestone_core_development.4,Case-Insensitive Get and Flatten Each Completions,graded,True,True,False,True,False,False,2629.0,1146.0,3775.0,164.0,28.0,2373.0,7.0,3.0,2.0,5.0,0.0,1.0,1.0,6.0,5d+,1-2h
+nushell,milestone_core_development.3,Commands and Parser and Error Handling Improvements,graded,True,True,True,True,False,False,1347.0,431.0,1778.0,60.0,27.0,1739.0,3.0,0.0,1.0,1.0,0.0,3.0,3.0,4.0,3-5d,1-2h
+nushell,milestone_core_development.4,Case-Insensitive Get and Flatten Each Completions,graded,True,True,False,True,False,False,2629.0,1146.0,3775.0,164.0,28.0,2278.0,7.0,3.0,2.0,5.0,0.0,1.0,1.0,6.0,5d+,1-2h
 nushell,milestone_core_development.5,Advanced Features and Refinements,inactive,False,,,,,,,,,,,,,,,,,,,,,
-scikit-learn,M01,Metadata Routing for RFE and RFECV Feature Selection,graded,True,True,False,True,False,False,232.0,30.0,262.0,2.0,2.0,1392.0,2.0,0.0,1.0,1.0,1.0,0.0,1.0,2.0,1-3d,30m-1h
+scikit-learn,M01,Metadata Routing for RFE and RFECV Feature Selection,graded,True,True,False,True,False,False,232.0,30.0,262.0,2.0,2.0,1215.0,2.0,0.0,1.0,1.0,1.0,0.0,1.0,2.0,1-3d,30m-1h
 scikit-learn,M03,Estimator Type Detection and Pipeline Fitted State Checks,graded,True,True,False,False,False,False,200.0,89.0,289.0,20.0,2.0,600.0,2.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,4h-1d,<30m
 scikit-learn,M04,Estimator Validation and Performance Improvements,graded,True,True,True,False,False,False,132.0,17.0,149.0,96.0,3.0,604.0,5.0,1.0,1.0,2.0,0.0,0.0,0.0,2.0,4h-1d,<30m
 scikit-learn,M06,Array API Support for Metrics and Preprocessing,graded,True,True,False,False,False,True,242.0,62.0,304.0,5.0,7.0,1323.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1-3d,30m-1h
 scikit-learn,M11,Missing Value Support for ExtraTree Estimators,graded,True,True,False,False,False,False,147.0,27.0,174.0,3.0,1.0,1367.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1-3d,30m-1h
-scikit-learn,M12.1,Infrastructure Phase 1: API Changes and Bug Fixes,graded,True,True,False,True,True,True,1276.0,1307.0,2583.0,222.0,41.0,4255.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,3-5d,1-2h
+scikit-learn,M12.1,Infrastructure Phase 1: API Changes and Bug Fixes,graded,True,True,False,True,True,True,1276.0,1307.0,2583.0,222.0,41.0,4074.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,3-5d,1-2h
 scikit-learn,M12.2,Infrastructure Phase 2: Metadata Routing and Bug Fixes,graded,True,True,True,True,True,True,718.0,490.0,1208.0,54.0,35.0,3514.0,1.0,0.0,1.0,1.0,1.0,3.0,4.0,5.0,3-5d,1-2h
 scikit-learn,M12.3,Infrastructure Phase 3a: Metrics and Validation Updates,graded,True,True,True,True,False,True,231.0,217.0,448.0,176.0,11.0,1688.0,2.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
-scikit-learn,M12.4,Infrastructure Phase 3b: Testing and Metadata Routing,graded,True,True,False,True,False,True,454.0,249.0,703.0,55.0,11.0,2078.0,3.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
-scikit-learn,M12.5,Tags System Migration and Validation Enhancements,graded,True,True,False,True,False,True,314.0,77.0,391.0,8.0,10.0,2633.0,4.0,3.0,2.0,5.0,1.0,1.0,2.0,7.0,1-3d,1-2h
+scikit-learn,M12.4,Infrastructure Phase 3b: Testing and Metadata Routing,graded,True,True,False,True,False,True,454.0,249.0,703.0,55.0,11.0,1896.0,3.0,0.0,1.0,1.0,0.0,1.0,1.0,2.0,1-3d,1-2h
+scikit-learn,M12.5,Tags System Migration and Validation Enhancements,graded,True,True,False,True,False,True,314.0,77.0,391.0,8.0,10.0,2510.0,4.0,3.0,2.0,5.0,1.0,1.0,2.0,7.0,1-3d,1-2h
 scikit-learn,M13,Documentation Consistency and Metadata Routing Coverage,graded,True,True,False,True,False,False,461.0,194.0,655.0,57.0,75.0,1349.0,2.0,1.0,0.0,1.0,1.0,0.0,1.0,2.0,4h-1d,30m-1h
 scikit-learn,M17,Performance Optimizations for Manifold and Covariance,graded,True,True,True,False,False,False,165.0,41.0,206.0,5.0,3.0,1001.0,5.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,4h-1d,30m-1h
 go-zero,M001,Go-Redis v9 Upgrade with API Modernization,graded,True,False,False,False,False,True,83.0,112.0,195.0,9.0,4.0,1178.0,4.0,0.0,2.0,2.0,0.0,1.0,1.0,3.0,4h-1d,<30m
@@ -138,7 +138,7 @@ go-zero,M019,HTTP Request/Response Parsing and CORS Improvements,graded,True,Fal
 go-zero,M020,Code Modernization with Go Generics and Stdlib,graded,True,False,False,False,True,True,208.0,407.0,615.0,16.0,15.0,1967.0,6.0,1.0,3.0,4.0,1.0,0.0,1.0,5.0,1-4h,2-4h
 go-zero,M021,Service Infrastructure and Config Validation Improvements,graded,True,False,True,True,False,False,119.0,51.0,170.0,8.0,6.0,922.0,2.0,2.0,0.0,2.0,1.0,0.0,1.0,3.0,1-4h,4h+
 go-zero,M022,Trace and Observability Stability Improvements,graded,True,False,True,True,False,False,27.0,26.0,53.0,5.0,5.0,739.0,8.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,1-4h,2-4h
-go-zero,M023,SQL and ORM Metrics and Bug Fixes,graded,True,False,True,True,False,False,71.0,7.0,78.0,9.0,10.0,1415.0,0.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,1-4h,4h+
+go-zero,M023,SQL and ORM Metrics and Bug Fixes,graded,True,False,True,True,False,False,71.0,7.0,78.0,9.0,10.0,1288.0,0.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,1-4h,4h+
 go-zero,M024,zRPC Server Interceptor and Balancer Improvements,graded,True,False,False,True,False,True,115.0,101.0,216.0,10.0,5.0,1105.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4h-1d,4h+
 go-zero,M025,Threading and Concurrency Utility Enhancements,graded,True,True,False,False,False,False,147.0,0.0,147.0,2.0,3.0,1209.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1-4h,2-4h
 go-zero,M026,Config Parsing Fix and K8s Build Tag Support,graded,True,False,False,True,True,False,27.0,5.0,32.0,6.0,4.0,601.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1-4h,1-2h
