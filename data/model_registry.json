@@ -40,23 +40,13 @@
   "logo_key": "zai"
  },
  {
-  "trial_id": "_claude-code_glm-5.3_run_002",
+  "trial_id": "_claude-code_glm-5.3_run_003",
   "agent": "claude-code",
   "model": "glm-5.3",
   "org": "Z.ai",
   "name": "GLM-5.3",
   "thinking": null,
   "context": null,
-  "logo_key": "zai"
- },
- {
-  "trial_id": "_claude-code_glm-5.3-1m_run_002",
-  "agent": "claude-code",
-  "model": "glm-5.3-1m",
-  "org": "Z.ai",
-  "name": "GLM-5.3",
-  "thinking": null,
-  "context": "1M",
   "logo_key": "zai"
  },
  {
