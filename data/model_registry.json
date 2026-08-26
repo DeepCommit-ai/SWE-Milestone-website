@@ -50,6 +50,16 @@
   "logo_key": "zai"
  },
  {
+  "trial_id": "_claude-code_glm-5.3-1m_run_002",
+  "agent": "claude-code",
+  "model": "glm-5.3-1m",
+  "org": "Z.ai",
+  "name": "GLM-5.3",
+  "thinking": null,
+  "context": "1M",
+  "logo_key": "zai"
+ },
+ {
   "trial_id": "_claude-code_glm-5.2_run_002",
   "agent": "claude-code",
   "model": "glm-5.2",
